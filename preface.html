@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+<link rel="stylesheet" type="text/css" href="css/book.css"/>
+</head>
+<body>
+<div class="watermark">
+<i>Work in progress</i><br>
+Book version 0.1
+</div>
+
+<h1>Welcome!</h1>
+
+<p><a href="http://parrt.cs.usfca.edu">Terence Parr</a> and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
+
+<p style="font-size: 80%">Copyright &copy; 2018 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.</p>
+
+
+
+
+<div id="toc">
+<p class="toc_title">Contents</p>
+<ul>
+	<li><a href="#sec0">Is this book right for you?</a></li>
+	<ul>
+	</ul>
+	<li><a href="#sec0">Tools of the trade</a></li>
+	<ul>
+	</ul>
+	<li><a href="#sec0">What you'll learn</a></li>
+	<ul>
+	</ul>
+	<li><a href="#sec0">Supporting materials online</a></li>
+	<ul>
+	</ul>
+	<li><a href="#sec0">Acknowledgements</a></li>
+	<ul>
+	</ul>
+
+</ul>
+</div>
+
+<p>&ldquo;<i>In God we trust; all others bring data.</i>&rdquo; &mdash; <a href="https://blog.deming.org/w-edwards-deming-quotes/large-list-of-quotes-by-w-edwards-deming">Attributed</a> to W. Edwards Deming and George Box</p>
+<span class=sidenote><span class=sup>1</span>&nbsp;<tt>https://www.kaggle.com</tt></span>
+<p>This book is a primer on machine learning for programmers trying to get up to speed quickly. You'll learn how machine learning works and how to apply it in practice.  We focus on just a few powerful models (algorithms) that are extremely effective on real problems, rather than presenting a broad survey of machine learning algorithms as many books do. Co-author Jeremy used these few models to become the #1 competitor for two consecutive years at Kaggle.com.<span class=sup>1</span> This narrow approach leaves lots of room to cover the models, training, and testing in detail, with intuitive descriptions and full code implementations.</p>
+<span class=sidenote><span class=sup>2</span>&nbsp;&ldquo;<i>Almost all of AI's recent progress is through one type, in which some input data (A) is used to quickly generate some simple response (B).</i>&rdquo; &mdash; Andrew Ng in <i>What Artificial Intelligence Can and Can't Do Right Now</i> Harvard Business Review November 9, 2016</span>
+<p>Because of our focus, this book does not cover data science in general nor does it present any case studies of machine learning from a business perspective.  We also completely ignore the problem of clustering (unsupervised learning) that attempts to group similar data records together (whereas supervised learning  maps an input record to an output value, such as an image to a category like &ldquo;it's a car&rdquo;). We find that supervised methods are more often applicable in practice, as corroborated by well-known machine learning researcher Andrew Ng.<span class=sup>2</span> </p>
+<p>There are a multitude of machine learning models and choosing an appropriate model requires experience.  This book is opinionated in the sense that we have chosen a two powerful models for you, <i>Random Forests</i> (TM) and <i>neural networks</i>, that will work in the vast majority of cases. We'll also explore <i>k-nearest neighbors</i>, <i>decision trees</i>, and <i>linear regression</i> models along the way in order to explain and motivate our &ldquo;power tools,&rdquo; random forests and neural networks.  Part of our goal with this book is to show that, while there are lots of details, the overall process of applying machine learning is pretty straightforward. In fact, we'll look at a broadly-applicable recipe in <span style="color: red">[workflow]</span>.</p>
+<p><span style="color: red">{TODO: people jump to trendy stuff like deep learning without getting the basics. To get started though it's important to understand about data preparation and get an intuition for how machine learning works.}</span></p>
+
+
+<h2 id="sec0">Is this book right for you?</h2>
+
+<p>Computer programming is required to do machine learning and programmers are the primary target audience of this book. In particular, you really need at least one solid year of programming experience, preferably in Python. Python is the most common programming language used in machine learning and so it is the language we use in this book. If you don't already know Python, those with sufficient experience can learn it on the fly while reading. Others should spend some time getting comfortable with basic Python before reading this book.</p>
+<p>You might be worried that you don't have sufficient knowledge of mathematics to understand machine learning.  Don't worry! You'll be fine if you can dredge up some high school level algebra and geometry. As a happy coincidence, the models and techniques we explore in this book require very little mathematics background, even when we get to deep learning (neural networks).   Some models require sophisticated mathematics to understand (for example, &ldquo;support vector machines&ldquo; and &ldquo;hidden Markoff models&rdquo;) but they are used much less frequently than mathematically-simpler but still powerful models like &rdquo;Random Forests.&rdquo;  </p>
+<p>Advancement mathematics is most often necessary when we try to prove a model's correctness, define model performance bounds, compare different models abstractly, design new models, and so on. In other words, to become a machine learning researcher you need serious math chops. Our goal, on the other hand, is to cover only as much mathematics as necessary to get you applying machine learning effectively in your job. As we go along, we'll cover any mathematics and notation needed for each discussion.</p>
+<span class=sidenote><span class=sup>3</span>&nbsp;&ldquo;<i>To Explain the World: The Discovery of Modern Science</i>&rdquo; &mdash; Steven Weinberg, Harper Collins 2015</span><span class=sidenote>
+
+<center>
+<img src="images/preface/pythagorean.svg" width="80%">
+</center>
+
+<br><b>Figure 1</b>. Pythagorus' theorem was expressed geometrically initially not algebraically.</span>
+<p>Even when mathematics is necessary to understand a model, it's important to remember that the math notation is really just a precise and concise way to express the results of someone's intuitive leap. Consider the Pythagorean theorem we all learned in middle school: <img style="vertical-align: -1.06pt;" src="images/eqn-D459699AB031562A6C4FBB577DB204BC-depth001.06.svg">. Pythagoras could never have expressed his theorem with such a formula. As Steven Weinberg points out, &ldquo;<i>The Greeks never learned to write and manipulate algebraic formulas</i>.&rdquo;<span class=sup>3</span> (Terence highly recommends this book.) Instead, Pythagoras arranged three squares so their edges formed a right triangle (one angle is 90 degrees) then observed that the area of the square whose edge formed the hypotenuse had the same area as the combined area of the other two squares; see <b>Figure 1</b>. It's pretty hard to start from the mathematics and work backwards to the intuition, which is why we're going to spend most of our time with the ideas and mechanisms behind machine learning.</p>
+
+
+<h2 id="sec0">Tools of the trade</h2>
+
+<p>Anaconda, notebooks, pandas, numpy, sckit-learn, matplotlib. jupyter lab.</p>
+
+
+<h2 id="sec0">What you'll learn</h2>
+
+
+<h2 id="sec0">Supporting materials online</h2>
+
+<p>github repository with source code referenced or given in the book; artifacts generated from the book automatically to ipython notebooks. short videos?</p>
+
+
+<h2 id="sec0">Acknowledgements</h2>
+
+<p>We thank Yannet Interian, professor of data science at the University of San Francisco, for her conversations and contributions to the techniques described in this book.</p>
+<p>We hope you enjoy this book and we wish you good luck on your machine learning journey!</p>
+<center>
+<table style="">
+<thead>
+<tr>
+<th align=center width="30%"></th><th align=center width="30%"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align=center>
+
+<center>
+<img src="images/preface/parrt.jpg" width="40%">
+</center>
+
+  </td><td align=center>
+
+<center>
+<img src="images/preface/jeremy.png" width="40%">
+</center>
+
+</td>
+</tr>
+<tr>
+<td align=center><a href="http://parrt.cs.usfca.edu">Terence Parr</a></td><td align=center><a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></td>
+</tr>
+<tr>
+<td align=center><i>University of San Francisco</i></td><td align=center><i>fast.ai and University of San Francisco</i></td>
+</tr>
+</tbody>
+</table>
+</center>
+
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="51 249 227 201" width="227pt" height="201pt" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <metadata> Produced by OmniGraffle 7.5 
+    <dc:date>2018-02-27 22:16:41 +0000</dc:date>
+  </metadata>
+  <defs>
+    <font-face font-family="Monaco" font-size="9" units-per-em="1000" underline-position="-37.597656" underline-thickness="75.68359" slope="0" x-height="560.5469" cap-height="780.2734" ascent="1e3" descent="-250" font-weight="500">
+      <font-face-src>
+        <font-face-name name="Monaco"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Monaco" font-size="7" units-per-em="1000" underline-position="-37.597656" underline-thickness="75.68359" slope="0" x-height="560.5469" cap-height="780.2734" ascent="1e3" descent="-250" font-weight="500">
+      <font-face-src>
+        <font-face-name name="Monaco"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Times New Roman" font-size="9" panose-1="2 2 8 3 7 5 5 2 3 4" units-per-em="1000" underline-position="-108.88672" underline-thickness="95.21484" slope="0" x-height="456.54297" cap-height="662.1094" ascent="891.1133" descent="-216.3086" font-weight="bold">
+      <font-face-src>
+        <font-face-name name="TimesNewRomanPS-BoldMT"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <g stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>intro</title>
+    <rect fill="white" width="576" height="733"/>
+    <g>
+      <title>Layer 1</title>
+      <text transform="translate(56.93356 254.93757)" fill="black">
+        <tspan font-family="Monaco" font-size="9" font-weight="500" x=".19604492" y="9" textLength="48.60791">bathrooms</tspan>
+      </text>
+      <text transform="translate(67.93356 295.92427)" fill="black">
+        <tspan font-family="Monaco" font-size="9" font-weight="500" x=".28857422" y="9" textLength="140.42285">40.6661&lt;=latitude&lt;=40.6663</tspan>
+      </text>
+      <text transform="translate(95.77662 330.61757)" fill="black">
+        <tspan font-family="Monaco" font-size="9" font-weight="500" x=".18725586" y="9" textLength="156.62549">-73.9882&lt;=longitude&lt;=-73.9402</tspan>
+      </text>
+      <line x1="208.14998" y1="380.51996" x2="182.37953" y2="403.7866" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <line x1="216.48332" y1="380.8533" x2="247.97953" y2="404.1866" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <text transform="translate(189.17952 367.3109)" fill="black">
+        <tspan font-family="Monaco" font-size="9" font-weight="500" x=".39648438" y="9" textLength="43.20703">bedrooms</tspan>
+      </text>
+      <text transform="translate(187.37952 383.3109)" fill="black">
+        <tspan font-family="Monaco" font-size="9" font-weight="500" fill="black" x=".29956055" y="9" textLength="5.400879">1</tspan>
+      </text>
+      <text transform="translate(234.97953 383.3109)" fill="black">
+        <tspan font-family="Monaco" font-size="9" font-weight="500" fill="black" x=".29956055" y="9" textLength="5.400879">2</tspan>
+      </text>
+      <text transform="translate(229.75883 405.51767)" fill="#4675b4">
+        <tspan font-family="Monaco" font-size="7" font-weight="500" fill="#4675b4" x=".49658203" y="7" textLength="42.006836">2200,2100,</tspan>
+        <tspan font-family="Monaco" font-size="7" font-weight="500" fill="#4675b4" x=".49658203" y="16.584473" textLength="42.006836">2100,2200,</tspan>
+        <tspan font-family="Monaco" font-size="7" font-weight="500" fill="#4675b4" x=".49658203" y="26.168945" textLength="42.006836">2100,1800,</tspan>
+        <tspan font-family="Monaco" font-size="7" font-weight="500" fill="#4675b4" x="13.098633" y="35.75342" textLength="16.802734">1800</tspan>
+      </text>
+      <text transform="translate(161.6576 405.60214)" fill="#4675b4">
+        <tspan font-family="Monaco" font-size="7" font-weight="500" fill="#4675b4" x=".49658203" y="7" textLength="42.006836">2500,2500,</tspan>
+        <tspan font-family="Monaco" font-size="7" font-weight="500" fill="#4675b4" x="2.5969238" y="16.584473" textLength="37.806152">2500,2350</tspan>
+      </text>
+      <line x1="135.75087" y1="307.4933" x2="167.24708" y2="330.82664" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <line x1="92.32139" y1="269.77332" x2="123.8176" y2="293.10665" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <text transform="translate(106.96185 270.44426)" fill="black">
+        <tspan font-family="Monaco" font-size="9" font-weight="500" fill="black" x=".29956055" y="9" textLength="5.400879">1</tspan>
+      </text>
+      <text transform="translate(153.6576 308.61757)" fill="black">
+        <tspan font-family="Monaco" font-size="9" font-weight="500" fill="black" x=".19824219" y="9" textLength="21.603516">true</tspan>
+      </text>
+      <line x1="85.12467" y1="269.77332" x2="77.92467" y2="279.77332" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <text transform="translate(73.70612 275.08216)" fill="black">
+        <tspan font-family="Times New Roman" font-size="9" font-weight="bold" fill="black" x=".125" y="8" textLength="6.75">...</tspan>
+      </text>
+      <line x1="127.65855" y1="307.4933" x2="120.45855" y2="317.4933" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <text transform="translate(116.24 312.80215)" fill="black">
+        <tspan font-family="Times New Roman" font-size="9" font-weight="bold" fill="black" x=".125" y="8" textLength="6.75">...</tspan>
+      </text>
+      <line x1="169.67614" y1="344.18663" x2="162.47614" y2="354.18663" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <text transform="translate(158.2576 349.49547)" fill="black">
+        <tspan font-family="Times New Roman" font-size="9" font-weight="bold" fill="black" x=".125" y="8" textLength="6.75">...</tspan>
+      </text>
+      <line x1="178.03735" y1="344.18663" x2="209.53355" y2="367.51996" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <text transform="translate(195.94407 345.3109)" fill="black">
+        <tspan font-family="Monaco" font-size="9" font-weight="500" fill="black" x=".19824219" y="9" textLength="21.603516">true</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

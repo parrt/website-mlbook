@@ -1,0 +1,683 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+<link rel="stylesheet" type="text/css" href="css/book.css"/>
+</head>
+<body>
+<div class="watermark">
+<i>Work in progress</i><br>
+Book version 0.1
+</div>
+
+<h1>A First Taste of Machine Learning</h1>
+
+<p><a href="http://parrt.cs.usfca.edu">Terence Parr</a> and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
+
+<p style="font-size: 80%">Copyright &copy; 2018 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.</p>
+
+
+
+
+<div id="toc">
+<p class="toc_title">Contents</p>
+<ul>
+	<li><a href="#sec0">Learning to Learn about Apartment Data</a></li>
+	<ul>
+			<li><a href="#">Learning by rote</a></li>
+			<li><a href="#">Getting to know the neighbors</a></li>
+			<li><a href="#">Drawing the line</a></li>
+			<li><a href="#">Walking through the trees</a></li>
+
+	</ul>
+	<li><a href="#sec0">Predicting New York City Apartment Rent</a></li>
+	<ul>
+			<li><a href="#">Computer environment sanity check</a></li>
+			<li><a href="#">Loading and sniffing the training data</a></li>
+			<li><a href="#">Training a random forest model</a></li>
+			<li><a href="#">Does the model capture training data relationships?</a></li>
+			<li><a href="#">Improving the model</a></li>
+			<li><a href="#">Checking model generality</a></li>
+			<li><a href="#">Fiddling with model hyper-parameters</a></li>
+			<li><a href="#">What the model says about the data</a></li>
+			<li><a href="#">Swapping out the model</a></li>
+
+	</ul>
+	<li><a href="#sec0">The Big Picture</a></li>
+	<ul>
+	</ul>
+
+</ul>
+</div>
+
+<p>&ldquo;<i>Without data you're just another person with an opinion</i>&rdquo; &mdash; W. Edwards Deming</p>
+<p>In densely-populated cities, such as San Francisco and New York, everyone's favorite topic is the cost of housing. There's nothing quite as invigorating as writing a check for US$4200/month to rent a single bedroom apartment (as renters do down the street from Terence's place in San Francisco's Mission District). People are always comparing rent prices because they want to know if they're overpaying or getting a good deal. The idea is to collect information on similar apartments and then compare prices. Real estate agents tend to have more data and are, hopefully, able to provide more accurate rent estimates.</p>
+<span class=sidenote><span class=sup>1</span>A nice alliteration by Navid Amini  https://scholar.google.com/citations?user=tZTnipEAAAAJ</span>
+<p>The problem, of course, is that large amounts of data quickly overwhelm the human mind and so we turn to computers for help. Unfortunately, basic statistics aren't sufficient to handle interesting problems like apartment rent prediction. Instead, we need <i>machine learning</i> to discover relationships and patterns in data, which is the subject of this book. Simply put, machine learning turns experience into expertise,<span class=sup>1</span> generalizing from training data to make  accurate predictions or classifications in new situations (for previously unseen data). </p>
+<p>In this first chapter, our goal is to show just how easy it is apply machine learning to get excellent rent price predictions from an idealized New York City rent data set (derived from a <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Kaggle competition</a>).  Along the way, we'll define a number of important terms and concepts commonly used by machine learning practitioners and give a general overview of the machine learning process. For the Python code snippets in this chapter, feel free to just cut-and-paste them blindly and don't sweat the details. In the next chapter, <span style="color: red">[tour]</span>, we're going to solve the same problem but in more detail and using the original data set, which needs to be cleaned up. We'll also recommend a work environment and give the key libraries a workout as we demonstrate the mechanics of machine learning.</p>
+
+
+<h2 id="sec0">Learning to Learn about Apartment Data</h2>
+
+<p>Instead of leaping immediately to our recommended solution, let's try to invent a technique for predicting apartment rent prices in New York City. It'll highlight the difficulty of the problem and help us understand the machine learning approach.  Without understanding the underlying algorithms, we can't successfully apply machine learning.   We must be able to choose the right algorithm for a particular problem and be able to properly prepare data for that algorithm. By starting simply and going down a few dead ends, we'll also motivate the construction of more sophisticated techniques. </p>
+<p>First, we have to clearly define the problem. Given four attributes of an apartment, the number of bedrooms, the number of bathrooms, and location (longitude, latitude) we want to <i>predict</i> (determine) the price. Those apartment attributes are called <i>features</i> and the price is called the <i>target</i>.  We're usually given data in the form of a table like the following (see file <span class=inlinecode>data/rent-ideal.csv</span>).</p>
+<p><img src="images/intro/rent-idea-head-annotated.png" width="55%"></p>
+<p>This data is called <i>training data</i> or the <i>training set</i> because we, or a program, must learn from this &ldquo;experience&rdquo; in order to make predictions. (It's often convenient to treat all of the features for a single record as a single <i>feature vector</i> called <span class=inlinecode>X</span> and to call the target scalar <span class=inlinecode>y</span>; a <i>vector</i> is a list of numbers.)</p>
+<p>The central problem of machine learning is to build a system that is accurate without being overly-specific to this training data (assuming the data has an underlying relationship to capture).</p>
+<p>It's easy to build a system that makes accurate predictions for items in the training set. All we have to do is memorize the apartments and their prices (in this context) then look up the price for an apartment in the training data when asked to do so. At the other extreme, we could compute the average rent across all apartments and predict that price for any apartment look up, inside or outside of the training data. The overall average rent would not be super accurate for a specific apartment, but it would give a ballpark figure, easily distinguishing rent from, say, a hot pastrami sandwich at Katz's delicatessen on E. Houston Street ($21.45).   </p>
+<p>Memorization doesn't generalize beyond the training data but is precise.  Blurring all apartments together obviously yields a prediction for any apartment we present but is not precise at all.   Somewhere in between lies effective machine learning. Let's start with just memorizing the training data and work our way towards a system that properly generalizes.</p>
+
+
+<h3 id="">Learning by rote</h3>
+
+<p>Given the training data, we can reasonably predict a price of $5,465 for an apartment with two bedrooms and one bathroom at location coordinates 40.7947,-73.9667 because that comes straight from the second row of the table.  To get perfect accuracy, we can interpret the learning process conceptually as just filling up a dictionary that maps a four-element key to a single value (price), something like this:</p>
+
+
+<div class="codeblk">model = {}
+def train(bedrooms, bathrooms, latitude, longitude, price):
+	model[(bedrooms, bathrooms, latitude, longitude)] = price</div>
+
+
+<p>In the vocabulary of machine learning, we are &ldquo;<i>training</i> a <i>model</i>,&rdquo;  where the model here is a dictionary data structure. Training in this case simply means to remember all apartment data with perfect recall.</p>
+<p>But this training process assumes that all apartment records are unique, which is not a valid assumption.  For example, here are four studio apartments with the same (bedrooms, bathrooms, latitude, longitude) feature vector but different (eye-popping!) prices:</p>
+<div class="scrollbar_wrapper">
+<table class="dataframe">
+<thead>
+	<tr><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2650</td>
+	</tr>
+	<tr>
+	<td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2850</td>
+	</tr>
+	<tr>
+	<td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2950</td>
+	</tr>
+	<tr>
+	<td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2850</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Having multiple prices for the same feature vector represents an uncertainty.  Which of the four prices should the model return? There's likely a good reason for the difference in prices, such as view or square footage, but we don't have that data. Or, as we'll see in the next chapter, data is sometimes noisy or just plain wrong.  Either way, we need to deal with this uncertainty because repeated keys cause our rudimentary training process to overwrite previous prices.</p>
+<p>Because our goal is to generalize, giving a good estimate for apartments not in our training data, we should aim for the expected rent value considering all apartments in the city with the same attributes. Another term for expected value is &ldquo;average&rdquo; so let's just record the average, which is what a human expert would do implicitly. In this case, we'd record an average price ($2,825) and yield that value when asked to predict the price of an apartment with those features. The more sample prices in our training data we have for a particular set of apartment attributes, the better the estimate of the true average price we'd get.   This works well and is actually a kind of lossy compression because we have merged records, at the cost of less specific predictions.</p>
+<p>Aggregating records for identical apartment feature vectors and recording their average rent dips a toe into the as-yet murky waters of machine learning.  We are creating an aggregate price for a prototypical apartment of a particular type, in a sense learning what the price should be or is expected to be for that type of apartment. This gives us a hint that machine learning is a just a sensible combination of data structures, algorithms, and statistics.  As we continue, hopefully you'll see that machine learning is not some mysterious and arcane mechanism that takes forever to learn.</p>
+
+
+<h3 id="">Getting to know the neighbors</h3>
+
+<p>The problem with the rudimentary dictionary model is that it's super rigid in that it can't deal with uncertainty in the apartment feature vectors themselves.  (Previously-unseen apartment feature combination raise a &ldquo;key error&rdquo; during look up.) How should we predict the price of an apartment whose features don't exactly match an entry in the training data?</p>
+<p>An interesting solution is to keep the original training data as-is and then scan for the apartment record whose features most closely match the features of the apartment for which we'd like a price. As before, there could be multiple prices for that closest matching record and so we'd want to average those prices to yield the prediction.  Believe it or not, such a simple model is very powerful (for appropriate data sets) and is variation on the <i>nearest neighbor</i> predictor, which we'll study in detail later (<span style="color: red">[kNN]</span>).</p>
+<p>The only problem with the nearest neighbor model is performance. We have to keep the entire training data set around as the model and we have to linearly scan all of the records looking for the closest match for an apartment feature vector.  In contrast to the dictionary model, there is no training process, but apartment lookup (prediction) is very slow.</p>
+<p>Another way to handle uncertainty in the apartment features, is to merge records as we did before. We can group apartment records by a combination of bedrooms and bathrooms and compute the average price for each group. This approach works in this case because there are only so many combinations of numbers of bedrooms and bathrooms; we can cover them all. For example, here are the first few average prices per bedrooms/bathrooms combination:</p>
+<div class="scrollbar_wrapper">
+<table class="dataframe">
+<thead>
+	<tr><th>bedrooms</th><th>bathrooms</th><th>price</th></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>0.0000</td><td>2872.9272</td>
+	</tr>
+	<tr>
+	<td>0</td><td>1.0000</td><td>2443.4782</td>
+	</tr>
+	<tr>
+	<td>0</td><td>1.5000</td><td>3391.1111</td>
+	</tr>
+	<tr>
+	<td>0</td><td>2.0000</td><td>5354.0714</td>
+	</tr>
+	<tr>
+	<td>0</td><td>4.0000</td><td>7995.0000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>0.0000</td><td>2944.1918</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>3016.4069</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>(You gotta like New York City and its quirky apartments; apparently you can rent  places with no bedroom but 4 bathrooms for an average of $7995/month!)</p>
+<p>At the cost of specificity, merging dramatically reduces the size of the data set, from 48,266 records down to 51 records for this data set. A dictionary or linear scan could quickly find the bedrooms/bathrooms combination to make a prediction. Of course, this approach completely ignores location, which we know to be important. The group averages are hiding a lot of variability between apartments. We could make a secondary index that grouped apartments by latitude/longitude to get a second estimate based solely on the location.  But it's unclear how we would merge the two rent estimates into a single prediction.  Such an ad hoc approach sometimes works but requires a lot of thought and is highly dependent upon the data set. We need a more systematic approach.</p>
+
+
+<h3 id="">Drawing the line</h3>
+
+<p>We could try a &ldquo;mathy&rdquo; approach where we weight each feature by how important it is then use a weighted sum to estimate rent prices:</p>
+<p><img style="vertical-align: -2.7825pt;" src="images/eqn-576FAA65E2A17721D10E7261E68917A0-depth002.65.svg"></p>
+<p>This equation boils all of our rent training data down to just four numbers, <span class=eqn>w<sub>i</sub></span>, which comprise our model. (That's an amazing compression!)  Better yet, making a prediction is superfast because it's just four multiplies and four additions.</p>
+<p>This approach often works well and is called a <a href="https://en.wikipedia.org/wiki/Linear_regression">linear model</a> or <i>linear regression</i> because it tries to draw a line (or plane when given more than two dimensions) through the training data. (Recall the formula for a line from high school algebra, <img style="vertical-align: -2.7825pt;" src="images/eqn-6D74D8F1C6D1196D2E75893F266AE552-depth002.65.svg">.)   The technique has been around for over 200 years and mathematicians have an elegant formula to conjure up suitable <span class=eqn>w<sub>i</sub></span> weights.</p>
+<span class=sidenote>
+<img src="/tmp/mlbook/images/intro/intro_stats_4.svg"
+  width="100%"
+>
+<br><b>Figure 1</b>. Price per number of bathrooms and linear regression fit line</span>
+<p>For this data set, unfortunately, a linear model is not a good choice because such models treat every feature as a single trend with lower rent on one side and higher rent on the other, or vice versa.  For example, it's reasonable to assume that rent prices would go up as the number of bathrooms goes up, but the data doesn't support that conclusion. <b>Figure 1</b> shows the average rent for all apartments with the same number of bathrooms with dots where we actually have data.</p>
+<p>The &ldquo;best fit,&rdquo; red line minimizes the difference between the line and the actual average price but is clearly a terrible predictor of price. In this case, there is something weird going on beyond 4 bathrooms. (10 bathrooms and only $3500/month? One can only imagine what those places look like.) Consequently, a single line is a poor fit and does not capture jagged relationships like this very well.</p>
+
+
+<h3 id="">Walking through the trees</h3>
+
+<p>A more sophisticated approach would treat different ranges of a feature's values  separately, giving a different rent estimate per range.  Each feature range would have a different prototypical apartment.  But, we have to be careful not to create a model that is too specific to the training data because it won't generalize well. We don't want to go lurching back to the other extreme towards a dictionary model that memorizes exact apartment feature vector to price relationships.</p>
+<p>We want a model that gracefully throttles up, splitting a feature's values into as many ranges as necessary to get decent accuracy but without creating so many tight ranges it kills generality.  To see how such a model might work, let's consider the rent prices for one-bath, one- and two-bedroom apartments in a very small rectangular region of New York:</p>
+<div class="scrollbar_wrapper">
+<table class="dataframe">
+<thead>
+	<tr><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2200</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2100</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2100</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2200</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2100</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2500</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2500</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2500</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>40.6663</td><td>-73.9402</td><td>1800</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>40.6663</td><td>-73.9402</td><td>1800</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1.0000</td><td>40.6663</td><td>-73.9402</td><td>2350</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>An easy but tedious way to capture the relationship between the feature values and the associated price would be to define some rules in Python:</p>
+
+
+<div class="codeblk">if bedrooms==1 and bathrooms==1.0 and \
+   latitude>=40.6661 and latitude<=40.6663 and \
+   longitude>=-73.9882 and longitude<=-73.9402:
+	price = 2143 # average of 2200,2100,2100,2200,2100,1800,1800
+if bedrooms==2 and bathrooms==1.0 and \
+   latitude>=40.6661 and latitude<=40.6663 and \
+   longitude>=-73.9882 and longitude<=-73.9402:
+	price = 2462 # average of 2500,2500,2500,2350</div>
+
+
+<p>With enough coffee, we should be able to come up with the rules to carve up the <i>feature space</i> (4-dimensional space of all possible bedrooms, bathrooms, latitude, longitude combinations) into clusters.  Ideally, each cluster would contain apartments with similar attributes and similar rent, as is the case for this subsample.  To make a rent prediction, we'd execute the rules until we get a match for the apartment features of interest.</p>
+<p>Unlike the dictionary model, these rules can handle previously unseen data. For example, imagine a one-bedroom, one-bathroom apartment at location 40.6612,-73.9800 that does not exist in the training data. The first rule applies and so the model would predict rent of $2,143. This model generalizes (at least somewhat) because it deals in ranges of feature values not exact feature values. </p>
+<p>The size and number of feature value ranges used by the model represent a kind of an accuracy &ldquo;knob.&rdquo; Turning the knob one way increases generality but makes the model potentially less accurate. In the opposite direction, we can make the ranges tighter and the model more accurate, but we potentially lose generality. A model that is overly-specific to the training data and not general enough is said to <i>overfit</i> the training data. The opposite, naturally, is an <i>underfit</i> model that doesn't capture the relationships in the training data well, which also means that it won't generalize well.</p>
+<p>Okay,  now we have a model that is potentially accurate and general but prediction through sequential execution of numerous <span class=inlinecode>if</span>-statements would be pretty slow. The trick to making prediction efficient is to factor and nest the rules so they share comparisons to avoid repeated testing:</p>
+
+
+<div class="codeblk">if bathrooms==1.0:
+    if latitude>=40.6661 and latitude<=40.6663 and \ 
+       longitude>=-73.9882 and longitude<=-73.9402:
+        if bedrooms==1: price = 2143
+        elif bedrooms==2: price = 2462</div>
+
+
+<span class=sidenote>
+
+<center>
+<img src="images/intro/dec-tree.svg" width="100%">
+</center>
+
+<br><b>Figure 2</b>. Sample decision tree</span>
+<p>Another way to encode those nested rules is with a tree data structure, where each node performs a comparison. <b>Figure 2</b> is a visual representation of what such a tree might look like.  Predicting rent using such a tree costs just four comparisons as we descend from root to the appropriate leaf, testing features as we go. The leaves of the tree contain the prices for all apartments fitting the criteria on the path from the root down to that leaf.  Trees like this are called  <i>decision trees</i> and, if we allow the same feature to be tested multiple times, decision trees can carve up feature spaces into arbitrarily tight clusters. </p>
+<p>The problem with decision trees is that they tend to get too specific; they overfit training data. For example, we could build a decision tree that carved up the feature space so that each leaf corresponded to a single apartment. That'd provide precise answers but, as with our rudimentary dictionary model, such a specific tree would not generalize. </p>
+<p>To prevent overfitting, we can weaken the decision tree by reducing its accuracy in a very specific way: by training the tree on a random selection of the training data instead of all members of the data set.  (Technically, we are <a href="https://en.wikipedia.org/wiki/Bootstrapping_(statistics)">bootstrapping</a>, which randomly selects records but with replacement, meaning that a record can appear multiple times in the bootstrapped sample; <span style="color: red">[RF]</span> explores this in detail.) Because not all elements from the original data set are present, we have a coarser view of the training data so the comparison ranges in our decision tree nodes will necessarily be broader. </p>
+<p>To compensate for this weak learner, we can create lots of them and take the average of their individual predictions to make an overall rent prediction.  We call this <a href="https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/springerEBR09.pdf">ensemble learning</a> and it's an excellent general technique to increase accuracy without such a strong tendency to overfit <span style="color: red">{TODO: is true?}</span>.  To reduce overfitting even further, we can add a bit more randomness in terms of how we select features to compare at each decision tree node.  </p>
+<p>Introducing more randomness gives us a <i>Random Forest</i>(tm), which we recommend as your model of choice for the majority of machine learning problems encountered in practice. We'll learn exactly how random forests work in <span style="color: red">[RF]</span> and establish why that model is the Swiss Army Knife (tm) of the machine learning world. A random forest behaves very much like a real estate agent that looks for &ldquo;comps&rdquo;, comparable units, to estimate prices. Both are carving up the feature space, aggregating units to form prototypical apartments and their expected prices.</p>
+<p>Now that we've peeked behind the curtain to get an idea of how machine learning algorithms learn from training data, let's train a random forest on our apartment data to see how well it can predict rent prices.</p>
+
+
+
+<h2 id="sec0">Predicting New York City Apartment Rent</h2>
+
+<p>Ok, we've got some idea of what's going on at a high level, so let's dig into the actual mechanics of applying machine learning to this real problem. You might be surprised at how little code it takes! Again, don't worry about the details, which we'll go over again in the next chapter anyway. The main take away should be the basic process and some idea of what machine learning code looks like. We're going to train and compare multiple random forest predictors, test models appropriately, and learn something about the rental market from the models. (Hint: New Yorkers apparently <i>really</i> care about bathrooms.) Before we  get started, let's make sure that we all have the same version of Python 3 and the necessary libraries.</p>
+
+
+<h3 id="">Computer environment sanity check</h3>
+
+<span class=sidenote><span class=sup>2</span>&nbsp;<tt>https://anaconda.org</tt></span>
+<p>Because we assume you know how to program in Python, we assume your machine is set up reasonably to edit and execute Python code.  We need to make sure, however, that all of the machine learning libraries we need are installed and that Python 3 is the default on your systems. The easiest way is to download and install Anaconda<span class=sup>2</span> for Python 3.</p>
+<span class=sidenote><span class=sup>3</span>During installation on Windows, make sure to check the box that adds Python to your <span class=inlinecode>PATH</span> environment variable, for which you will need administrator privileges.</span>
+<p>Download and install the Python 3.6 or higher version of Anaconda using the &ldquo;64-bit graphical installer.&ldquo; <span class=sup>3</span> Use the &rdquo;just for me&rdquo; option so that the installer puts Anaconda in your home directory so we all have it in the same spot: <span class=inlinecode>C:\Users\YOURID\Anaconda3</span> on Windows and <span class=inlinecode>/Users/YOURID/anaconda3</span> on Mac (similar on any UNIX machine). The libraries are big and so you'll need 2.4G of disk space. To verify everything is installed properly, you should try to import a library, as Terence demonstrates here on his computer from the Mac (UNIX) command line:</p>
+
+
+<div class="codeblk">$ which python3
+/Users/parrt/anaconda3/bin/python3
+$ python3
+Python 3.6.3 |Anaconda custom (64-bit)| (default, Oct  6 2017, 12:04:38) 
+[GCC 4.2.1 Compatible Clang 4.0.1 (tags/RELEASE_401/final)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import pandas as pd
+>>></div>
+
+
+<p>On windows, you can start the Python 3 interpreter from the PowerShell (if <span class=inlinecode>python</span> is in your <span class=inlinecode>PATH</span>) or via the  &ldquo;anaconda prompt&rdquo; launched from the start menu:</p>
+
+
+<div class="codeblk">(C:\Users\parrt\Anaconda3) C:\Users\parrt>python
+Python 3.6.3 |Anaconda, Inc.| (default, Oct 15 2017, 03:27:45) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import pandas as pd
+>>></div>
+
+
+<p>If you get the <span class=inlinecode>>>></span> prompt back and don't get any errors, you are good to go!</p>
+<p>We will also need a package called <span class=inlinecode>rfpimp</span> that gives us a reliable way to compare the predictive value of the various apartment features:</p>
+
+
+<div class="codeblk">$ pip install rfpimp</div>
+
+
+
+<h3 id="">Loading and sniffing the training data</h3>
+
+<p>The first step in the machine learning process is to load our training data, <span class=inlinecode>rent-ideal.csv</span> from this book's <a href="https://github.com/parrt/website-mlbook/data">data</a> directory, which we'll do with the help of your new BFF (best friend forever) <a href="https://pandas.pydata.org/">Pandas</a>. Once we import the Pandas library, giving it the standard short alias <span class=inlinecode>pd</span>, we can call function <span class=inlinecode>read_csv()</span> to open a file of comma-separated value records (one apartment record per line and with a header row with column names):</p>
+
+
+<div class="codeblk">import pandas as pd # Import the library and give a short alias: pd
+rent = pd.read_csv("data/rent-ideal.csv")
+</div>
+
+<p>The result stored into variable <span class=inlinecode>rent</span> is called a <i>data frame</i> and works like a spreadsheet or a database table, with rows and named columns. Here's how to print out the first five records:</p>
+
+
+<div class="codeblk">print(rent.head(5))
+</div>
+
+<p class="stdout">   bedrooms  bathrooms  latitude  longitude  price
+0         3        1.5   40.7145   -73.9425   3000
+1         2        1.0   40.7947   -73.9667   5465
+2         1        1.0   40.7388   -74.0018   2850
+3         1        1.0   40.7539   -73.9677   3275
+4         4        1.0   40.8241   -73.9493   3350
+</p>
+<p>You can literally just cut-and-paste those three lines into a Python file and run the file to get that output, assuming you give <span class=inlinecode>read_csv()</span> the correct path to the data file. All of the code snippets in this section are pieces of the same large script.</p>
+<p>Once we have a data frame, we can ask it all sorts of questions. For example, we can pull out the price column using <span class=inlinecode>rent['price']</span> and then ask for the average (mean) rent:</p>
+
+
+<div class="codeblk">prices = rent['price']
+avg_rent = prices.mean()
+print(f"Average rent is ${avg_rent:.0f}")
+</div>
+
+<p class="stdout">Average rent is $3439
+</p>
+<p>Just like spreadsheet <a href="https://en.wikipedia.org/wiki/Pivot_table">pivot tables</a> or the database <a href="https://www.w3schools.com/sql/sql_groupby.asp">group by</a> operator, we can do some pretty fancy data aggregation with Pandas. The following code groups the training data by the number of bathrooms and computes the mean price (actually mean of all of the other columns too):</p>
+
+
+<div class="codeblk">bybaths = rent.groupby(['bathrooms']).mean()
+bybaths = bybaths.reset_index() # overcome quirk in Pandas
+print(bybaths[['bathrooms','price']]) # print just num baths, avg price
+</div>
+
+<p class="stdout">   bathrooms        price
+0        0.0  3144.870000
+1        1.0  3028.111035
+2        1.5  4226.336449
+3        2.0  5278.595739
+4        2.5  6869.047368
+5        3.0  6897.974576
+6        3.5  7635.357143
+7        4.0  7422.888889
+8        4.5  2050.000000
+9       10.0  3600.000000
+</p>
+<p>Pandas also has excellent graphing facilities, courtesy of your next best friend, a sophisticated plotting library called <a href="https://matplotlib.org/">matplotlib</a>. Here's how to plot the price against the number of bathrooms:</p>
+<span class=sidenote>
+&#187; <i>Graph generated by code to left</i><br>
+<img src="/tmp/mlbook/images/intro/intro_go_5.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">import matplotlib.pyplot as plt
+
+bybaths.plot.line('bathrooms','price', style='-o')
+plt.show()</div>
+
+
+<h3 id="">Training a random forest model</h3>
+
+<p>To train a model, we split the data frame into the feature columns (the predictors) and the target (predicted) column, which practitioners typically call variables <span class=inlinecode>X</span> and <span class=inlinecode>y</span>. Let's train a model that just considers the number of bathrooms for prediction purposes. Here's how to extract the appropriate feature vectors and target column:</p>
+
+
+<div class="codeblk">X, y = rent[['bathrooms']], rent['price']
+</div>
+
+<p>Variable <span class=inlinecode>X</span> is a data frame (list of columns) with the bathrooms column whereas <span class=inlinecode>y</span> is the price column:</p>
+
+
+<div class="codeblk">print(type(X), type(y))
+</div>
+
+<p class="stdout">&lt;class 'pandas.core.frame.DataFrame'> &lt;class 'pandas.core.series.Series'>
+</p>
+<span class=sidenote><span class=sup>4</span>The surface area of the Python libraries for machine learning is vast and it's difficult to tell where one library stops and the other starts, because they are so intertwined.</span>
+<p>The random forest implementation we're going to use is from yet another awesome library called <a href="http://scikit-learn.org/stable/">scikit-learn</a>.<span class=sup>4</span> In particular, we'll use class <span class=inlinecode>RandomForestRegressor</span> where <i>regressor</i> is another (poorly chosen) term for predictor that statisticians like to use. Here is the simple incantation that trains a random forest on our apartment rent data:</p>
+
+
+<div class="codeblk">from sklearn.ensemble import RandomForestRegressor
+
+rf = RandomForestRegressor()
+rf.fit(X, y)
+</div>
+
+<p>To actually make a prediction, we call <span class=inlinecode>predict()</span> with a list of one or more feature vectors.  Because we trained our model with just one feature, making a prediction for a single feature vector looks a bit strange: <span class=inlinecode>rf.predict([[0]])</span>. The <span class=inlinecode>[[0]]</span> Python expression is a list with one element that is also a list, whose first element is <span class=inlinecode>0</span>.  Here's how to ask the model to predict prices for apartments with zero or one bathrooms:</p>
+
+
+<div class="codeblk">print( rf.predict([[0], [1]]) )
+</div>
+
+<p class="stdout">[3175.43601774 3029.23187161]
+</p>
+<p>Those predictions seem a bit off because it appears an apartment with no bathroom is slightly more expensive than an apartment with one bathroom, but that's exactly what the training data shows in the scatterplot above. The model has captures the underlying bathrooms versus price relationship in the training data well.</p>
+
+
+<h3 id="">Does the model capture training data relationships?</h3>
+
+<p>Once we've trained a model, we have to test it, just like we do with software before deployment. There are two things to test. First, we verify that the model fits the training data well, meaning that the model captures the relationship in the training data between feature vectors and the targets. In this case, we assume there is a relationship between the number of bathrooms and the rent so we'd like to know how well the model captures that relationship. Second, we verify that the model generalizes, yielding reasonable rent predictions for feature vectors not in the training set. We'll worry about generalization later, after we've built a stronger model.</p>
+<p>To see how well the model fits the training data, we pass the feature vectors of the training data back into the model and compare the predictions to the known actual prices.  At this point in our process, we don't care about generality. We're just checking that our model can reproduce the original training data with some degree of accuracy. If the model can't make accurate predictions for apartments it trained on, then there's no hope the model will generalize to previously-unseen apartments.</p>
+<p>There are number of common error metrics that practitioners use, but in this case, measuring the average difference between predicted and actual prices is a good metric. In other words, we'll make a prediction for every apartment and subtract that from the actual price found in the training data (and take absolute value). The average of those differences is the average absolute error and scikit provides a ready-made function to compute that. Here's how to run the training data back into the model and print out how far off model is on average (and the percentage of the average that represents):</p>
+
+
+<div class="codeblk">from sklearn.metrics import mean_absolute_error
+
+predictions = rf.predict(X)
+e = mean_absolute_error(y, predictions)
+print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
+</div>
+
+<p class="stdout">$808 average error; 23.49% error
+</p>
+<p>That means a user of this model can expect the predicted price for an apartment in the training data to be off by about $808, which is not great but we're only using single predictor feature.  Let's add some more features to the model to see if we can improve the average error.</p>
+
+
+<h3 id="">Improving the model</h3>
+
+<p>Creating a good model is more about <i>feature engineering</i> than it is about choosing the right model.  Feature engineering means acquiring or even <i>synthesizing</i> features that are strong predictors of the target.   Synthesizing features means deriving new features from existing features or injecting features from other data sources. For example, we could synthesize the name of the neighborhood from the latitude and longitude in the apartment data.  It doesn't matter how sophisticated our model is if we don't give it something useful to chew on. If there is no relationship to discover, because the features are not predictive, no machine learning model is going to give accurate predictions.</p>
+<p>At this point, we've only used one of the four apartment attributes as features in our model, so the natural thing to do is to try adding another feature and see how it affects model accuracy on the training set. Let's add in the number of bedrooms to our feature set and retrain model:</p>
+
+
+<div class="codeblk">X, y = rent[['bedrooms','bathrooms']], rent['price']
+
+rf = RandomForestRegressor()
+rf.fit(X, y)
+</div>
+
+<p>We can also check how well this model fits the training data as we did before:</p>
+
+
+<div class="codeblk">predictions = rf.predict(X)
+e = mean_absolute_error(y, predictions)
+print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
+</div>
+
+<p class="stdout">$723 average error; 21.01% error
+</p>
+<p>That's an improvement in expected rent prediction error on the training set of 808-722 = $86, or around 10%. That gives us a hint that the number of bedrooms is not as predictive as the number of bathrooms; we'll see a more formal way to check that below.</p>
+<p>They say that three most important property attributes in real estate are: location, location, location. Let's test that hypothesis with our rental data, using just the two columns associated with map location:</p>
+
+
+<div class="codeblk">X, y = rent[['latitude','longitude']], rent['price']
+rf = RandomForestRegressor()
+rf.fit(X, y)
+e = mean_absolute_error(y, rf.predict(X))
+print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
+</div>
+
+<p class="stdout">$523 average error; 15.20% error
+</p>
+<p>Ok, now we're getting somewhere. The average prediction error on the training set has dropped to $525. You might  compare the difference the 21% error for the model fit on bedrooms and bathrooms and this 15% error and think &ldquo;it's only 6%.&rdquo; It's better to think of this as the ratio 15/21 = 71% rather than the difference 21-15. The ratio says that our prediction error relative to the average rent price got 100-71 = 29% better (lower). That more accurately represents how much better location helps the model fit the training data.</p>
+<p>Let's see what happens if we combine all four attributes into our feature vector and retrain the model:</p>
+
+
+<div class="codeblk">X, y = rent[['bedrooms','bathrooms','latitude','longitude']], rent['price']
+rf = RandomForestRegressor()
+rf.fit(X, y)
+e = mean_absolute_error(y, rf.predict(X))
+print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
+</div>
+
+<p class="stdout">$190 average error; 5.53% error
+</p>
+<p>Great!  The average error in the predicted price for an apartment in the training data is down to only $190. Alas, we shouldn't get too excited because all we've shown so far is that our model captures the relationships in the training data. We know nothing about the model's generality.</p>
+
+
+<h3 id="">Checking model generality</h3>
+
+<p>The true measure of model quality is its generality: how accurately it predicts prices for apartment feature vectors not found in the training data. Even a crappy model like a dictionary can memorize training data and spit back accurate prices for that same training data.  To test for model generality, we need a validation strategy. This is a big, important topic and one that we'll revisit throughout the book. For now, let's look at the two most common validation strategies: <i>hold out</i> and <span class=eqn>k</span>-<i>fold cross validation</i>.</p>
+<p>We were given a single data set: the training data. If we train on that entire data set, how can we measure accuracy on data not in the training set? We don't have any other data to use for validation. The answer is to hold out, say, 20% of the training data, splitting the original data set into two: a smaller training set and a <i>validation set</i>. Validation set is data used only for generality testing of our model, not in training the model. Which 20% to hold out is sometimes nontrivial, but for the apartment data, a random subset is perfect.</p>
+<p>Scikit has a built-in function to split data sets, so let's retrain our random forest model using 80% of the data and check the average price error using the 20% in the validation set this time:</p>
+
+
+<div class="codeblk">from sklearn.model_selection import train_test_split
+
+X, y = rent[['bedrooms','bathrooms','latitude','longitude']], rent['price']
+# 20% of data goes into test set, 80% into training set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) 
+
+rf = RandomForestRegressor()
+rf.fit(X_train, y_train)
+
+e = mean_absolute_error(y_test, rf.predict(X_test))
+print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
+</div>
+
+<p class="stdout">$293 average error; 8.51% error
+</p>
+<p>Comparing the average error $304 from the validation set and the $190 error on data from the training set, we see that the model performs about 1/3 better on the training data. This is as we'd expect because the training error is our &ldquo;do not exceed speed.&rdquo; (The training error is analogous to the score we'd get on a quiz for which we'd seen the answers beforehand.) We want the validation error to be as close to the training error as possible.</p>
+<p>If you run that code multiple times, you'll notice that different runs get different validation errors because of the variability in selecting the validation subset. That's not a good characteristic, which brings us to our second and more stable validation strategy, <span class=eqn>k</span>-fold cross validation.</p>
+<p>The <span class=eqn>k</span>-fold cross validation strategy repeats the hold out strategy <span class=eqn>k</span> times and averages the <span class=eqn>k</span> errors to get a final estimate of the validation error.  The strategy breaks the original data set into <span class=eqn>k</span> equally sized subsets then trains on <img style="vertical-align: -1.08pt;" src="images/eqn-14464AC1DFE6FA8AD8FDA94BB6F01571-depth001.08.svg"> subsets, using the remaining subset as the validation set. For example, <span class=eqn>k</span>=5 cross validation splits the data set into five subsets, trains on the first four subsets and tests with the last subset. Next it rotates, training on the second through the last subset and validating with the first subset. This is so common that scikit provides a built-in function to automatically re-train and validate our model, <span class=inlinecode>rf</span>, using <span class=eqn>k</span> subsets from our full data set, <span class=inlinecode>X</span> and <span class=inlinecode>y</span>:</p>
+
+
+<div class="codeblk">from sklearn.model_selection import cross_val_score
+
+k = 5
+cv_err = cross_val_score(RandomForestRegressor(),
+                         X, y, cv=k,
+                         scoring='neg_mean_absolute_error')
+m_err = -cv_err.mean()
+std_err = cv_err.std()
+print(f"${m_err:.0f} average error +/-${2*std_err:.2f}; {m_err*100.0/y.mean():.2f}% error")
+</div>
+
+<p class="stdout">$306 average error +/-$17.81; 8.89% error
+</p>
+<p>(This can take awhile on a lower-end machine; don't worry---it'll peg your CPU but finish in about 15 seconds or so.)</p>
+<p>This $307 average error is much more stable and more accurate than the error computed using the holdout strategy. The +/-$17.18 covers the range of two standard deviations, which just means that about 95% of the time the actual error will be within $17.18 of $307.</p>
+<p>We're going to use cross validation frequently in the code snippets below, so let's factor the code into a function:</p>
+
+
+<div class="codeblk">def validate(model):
+    cv_err = cross_val_score(model, X, y, cv=5, scoring='neg_mean_absolute_error')
+    m_err = -cv_err.mean()
+    std_err = cv_err.std()
+    print(f"${m_err:.0f} average error +/-${2*std_err:.2f}; {m_err*100.0/y.mean():.2f}% error")
+</div>
+
+<p>Then we can call <span class=inlinecode>validate(rf)</span> to validate our models.</p>
+
+
+<h3 id="">Fiddling with model hyper-parameters</h3>
+
+<p>Now that we have a decent and stable metric of model generality, we can use it to tweak model architecture in an effort to improve accuracy. The idea is to wiggle some aspect(s) of the model and see if the validation error goes up or down. For example, the number of trees in our forest affects accuracy and so let's increase the number of trees to 100 from the default of 10:</p>
+
+
+<div class="codeblk">rf = RandomForestRegressor(n_estimators=100)
+validate(rf)
+</div>
+
+<p class="stdout">$300 average error +/-$15.85; 8.71% error
+</p>
+<p>The number of trees, and any other aspect of the model that affects its architecture, statisticians call a <i>hyper-parameter</i>. (I think we programmers would call this a meta-parameter.) The elements inside the model like the trees themselves are called the model parameters. As another example, the four <span class=eqn>w<sub>i</sub></span> weights and minimum rent value from a linear model are the model parameters.</p>
+<p><span style="color: red">{TODO: why does RandomForestRegressor(criterion='mae', n_jobs=-1) take forever whereas criterion='mse', the default, take only a few seconds?!}</span></p>
+<p>At the cost of a little more computing power, the accuracy of our model improves just a little, but every little bit helps.</p>
+
+
+<h3 id="">What the model says about the data</h3>
+
+<p>Machine learning models do much more for us than make predictions. Depending on the model, we can learn quite a bit about the data itself.  The idea is that models trained on different data sets will have different guts (parameters) inside. Instead of examining those individual parameters, however, we can learn much more by interrogating the model. For example, a key marketing question for real estate agents is &ldquo;what do people care about in this market?&rdquo; More generally, we'd like to know which features have the most predictive power. </p>
+<p>To compute such feature importance, we can compare the validation errors from a model trained using all features and the same model trained with a single feature removed. This difference tells us something about the relative importance of that missing feature. If the validation error goes way up, we know that feature is important. But if the error stays about the same, we can conclude that feature, in isolation, has very little predictive power.  Practitioners do this all the time with random forests, but this querying approach to feature importance applies to any model. (This brute force retraining method works and illustrates the idea, but it's more efficient to randomize a feature's column and retest rather than removing and retraining the model.)  Here's how to print out feature importances with a little help from the <span class=inlinecode>rfpimp</span> package:</p>
+
+
+<div class="codeblk">from rfpimp import *
+rf = RandomForestRegressor(n_estimators=100)
+rf.fit(X, y)
+I = importances(rf, X, y)
+I</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe">
+<thead>
+	<tr><th>Feature</th><th>Importance</th></tr>
+</thead>
+<tbody>
+	<tr>
+	<td><b>bathrooms</b></td><td>0.4492</td>
+	</tr>
+	<tr>
+	<td><b>latitude</b></td><td>0.5537</td>
+	</tr>
+	<tr>
+	<td><b>longitude</b></td><td>0.5956</td>
+	</tr>
+	<tr>
+	<td><b>bedrooms</b></td><td>0.6024</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>The actual value of each feature importance is not that relevant; we care about the relative differences between the feature importances. It's easier to see their relative strengths if we get fancy and look at the importances visually:</p>
+<span class=sidenote>
+&#187; <i>Graph generated by code to left</i><br>
+<img src="/tmp/mlbook/images/intro/intro_go_20.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">I = importances(rf,X_train,y_train)
+I.plot(kind='barh', legend=False)</div>
+<p>From this, we can conclude that New Yorkers care the least about bathrooms because that feature has the least predictive power, by a small margin, over other features. This compares features in isolation, though, and so we don't have a true measure of location importance because location is broken into two features, latitude and longitude. Nonetheless, this graph gives us good information about the predictive power of the various features.</p>
+
+
+<h3 id="">Swapping out the model</h3>
+
+<p>We pointed out earlier that achieving good model generality is more about the features than the model, but the model can still matter.  Until you get more experience, though, picking a model is not something you should worry about. Just use a random forest because it will work in just about any common business application where the data sits nicely in a spreadsheet-like table. </p>
+<p>To demonstrate that random forests do a good job and to show how easy it is to swap out a model for a different one, here's how to create and validate a linear model using the same data set:</p>
+
+
+<div class="codeblk">from sklearn import linear_model
+
+lm = linear_model.LinearRegression() # create linear model
+lm.fit(X, y)
+validate(lm)
+</div>
+
+<p class="stdout">$658 average error +/-$12.66; 19.14% error
+</p>
+<p>Notice that only the code line that creates the model itself is different. All scikit regression models have the same interface, such as functions <span class=inlinecode>fit()</span> and <span class=inlinecode>predict()</span>. The linear model's validation error of 19.14% is more than twice as bad as the 8.72% for the random forest trained on the same features.</p>
+<p>Another popular model, also based upon trees, is called <i>gradient boosting</i>. Here's how to swap in a gradient boosting predictor:</p>
+
+
+<div class="codeblk">from sklearn import ensemble
+
+gbr = ensemble.GradientBoostingRegressor() # create boosting model
+gbr.fit(X_train, y_train)
+validate(gbr)
+</div>
+
+<p class="stdout">$518 average error +/-$7.17; 15.06% error
+</p>
+<p><span style="color: red">{TODO: indicate we would normally run a grid search over the hyper parameters}</span></p>
+<p>The validation error of 15.06% is better but still about twice as bad as the random forest validation error. We could tweak the hyper parameters of these models to try to improve accuracy, but this gives us a ballpark idea of different models' accuracies for a specific data set.</p>
+<p>That wraps up our quick tour applying machine learning to the apartment rent data set. We've gone over a lot in this chapter, so let's pull it all together now.</p>
+
+
+
+<h2 id="sec0">The Big Picture</h2>
+
+<p>As a review, and as a reference for future use, let's pack the key concepts and terminology we've learned in this chapter into a few concentrated paragraphs.</p>
+<span class=sidenote>
+
+<center>
+<img src="images/intro/Xy.svg" width="85%">
+</center>
+
+<br><b>Figure 3</b>. Feature vectors X and targets y</span>
+<p>Machine learning uses a model to capture the relationship between feature vectors and some target variables within a training data set.  A feature vector is a set of features or attributes that characterize a particular object, such as the number of bedrooms, bathrooms, and location of an apartment. The target is either a scalar value like rent price, or it's an integer classification such as &ldquo;creditworthy&ldquo; or &rdquo;it's not cancer.&rdquo;  Features and targets are presented to the model for training as abstract matrix <span class=inlinecode>X</span> and vector <span class=inlinecode>y</span> (<b>Figure 3</b>) where each row represents everything we know about a particular entity, such as an apartment.</p>
+<span class=sidenote>
+
+<center>
+<img src="images/intro/regressor.svg" width="90%">
+</center>
+
+ <br><b>Figure 4</b>. Predictor block diagram</span><span class=sidenote>
+
+<center>
+<img src="images/intro/classifier.png" width="100%">
+</center>
+
+<br><b>Figure 5</b>. Classifier block diagram</span><span class=sidenote>
+
+<center>
+<img src="images/intro/fitpiecewise.svg" width="85%">
+</center>
+
+<br><b>Figure 6</b>. Predictors draw curves through data</span><span class=sidenote>
+
+<center>
+<img src="images/intro/mindist-decision-lines.svg" width="85%">
+</center>
+
+<br><b>Figure 7</b>. Classifiers draw curves through the  space separating classes</span>
+<p>If the target is a scalar value, we're building a predictor (also commonly called a regressor), as shown in <b>Figure 4</b>.  If the target is a discrete category or class, we're building a classifier (<b>Figure 5</b>). We'll learn about classifiers in <span style="color: red">[foo]</span>, but a simple way to think about the difference between predictors and classifiers is illustrated in <b>Figure 6</b> and <b>Figure 7</b>. Predictors are usually fitting curves to data and classifiers are drawing decision boundaries in between data points associated with the various categories. There is a tendency to think of predictors and classifiers as totally different problems with different solutions, but they are really the same core problem and most models have both predictor and classifier variants. In fact, the classifier variant is sometimes nothing more than the predictor variant with an additional function that clips, scales, or tweaks the predictor's output.</p>
+<p>Machine learning tasks that have both feature vectors <span class=inlinecode>X</span> and known targets <span class=inlinecode>y</span> fall into the <i>supervised learning</i> category and are the focus of this book. <i>Unsupervised learning</i> tasks involve just <span class=inlinecode>X</span> and the target variable is unknown; we say the data is unlabeled. The most common unsupervised task is called <i>clustering</i> that attempts to cluster similar data points together very much like <b>Figure 7</b>. In the supervised case, though, we know not only how many categories there are but we also know which records are associated with which category. The goal of clustering is to discover both the number of categories and assign records to categories. As we mentioned in <b>Chapter 1</b> <i>Welcome!</i>, the vast majority of machine learning problems are supervised and, besides, unsupervised techniques are straightforward to learn after mastering supervised techniques.</p>
+<span class=sidenote>
+
+<center>
+<img src="images/intro/training.svg" width="100%">
+</center>
+
+<br><b>Figure 8</b>. Distilling model parameters from training data and</span>
+<p>A model is a combination of data structure, algorithm, and mathematics that captures the relationship described by a collection of (feature vector, target) pairs. The model records a condensation of the training data in its data structure, which can be anything from the unaltered training set (nearest neighbor model) to a set of decision trees (random forest model) to a handful of weights (linear model). This data structure comprises the parameters of the model and the parameters are computed from the training data. <b>Figure 8</b> illustrates the process.</p>
+<p>The process of computing model parameters is called training the model or fitting a model to the data. If a model is unable to capture the relationship between feature vectors and targets, the model is underfitting (assuming there is a relationship to be had). At the other extreme, a model is overfitting if it is too specific to the training data and doesn't generalize well. To generalize means that we get accurate predictions for feature vectors not found in the training set.</p>
+<p>Models also have hyper-parameters, which dictate the overall architecture or other aspects of the model. For example, the nearest neighbor model is more specifically called &ldquo;<span class=eqn>k</span>-nearest neighbor&rdquo; because the model finds the nearest <span class=eqn>k</span> objects then averages their target values to make a prediction. <span class=eqn>k</span> is the model's hyper-parameter. In a random forest, the number of trees in the forest is the most common hyper-parameter.  In a neural network, hyper-parameters typically include the number of layers and number of neurons. Hyper-parameters are specified by the programmer, not computed from the training data, and are often used to tune a model to improve accuracy for a particular data set. The basic code sequence we'll use to train a model looks like this:</p>
+<p><span class=inlinecode>df</span> = <span class=inlinecode>pd.read_csv</span>(<i>datafile</i>)<br><span class=inlinecode>X</span> = <span class=inlinecode>df[[</span><i>feature column names of interest</i><span class=inlinecode>]]</span><br><span class=inlinecode>y</span> = <span class=inlinecode>df[</span><i>target column name</i><span class=inlinecode>]</span><br><span class=inlinecode>m</span> = <i>ChooseYourModel</i>(<i>hyper-parameters</i>)<br><span class=inlinecode>m.fit(X,y)</span></p>
+<p>To test generality, we either need to be given a validation set as well as a training set, or we need to split the provided single data set into a training set and a validation set. The model is exposed only to the training set, reserving the validation set for measuring generality and tuning the model. (Later we'll discuss a <i>test set</i> that is used as a final test of generality; the test set is never used while training or tuning the model.) The validation set has both feature vectors and targets and so we can compare the model's prediction with the known correct targets to compute an accuracy metric.</p>
+<p>We haven't explicitly brought it up yet, but the data in the apartment data set is considered <i>structured</i> data because it has clearly identifiable features for each record, including a feature name and data type.  All records in structured data sets have the same number of features. Loosely speaking, structured data fits comfortably in a spreadsheet or database table. <i>Unstructured data</i> sets, on the other hand, contain amorphous blobs of data for each record, possibly with records of varying length. For example, a data set of news articles contains records that are strings or list of words. Image collections are another well-known example of an unstructured data set. The first part of this book focuses on structured data and the second part, where we learn about neural networks, focuses on unstructured data. When in doubt, use a random forest model for structured data and neural networks for unstructured data.</p>
+<p>The code samples in this chapter explicitly or implicitly use a number of important libraries that form the backbone of machine learning with Python for structured data:</p>
+<ul>
+<li><a href="https://pandas.pydata.org/">Pandas</a> provides the key data structures we use to hold training and validation sets: data frames and series (columns of data).</li>
+<li><a href="https://matplotlib.org/">matplotlib</a> provides sophisticated 2D graphing facilities; Pandas delegates graphing to matplotlib.</li>
+<li><a href="http://scikit-learn.org/">scikit-learn</a> has the machine learning models, validation functions, error metrics, and a wide range of data processing facilities.</li>
+<li><a href="http://www.numpy.org/">numpy</a> provides an efficient <span class=eqn>n</span>-dimensional array data structure used by the other libraries.</li>
+</ul>
+<p>That's a lot to take in, but it will crystallize more and more as we work through more examples. In the next chapter, we're going to re-examine the apartment data set, but this time using the original data set. The original data has a number of issues that prevent us from immediately using it to train a model and get good results. We have to explore the data and do some preprocessing before training a model.</p>
+
+
+
+</body>
+</html>

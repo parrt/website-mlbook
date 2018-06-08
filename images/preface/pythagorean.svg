@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="36 35 214 214" width="214pt" height="214pt" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <metadata> Produced by OmniGraffle 7.5 
+    <dc:date>2018-02-27 21:52:55 +0000</dc:date>
+  </metadata>
+  <defs>
+    <font-face font-family="Times New Roman" font-size="14" panose-1="2 2 5 3 5 4 5 9 3 4" units-per-em="1000" underline-position="-108.88672" underline-thickness="48.828125" slope="-1166.6423" x-height="430.1758" cap-height="662.1094" ascent="891.1133" descent="-216.3086" font-style="italic" font-weight="500">
+      <font-face-src>
+        <font-face-name name="TimesNewRomanPS-ItalicMT"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <g stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" width="576" height="733"/>
+    <g>
+      <title>Layer 1</title>
+      <path d="M 108 106.36374 L 178.59854 35.765207 L 249.33333 106.5 L 178.7348 177.09854 Z" fill="#e1f4f8"/>
+      <path d="M 108 106.36374 L 178.59854 35.765207 L 249.33333 106.5 L 178.7348 177.09854 Z" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <rect x="37" y="106" width="71" height="71" fill="#feae61" fill-opacity=".5146552"/>
+      <rect x="37" y="106" width="71" height="71" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <rect x="108" y="177" width="71" height="71" fill="#fee18f" fill-opacity=".5"/>
+      <rect x="108" y="177" width="71" height="71" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <text transform="translate(100.66667 133.70264)" fill="black">
+        <tspan font-family="Times New Roman" font-size="14" font-style="italic" font-weight="500" x="0" y="12" textLength="7">a</tspan>
+      </text>
+      <text transform="translate(69 101.70264)" fill="black">
+        <tspan font-family="Times New Roman" font-size="14" font-style="italic" font-weight="500" x="0" y="12" textLength="7">a</tspan>
+      </text>
+      <text transform="translate(140 176.70264)" fill="black">
+        <tspan font-family="Times New Roman" font-size="14" font-style="italic" font-weight="500" x="0" y="12" textLength="7">b</tspan>
+      </text>
+      <text transform="translate(170.33334 204.70264)" fill="black">
+        <tspan font-family="Times New Roman" font-size="14" font-style="italic" font-weight="500" x="0" y="12" textLength="7">b</tspan>
+      </text>
+      <text transform="translate(141.33333 126.70263)" fill="black">
+        <tspan font-family="Times New Roman" font-size="14" font-style="italic" font-weight="500" x=".3930664" y="12" textLength="6.213867">c</tspan>
+      </text>
+      <text transform="translate(209.6667 126.70264)" fill="black">
+        <tspan font-family="Times New Roman" font-size="14" font-style="italic" font-weight="500" x=".3930664" y="12" textLength="6.213867">c</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

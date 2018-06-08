@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="240 484 145 143" width="145pt" height="143pt" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <metadata> Produced by OmniGraffle 7.5 
+    <dc:date>2018-02-27 21:00:57 +0000</dc:date>
+  </metadata>
+  <defs>
+    <radialGradient cx="0" cy="0" r="1" id="Gradient" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#abdae9"/>
+      <stop offset="1" stop-color="#a5a5a5"/>
+    </radialGradient>
+    <radialGradient id="Obj_Gradient" xl:href="#Gradient" gradientTransform="translate(277.59202 570.1366) scale(46.535273)"/>
+    <radialGradient cx="0" cy="0" r="1" id="Gradient_2" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#abdae9"/>
+      <stop offset="1" stop-color="#a5a5a5"/>
+    </radialGradient>
+    <radialGradient id="Obj_Gradient_2" xl:href="#Gradient_2" gradientTransform="translate(315.07184 524.46766) scale(7.4356625)"/>
+    <radialGradient id="Obj_Gradient_3" xl:href="#Gradient_2" gradientTransform="translate(319.4442 530.22766) scale(7.4356625)"/>
+    <radialGradient id="Obj_Gradient_4" xl:href="#Gradient_2" gradientTransform="translate(315.75825 536.038) scale(7.4356625)"/>
+    <font-face font-family="Helvetica" font-size="10" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="500">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica Neue" font-size="10" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="500">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <g stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>ML bigpic</title>
+    <rect fill="white" width="576" height="733"/>
+    <g>
+      <title>Layer 1</title>
+      <ellipse cx="268.79012" cy="558.5391" rx="28.207597" ry="27.40094" fill="url(#Obj_Gradient)"/>
+      <rect x="240.5923" y="532.36045" width="56.609346" height="16.22244" fill="white"/>
+      <ellipse cx="268.96912" cy="558.3381" rx="28.37027" ry="28.10194" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <circle cx="247.10606" cy="554.62606" r="2.3060733" fill="#999"/>
+      <circle cx="254.70303" cy="554.62606" r="2.3060733" fill="#999"/>
+      <circle cx="262.3" cy="554.62606" r="2.3060733" fill="#999"/>
+      <circle cx="269.89696" cy="554.62606" r="2.3060733" fill="#999"/>
+      <circle cx="277.49392" cy="554.62606" r="2.3060733" fill="#999"/>
+      <circle cx="247.10606" cy="560.81724" r="2.3060733" fill="#999"/>
+      <circle cx="254.70303" cy="560.81724" r="2.3060733" fill="#999"/>
+      <circle cx="262.3" cy="560.81724" r="2.3060733" fill="#999"/>
+      <circle cx="269.89696" cy="560.81724" r="2.3060733" fill="#999"/>
+      <circle cx="277.49392" cy="560.81724" r="2.3060733" fill="#999"/>
+      <circle cx="247.10606" cy="566.9654" r="2.3060733" fill="#999"/>
+      <circle cx="254.70303" cy="566.9654" r="2.3060733" fill="#999"/>
+      <circle cx="262.3" cy="566.9654" r="2.3060733" fill="#999"/>
+      <circle cx="269.89696" cy="566.9654" r="2.3060733" fill="#999"/>
+      <circle cx="277.49392" cy="566.9654" r="2.3060733" fill="#999"/>
+      <circle cx="290.43877" cy="554.62606" r="2.3060733" fill="#999"/>
+      <circle cx="290.43877" cy="560.81724" r="2.3060733" fill="#999"/>
+      <circle cx="290.43877" cy="566.9654" r="2.3060733" fill="#999"/>
+      <path d="M 304.15757 540.58 L 330.12 540.58 L 330.12 573.12 L 304.15757 573.12 Z" stroke="#727272" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5" stroke-dasharray="2,2"/>
+      <path d="M 314.54986 557.9568 L 314.3266 559.9663 L 313.2846 560.43146 L 311.65653 559.1104 L 310.28895 560.5059 L 311.5914 562.1526 L 311.11694 563.1387 L 309.14464 563.3899 C 309.14464 563.3899 309.04896 565.01286 309.0702 565.3529 C 309.6759 565.3848 311.07973 565.6413 311.07973 565.6413 L 311.5356 566.6554 L 310.24243 568.2369 L 311.61 569.67894 L 313.19158 568.4044 L 314.20564 568.9068 L 314.50334 570.7302 L 316.46634 570.83255 C 316.46634 570.83255 316.60866 568.9798 316.81056 568.9161 C 317.01247 568.8523 317.86184 568.4509 317.86184 568.4509 L 319.36897 569.66964 C 319.36897 569.66964 320.68206 568.3671 320.67144 568.2183 C 320.6608 568.06955 319.53643 566.7856 319.53643 566.7856 C 319.53643 566.7856 320.0109 565.8326 320.0109 565.71574 C 320.0109 565.59885 321.89017 565.3994 321.89017 565.3994 L 321.946 563.455 C 321.946 563.455 320.04543 563.2835 319.9923 563.1666 C 319.93916 563.04974 319.71576 562.4195 319.54574 562.06884 C 319.90703 561.66504 320.79238 560.5524 320.79238 560.5524 L 319.4062 559.2034 L 317.84323 560.40355 L 316.77335 559.9384 L 316.52216 558.0126 Z M 315.5081 562.33864 C 316.64606 562.33864 317.57343 563.2567 317.57343 564.3947 C 317.57343 565.5326 316.64606 566.46 315.5081 566.46 C 314.37014 566.46 313.45207 565.5326 313.45207 564.3947 C 313.45207 563.2567 314.37014 562.33864 315.5081 562.33864 Z" fill="#feae61"/>
+      <path d="M 314.54986 544.0908 L 314.3266 546.1003 L 313.2846 546.5655 L 311.65653 545.2444 L 310.28895 546.6399 L 311.5914 548.2866 L 311.11694 549.27276 L 309.14464 549.52395 C 309.14464 549.52395 309.04896 551.1469 309.0702 551.48694 C 309.6759 551.5188 311.07973 551.77535 311.07973 551.77535 L 311.5356 552.7894 L 310.24243 554.371 L 311.61 555.813 L 313.19158 554.5384 L 314.20564 555.0408 L 314.50334 556.86425 L 316.46634 556.9666 C 316.46634 556.9666 316.60866 555.1139 316.81056 555.0501 C 317.01247 554.98635 317.86184 554.58494 317.86184 554.58494 L 319.36897 555.8037 C 319.36897 555.8037 320.68206 554.5011 320.67144 554.35236 C 320.6608 554.2036 319.53643 552.91965 319.53643 552.91965 C 319.53643 552.91965 320.0109 551.96666 320.0109 551.8498 C 320.0109 551.7329 321.89017 551.53346 321.89017 551.53346 L 321.946 549.5891 C 321.946 549.5891 320.04543 549.41756 319.9923 549.3007 C 319.93916 549.1838 319.71576 548.55355 319.54574 548.2029 C 319.90703 547.7991 320.79238 546.68644 320.79238 546.68644 L 319.4062 545.33746 L 317.84323 546.5376 L 316.77335 546.0724 L 316.52216 544.14664 Z M 315.5081 548.4727 C 316.64606 548.4727 317.57343 549.39075 317.57343 550.5287 C 317.57343 551.66666 316.64606 552.59404 315.5081 552.59404 C 314.37014 552.59404 313.45207 551.66666 313.45207 550.5287 C 313.45207 549.39075 314.37014 548.4727 315.5081 548.4727 Z" fill="#4675b4"/>
+      <path d="M 326.47528 554.99206 L 325.03322 555.4236 L 324.41135 554.84485 L 324.84308 553.34486 L 323.48894 552.8136 L 322.73935 554.18517 L 321.92553 554.1469 L 321.17967 552.86834 C 321.17967 552.86834 320.03964 553.2749 319.8128 553.38836 C 319.96714 553.8127 320.1997 554.84935 320.1997 554.84935 L 319.63738 555.4567 L 318.17738 555.0306 L 317.587 556.38726 L 318.9205 557.10034 L 318.8712 557.9414 L 317.7082 558.67584 L 318.2091 560.05084 C 318.2091 560.05084 319.52014 559.6094 319.62257 559.72924 C 319.725 559.84906 320.24715 560.31436 320.24715 560.31436 L 319.85037 561.7017 C 319.85037 561.7017 321.12496 562.22266 321.2238 562.1721 C 321.32268 562.12155 321.87548 560.97754 321.87548 560.97754 C 321.87548 560.97754 322.66658 561.0255 322.74668 560.9915 C 322.8268 560.9575 323.5101 562.1873 323.5101 562.1873 L 324.8588 561.65995 C 324.8588 561.65995 324.4235 560.3076 324.48815 560.2372 C 324.5528 560.1668 324.9197 559.8304 325.11056 559.61185 C 325.49238 559.742 326.5124 560.02505 326.5124 560.02505 L 327.0336 558.6827 L 325.75653 557.9607 L 325.7641 557.0922 L 327.01074 556.3599 Z M 323.75116 556.9234 C 324.0822 557.7032 323.7228 558.6058 322.94296 558.9368 C 322.16313 559.2678 321.25784 558.90207 320.92682 558.1222 C 320.5958 557.3424 320.96427 556.4435 321.7441 556.11247 C 322.52394 555.78145 323.42014 556.14354 323.75116 556.9234 Z" fill="#666"/>
+      <line x1="259.89538" y1="531.494" x2="259.89538" y2="485.5582" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <line x1="277.6595" y1="531.494" x2="277.6595" y2="485.5582" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <line x1="259.89538" y1="485.5582" x2="277.6595" y2="485.5582" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <rect x="260.1721" y="527.37483" width="17.236069" height="8.56027" fill="white"/>
+      <line x1="277.6595" y1="498.51966" x2="312.34956" y2="511.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <line x1="277.6595" y1="505.51055" x2="311.59956" y2="514" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <line x1="312.34956" y1="511.5" x2="311.59956" y2="514" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      <rect x="272.00202" y="498.89317" width="6.185201" height="6.438333" fill="white"/>
+      <path d="M 315.30114 524.15076 C 319.1618 522.0015 315.07974 519.66296 314.52722 515.5595 C 313.9747 511.4561 311.4405 526.3 315.30114 524.15076 Z" fill="url(#Obj_Gradient_2)"/>
+      <path d="M 319.6735 529.91076 C 323.53414 527.7615 319.4521 525.42296 318.89958 521.3195 C 318.34706 517.2161 315.81285 532.06 319.6735 529.91076 Z" fill="url(#Obj_Gradient_3)"/>
+      <path d="M 315.98755 535.7211 C 319.8482 533.5718 315.76615 531.2333 315.21363 527.12985 C 314.6611 523.0264 312.1269 537.87035 315.98755 535.7211 Z" fill="url(#Obj_Gradient_4)"/>
+      <text transform="translate(322.79676 497.1955)" fill="black">
+        <tspan font-family="Helvetica" font-size="10" font-weight="500" x=".21191406" y="10" textLength="50.57617">parameters</tspan>
+      </text>
+      <text transform="translate(291.2 599.82355)" fill="black">
+        <tspan font-family="Helvetica" font-size="10" font-weight="500" x=".42871094" y="10" textLength="66.14258">user-controlled</tspan>
+      </text>
+      <text transform="translate(291.7 609.6375)" fill="black">
+        <tspan font-family="Helvetica" font-size="10" font-weight="500" x=".03955078" y="10" textLength="78.9209">hyper-parameters</tspan>
+      </text>
+      <text transform="translate(333.0336 536.1382)" fill="black">
+        <tspan font-family="Helvetica" font-size="10" font-weight="500" x=".38183594" y="10" textLength="27.236328">model</tspan>
+      </text>
+      <text transform="translate(322.6301 506.8637)" fill="black">
+        <tspan font-family="Helvetica" font-size="10" font-weight="500" x=".43603516" y="10" textLength="56.12793">distilled from</tspan>
+      </text>
+      <text transform="translate(323.04676 515.96455)" fill="black">
+        <tspan font-family="Helvetica" font-size="10" font-weight="500" x=".2685547" y="10" textLength="19.46289">data</tspan>
+      </text>
+      <text transform="translate(322.79676 489.08764)" fill="black">
+        <tspan font-family="Helvetica" font-size="10" font-weight="500" x=".38183594" y="10" textLength="27.236328">model</tspan>
+      </text>
+      <path d="M 260.07938 599.4305 C 267.14396 596.7579 258.26144 585.7697 258.6632 588.7473 C 259.06495 591.72484 253.0148 602.10315 260.07938 599.4305 Z" fill="#f56c44"/>
+      <path d="M 260.09165 599.83916 C 264.3049 598.2452 259.00745 591.692 259.24705 593.4678 C 259.48666 595.24356 255.8784 601.4331 260.09165 599.83916 Z" fill="white"/>
+      <path d="M 269.51992 599.4305 C 276.5845 596.7579 267.702 585.7697 268.10374 588.7473 C 268.5055 591.72484 262.45534 602.10315 269.51992 599.4305 Z" fill="#f56c44"/>
+      <path d="M 269.5322 599.83916 C 273.74545 598.2452 268.448 591.692 268.6876 593.4678 C 268.9272 595.24356 265.31895 601.4331 269.5322 599.83916 Z" fill="white"/>
+      <path d="M 278.19828 599.4305 C 285.26286 596.7579 276.38034 585.7697 276.7821 588.7473 C 277.18386 591.72484 271.1337 602.10315 278.19828 599.4305 Z" fill="#f56c44"/>
+      <path d="M 278.21055 599.83916 C 282.4238 598.2452 277.12635 591.692 277.36595 593.4678 C 277.60556 595.24356 273.9973 601.4331 278.21055 599.83916 Z" fill="white"/>
+      <text transform="translate(291.2 585.7354)" fill="black">
+        <tspan font-family="Helvetica" font-size="10" font-weight="500" x=".10107422" y="10" textLength="32.79785">training</tspan>
+      </text>
+      <text transform="translate(259.16 540.68)" fill="black">
+        <tspan font-family="Helvetica Neue" font-size="10" font-weight="500" x=".445" y="10" textLength="6.11">X</tspan>
+      </text>
+      <text transform="translate(287.78482 539.2921)" fill="black">
+        <tspan font-family="Helvetica Neue" font-size="10" font-weight="500" x="0" y="10" textLength="5">y</tspan>
+      </text>
+      <circle cx="256.54467" cy="611.5287" r="6.801429" fill="black"/>
+      <circle cx="256.58662" cy="611.50985" r=".5541336" fill="white"/>
+      <path d="M 251.04083 615.59595 L 256.22263 611.0915 L 256.94972 611.9279 L 251.76792 616.4324 Z" fill="white"/>
+      <circle cx="256.54467" cy="603.274" r=".4497927" fill="black"/>
+      <circle cx="250.45256" cy="606.1287" r=".4497927" fill="black"/>
+      <circle cx="248.37643" cy="610.973" r=".4497927" fill="black"/>
+      <circle cx="262.39032" cy="605.86915" r=".4497927" fill="black"/>
+      <circle cx="264.7129" cy="610.973" r=".4497927" fill="black"/>
+      <circle cx="262.3038" cy="617.2879" r=".4497927" fill="black"/>
+      <circle cx="250.45256" cy="617.0417" r=".4497927" fill="black"/>
+      <circle cx="281.02467" cy="611.5287" r="6.801429" fill="black"/>
+      <circle cx="281.04518" cy="611.28516" r=".5541336" fill="white"/>
+      <path d="M 276.31367 606.2787 L 281.41607 610.8729 L 280.6745 611.6965 L 275.5721 607.1023 Z" fill="white"/>
+      <circle cx="281.02467" cy="603.274" r=".4497927" fill="black"/>
+      <circle cx="274.93256" cy="606.1287" r=".4497927" fill="black"/>
+      <circle cx="272.85642" cy="610.973" r=".4497927" fill="black"/>
+      <circle cx="286.87032" cy="605.86915" r=".4497927" fill="black"/>
+      <circle cx="289.1929" cy="610.973" r=".4497927" fill="black"/>
+      <circle cx="286.7838" cy="617.2879" r=".4497927" fill="black"/>
+      <circle cx="274.93256" cy="617.0417" r=".4497927" fill="black"/>
+    </g>
+  </g>
+</svg>
