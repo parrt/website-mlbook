@@ -149,7 +149,7 @@ mkdir data</div>
 </center>
 
 <br><b>Figure 2</b>. Jupyter Lab after creating Python 3 notebook</span>
-<p>Running that command should also open a browser window that looks like <b>Figure 1</b>.  That notebook communicates with the Jupyter Lab server via good old http, the web protocol. Clicking on the &ldquo;Python 3&ldquo; icon under the &rdquo;Notebook&rdquo; category, will create and open a new notebook window that looks like <b>Figure 2</b>. Cut-and-paste the following code into the empty <i>notebook cell</i>, replacing the data file name as appropriate for your set up (here we've copied and unzipped the <a href="https://github.com/parrt/website-mlbook/data/rent-ideal.csv.zip">data/rent-ideal.csv.zip</a> file into the <span class=inlinecode>data</span> directory under <span class=inlinecode>src</span> we just created above).</p>
+<p>Running that command should also open a browser window that looks like <b>Figure 1</b>.  That notebook communicates with the Jupyter Lab server via good old http, the web protocol. Clicking on the &ldquo;Python 3&ldquo; icon under the &rdquo;Notebook&rdquo; category, will create and open a new notebook window that looks like <b>Figure 2</b>. Cut-and-paste the following code into the empty <i>notebook cell</i>, replacing the data file name as appropriate for your set up (here we've copied and unzipped the <a href="/data/rent-ideal.csv.zip">data/rent-ideal.csv.zip</a> file into the <span class=inlinecode>data</span> directory under <span class=inlinecode>src</span> we just created above).</p>
 
 
 <div class="codeblk">import pandas as pd
@@ -229,7 +229,7 @@ plt.show()</div>
 
 <h3 id="">Getting a quick sniff of the data</h3>
 
-<p>The apartment data we've been using was derived from a Kaggle competition called <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Two Sigma Connect: Rental Listing Inquiries</a> and was given in JSON form, but we have converted it to CSV  for the purposes of this chapter; see zipped book data file <a href="https://github.com/parrt/website-mlbook/data/rent.csv.zip">rent.csv.zip</a>.</p>
+<p>The apartment data we've been using was derived from a Kaggle competition called <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Two Sigma Connect: Rental Listing Inquiries</a> and was given in JSON form, but we have converted it to CSV  for the purposes of this chapter; see zipped book data file <a href="/data/rent.csv.zip">rent.csv.zip</a>.</p>
 <p>To get started, let's create a new Jupyter notebook by clicking on the &ldquo;+&ldquo; button again and selecting &ldquo;Python 3&ldquo; under the &ldquo;Notebook&rdquo; tab. This will create a file in the same directory where you started <span class=inlinecode>jupyter lab</span> (unless you have jumped around using the &rdquo;Files&rdquo; tab on the left side of the lab browser window). It's probably a good idea to give the file a decent name like <span class=inlinecode>prep.ipynb</span> by right clicking on the notebook tab that currently says &rdquo;Untitled.ipynb.&rdquo; Now, let's enter some code into the notebook to read in the CSV data using Pandas to get our first look at the original data:</p>
 
 
