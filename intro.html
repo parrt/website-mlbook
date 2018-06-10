@@ -56,8 +56,10 @@ Book version 0.1
 
 <p>&ldquo;<i>Without data you're just another person with an opinion</i>&rdquo; &mdash; W. Edwards Deming</p>
 <p>In densely-populated cities, such as San Francisco and New York, everyone's favorite topic is the cost of housing. There's nothing quite as invigorating as writing a check for US$4200/month to rent a single bedroom apartment (as renters do down the street from Terence's place in San Francisco's Mission District). People are always comparing rent prices because they want to know if they're overpaying or getting a good deal. The idea is to collect information on similar apartments and then compare prices. Real estate agents tend to have more data and are, hopefully, able to provide more accurate rent estimates.</p>
-<span class=sidenote><span class=sup>1</span>A nice alliteration by Navid Amini  https://scholar.google.com/citations?user=tZTnipEAAAAJ</span>
-<p>The problem, of course, is that large amounts of data quickly overwhelm the human mind and so we turn to computers for help. Unfortunately, basic statistics aren't sufficient to handle interesting problems like apartment rent prediction. Instead, we need <i>machine learning</i> to discover relationships and patterns in data, which is the subject of this book. Simply put, machine learning turns experience into expertise,<span class=sup>1</span> generalizing from training data to make  accurate predictions or classifications in new situations (for previously unseen data). </p>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>1</span>A nice alliteration by Navid Amini  https://scholar.google.com/citations?user=tZTnipEAAAAJ</p>
+<p class=p_left>The problem, of course, is that large amounts of data quickly overwhelm the human mind and so we turn to computers for help. Unfortunately, basic statistics aren't sufficient to handle interesting problems like apartment rent prediction. Instead, we need <i>machine learning</i> to discover relationships and patterns in data, which is the subject of this book. Simply put, machine learning turns experience into expertise,<span class=sup>1</span> generalizing from training data to make  accurate predictions or classifications in new situations (for previously unseen data). </p>
+</div>
 <p>In this first chapter, our goal is to show just how easy it is apply machine learning to get excellent rent price predictions from an idealized New York City rent data set (derived from a <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Kaggle competition</a>).  Along the way, we'll define a number of important terms and concepts commonly used by machine learning practitioners and give a general overview of the machine learning process. For the Python code snippets in this chapter, feel free to just cut-and-paste them blindly and don't sweat the details. In the next chapter, <span style="color: red">[tour]</span>, we're going to solve the same problem but in more detail and using the original data set, which needs to be cleaned up. We'll also recommend a work environment and give the key libraries a workout as we demonstrate the mechanics of machine learning.</p>
 
 
@@ -156,12 +158,14 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 <p><img style="vertical-align: -2.7825pt;" src="images/eqn-576FAA65E2A17721D10E7261E68917A0-depth002.65.svg"></p>
 <p>This equation boils all of our rent training data down to just four numbers, <span class=eqn>w<sub>i</sub></span>, which comprise our model. (That's an amazing compression!)  Better yet, making a prediction is superfast because it's just four multiplies and four additions.</p>
 <p>This approach often works well and is called a <a href="https://en.wikipedia.org/wiki/Linear_regression">linear model</a> or <i>linear regression</i> because it tries to draw a line (or plane when given more than two dimensions) through the training data. (Recall the formula for a line from high school algebra, <img style="vertical-align: -2.7825pt;" src="images/eqn-6D74D8F1C6D1196D2E75893F266AE552-depth002.65.svg">.)   The technique has been around for over 200 years and mathematicians have an elegant formula to conjure up suitable <span class=eqn>w<sub>i</sub></span> weights.</p>
+<div class="p_wrapper">
 <span class=sidenote>
 <img src="images/intro/intro_stats_4.svg"
   width="100%"
 >
 <br><b>Figure 1</b>. Price per number of bathrooms and linear regression fit line</span>
-<p>For this data set, unfortunately, a linear model is not a good choice because such models treat every feature as a single trend with lower rent on one side and higher rent on the other, or vice versa.  For example, it's reasonable to assume that rent prices would go up as the number of bathrooms goes up, but the data doesn't support that conclusion. <b>Figure 1</b> shows the average rent for all apartments with the same number of bathrooms with dots where we actually have data.</p>
+<p class=p_left>For this data set, unfortunately, a linear model is not a good choice because such models treat every feature as a single trend with lower rent on one side and higher rent on the other, or vice versa.  For example, it's reasonable to assume that rent prices would go up as the number of bathrooms goes up, but the data doesn't support that conclusion. <b>Figure 1</b> shows the average rent for all apartments with the same number of bathrooms with dots where we actually have data.</p>
+</div>
 <p>The &ldquo;best fit,&rdquo; red line minimizes the difference between the line and the actual average price but is clearly a terrible predictor of price. In this case, there is something weird going on beyond 4 bathrooms. (10 bathrooms and only $3500/month? One can only imagine what those places look like.) Consequently, a single line is a poor fit and does not capture jagged relationships like this very well.</p>
 
 
@@ -237,6 +241,7 @@ if bedrooms==2 and bathrooms==1.0 and \
         elif bedrooms==2: price = 2462</div>
 
 
+<div class="p_wrapper">
 <span class=sidenote>
 
 <center>
@@ -244,7 +249,8 @@ if bedrooms==2 and bathrooms==1.0 and \
 </center>
 
 <br><b>Figure 2</b>. Sample decision tree</span>
-<p>Another way to encode those nested rules is with a tree data structure, where each node performs a comparison. <b>Figure 2</b> is a visual representation of what such a tree might look like.  Predicting rent using such a tree costs just four comparisons as we descend from root to the appropriate leaf, testing features as we go. The leaves of the tree contain the prices for all apartments fitting the criteria on the path from the root down to that leaf.  Trees like this are called  <i>decision trees</i> and, if we allow the same feature to be tested multiple times, decision trees can carve up feature spaces into arbitrarily tight clusters. </p>
+<p class=p_left>Another way to encode those nested rules is with a tree data structure, where each node performs a comparison. <b>Figure 2</b> is a visual representation of what such a tree might look like.  Predicting rent using such a tree costs just four comparisons as we descend from root to the appropriate leaf, testing features as we go. The leaves of the tree contain the prices for all apartments fitting the criteria on the path from the root down to that leaf.  Trees like this are called  <i>decision trees</i> and, if we allow the same feature to be tested multiple times, decision trees can carve up feature spaces into arbitrarily tight clusters. </p>
+</div>
 <p>The problem with decision trees is that they tend to get too specific; they overfit training data. For example, we could build a decision tree that carved up the feature space so that each leaf corresponded to a single apartment. That'd provide precise answers but, as with our rudimentary dictionary model, such a specific tree would not generalize. </p>
 <p>To prevent overfitting, we can weaken the decision tree by reducing its accuracy in a very specific way: by training the tree on a random selection of the training data instead of all members of the data set.  (Technically, we are <a href="https://en.wikipedia.org/wiki/Bootstrapping_(statistics)">bootstrapping</a>, which randomly selects records but with replacement, meaning that a record can appear multiple times in the bootstrapped sample; <span style="color: red">[RF]</span> explores this in detail.) Because not all elements from the original data set are present, we have a coarser view of the training data so the comparison ranges in our decision tree nodes will necessarily be broader. </p>
 <p>To compensate for this weak learner, we can create lots of them and take the average of their individual predictions to make an overall rent prediction.  We call this <a href="https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/springerEBR09.pdf">ensemble learning</a> and it's an excellent general technique to increase accuracy without such a strong tendency to overfit <span style="color: red">{TODO: is true?}</span>.  To reduce overfitting even further, we can add a bit more randomness in terms of how we select features to compare at each decision tree node.  </p>
@@ -260,10 +266,14 @@ if bedrooms==2 and bathrooms==1.0 and \
 
 <h3 id="">Computer environment sanity check</h3>
 
+<div class="p_wrapper">
 <span class=sidenote><span class=sup>2</span>&nbsp;<tt>https://anaconda.org</tt></span>
-<p>Because we assume you know how to program in Python, we assume your machine is set up reasonably to edit and execute Python code.  We need to make sure, however, that all of the machine learning libraries we need are installed and that Python 3 is the default on your systems. The easiest way is to download and install Anaconda<span class=sup>2</span> for Python 3.</p>
-<span class=sidenote><span class=sup>3</span>During installation on Windows, make sure to check the box that adds Python to your <span class=inlinecode>PATH</span> environment variable, for which you will need administrator privileges.</span>
-<p>Download and install the Python 3.6 or higher version of Anaconda using the &ldquo;64-bit graphical installer.&ldquo; <span class=sup>3</span> Use the &rdquo;just for me&rdquo; option so that the installer puts Anaconda in your home directory so we all have it in the same spot: <span class=inlinecode>C:\Users\YOURID\Anaconda3</span> on Windows and <span class=inlinecode>/Users/YOURID/anaconda3</span> on Mac (similar on any UNIX machine). The libraries are big and so you'll need 2.4G of disk space. To verify everything is installed properly, you should try to import a library, as Terence demonstrates here on his computer from the Mac (UNIX) command line:</p>
+<p class=p_left>Because we assume you know how to program in Python, we assume your machine is set up reasonably to edit and execute Python code.  We need to make sure, however, that all of the machine learning libraries we need are installed and that Python 3 is the default on your systems. The easiest way is to download and install Anaconda<span class=sup>2</span> for Python 3.</p>
+</div>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>3</span>During installation on Windows, make sure to check the box that adds Python to your <span class=inlinecode>PATH</span> environment variable, for which you will need administrator privileges.</p>
+<p class=p_left>Download and install the Python 3.6 or higher version of Anaconda using the &ldquo;64-bit graphical installer.&rdquo; <span class=sup>3</span> Use the &ldquo;just for me&rdquo; option so that the installer puts Anaconda in your home directory so we all have it in the same spot: <span class=inlinecode>C:\Users\YOURID\Anaconda3</span> on Windows and <span class=inlinecode>/Users/YOURID/anaconda3</span> on Mac (similar on any UNIX machine). The libraries are big and so you'll need 2.4G of disk space. To verify everything is installed properly, you should try to import a library, as Terence demonstrates here on his computer from the Mac (UNIX) command line:</p>
+</div>
 
 
 <div class="codeblk">$ which python3
@@ -378,8 +388,10 @@ plt.show()</div>
 
 <p class="stdout">&lt;class 'pandas.core.frame.DataFrame'> &lt;class 'pandas.core.series.Series'>
 </p>
-<span class=sidenote><span class=sup>4</span>The surface area of the Python libraries for machine learning is vast and it's difficult to tell where one library stops and the other starts, because they are so intertwined.</span>
-<p>The random forest implementation we're going to use is from yet another awesome library called <a href="http://scikit-learn.org/stable/">scikit-learn</a>.<span class=sup>4</span> In particular, we'll use class <span class=inlinecode>RandomForestRegressor</span> where <i>regressor</i> is another (poorly chosen) term for predictor that statisticians like to use. Here is the simple incantation that trains a random forest on our apartment rent data:</p>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>4</span>The surface area of the Python libraries for machine learning is vast and it's difficult to tell where one library stops and the other starts, because they are so intertwined.</p>
+<p class=p_left>The random forest implementation we're going to use is from yet another awesome library called <a href="http://scikit-learn.org/stable/">scikit-learn</a>.<span class=sup>4</span> In particular, we'll use class <span class=inlinecode>RandomForestRegressor</span> where <i>regressor</i> is another (poorly chosen) term for predictor that statisticians like to use. Here is the simple incantation that trains a random forest on our apartment rent data:</p>
+</div>
 
 
 <div class="codeblk">from sklearn.ensemble import RandomForestRegressor
@@ -394,7 +406,7 @@ rf.fit(X, y)
 <div class="codeblk">print( rf.predict([[0], [1]]) )
 </div>
 
-<p class="stdout">[3175.43601774 3029.23187161]
+<p class="stdout">[3145.10680038 3024.53314782]
 </p>
 <p>Those predictions seem a bit off because it appears an apartment with no bathroom is slightly more expensive than an apartment with one bathroom, but that's exactly what the training data shows in the scatterplot above. The model has captures the underlying bathrooms versus price relationship in the training data well.</p>
 
@@ -413,7 +425,7 @@ e = mean_absolute_error(y, predictions)
 print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
 </div>
 
-<p class="stdout">$808 average error; 23.49% error
+<p class="stdout">$807 average error; 23.47% error
 </p>
 <p>That means a user of this model can expect the predicted price for an apartment in the training data to be off by about $808, which is not great but we're only using single predictor feature.  Let's add some more features to the model to see if we can improve the average error.</p>
 
@@ -438,7 +450,7 @@ e = mean_absolute_error(y, predictions)
 print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
 </div>
 
-<p class="stdout">$723 average error; 21.01% error
+<p class="stdout">$722 average error; 21.00% error
 </p>
 <p>That's an improvement in expected rent prediction error on the training set of 808-722 = $86, or around 10%. That gives us a hint that the number of bedrooms is not as predictive as the number of bathrooms; we'll see a more formal way to check that below.</p>
 <p>They say that three most important property attributes in real estate are: location, location, location. Let's test that hypothesis with our rental data, using just the two columns associated with map location:</p>
@@ -451,7 +463,7 @@ e = mean_absolute_error(y, rf.predict(X))
 print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
 </div>
 
-<p class="stdout">$523 average error; 15.20% error
+<p class="stdout">$524 average error; 15.24% error
 </p>
 <p>Ok, now we're getting somewhere. The average prediction error on the training set has dropped to $525. You might  compare the difference the 21% error for the model fit on bedrooms and bathrooms and this 15% error and think &ldquo;it's only 6%.&rdquo; It's better to think of this as the ratio 15/21 = 71% rather than the difference 21-15. The ratio says that our prediction error relative to the average rent price got 100-71 = 29% better (lower). That more accurately represents how much better location helps the model fit the training data.</p>
 <p>Let's see what happens if we combine all four attributes into our feature vector and retrain the model:</p>
@@ -464,7 +476,7 @@ e = mean_absolute_error(y, rf.predict(X))
 print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
 </div>
 
-<p class="stdout">$190 average error; 5.53% error
+<p class="stdout">$189 average error; 5.51% error
 </p>
 <p>Great!  The average error in the predicted price for an apartment in the training data is down to only $190. Alas, we shouldn't get too excited because all we've shown so far is that our model captures the relationships in the training data. We know nothing about the model's generality.</p>
 
@@ -489,7 +501,7 @@ e = mean_absolute_error(y_test, rf.predict(X_test))
 print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
 </div>
 
-<p class="stdout">$293 average error; 8.51% error
+<p class="stdout">$299 average error; 8.68% error
 </p>
 <p>Comparing the average error $304 from the validation set and the $190 error on data from the training set, we see that the model performs about 1/3 better on the training data. This is as we'd expect because the training error is our &ldquo;do not exceed speed.&rdquo; (The training error is analogous to the score we'd get on a quiz for which we'd seen the answers beforehand.) We want the validation error to be as close to the training error as possible.</p>
 <p>If you run that code multiple times, you'll notice that different runs get different validation errors because of the variability in selecting the validation subset. That's not a good characteristic, which brings us to our second and more stable validation strategy, <span class=eqn>k</span>-fold cross validation.</p>
@@ -507,7 +519,7 @@ std_err = cv_err.std()
 print(f"${m_err:.0f} average error +/-${2*std_err:.2f}; {m_err*100.0/y.mean():.2f}% error")
 </div>
 
-<p class="stdout">$306 average error +/-$17.81; 8.89% error
+<p class="stdout">$307 average error +/-$17.89; 8.92% error
 </p>
 <p>(This can take awhile on a lower-end machine; don't worry---it'll peg your CPU but finish in about 15 seconds or so.)</p>
 <p>This $307 average error is much more stable and more accurate than the error computed using the holdout strategy. The +/-$17.18 covers the range of two standard deviations, which just means that about 95% of the time the actual error will be within $17.18 of $307.</p>
@@ -533,7 +545,7 @@ print(f"${m_err:.0f} average error +/-${2*std_err:.2f}; {m_err*100.0/y.mean():.2
 validate(rf)
 </div>
 
-<p class="stdout">$300 average error +/-$15.85; 8.71% error
+<p class="stdout">$299 average error +/-$15.10; 8.70% error
 </p>
 <p>The number of trees, and any other aspect of the model that affects its architecture, statisticians call a <i>hyper-parameter</i>. (I think we programmers would call this a meta-parameter.) The elements inside the model like the trees themselves are called the model parameters. As another example, the four <span class=eqn>w<sub>i</sub></span> weights and minimum rent value from a linear model are the model parameters.</p>
 <p><span style="color: red">{TODO: why does RandomForestRegressor(criterion='mae', n_jobs=-1) take forever whereas criterion='mse', the default, take only a few seconds?!}</span></p>
@@ -558,16 +570,16 @@ I</div>
 </thead>
 <tbody>
 	<tr>
-	<td><b>bathrooms</b></td><td>0.4492</td>
+	<td><b>bathrooms</b></td><td>0.5056</td>
 	</tr>
 	<tr>
-	<td><b>latitude</b></td><td>0.5537</td>
+	<td><b>latitude</b></td><td>0.5161</td>
 	</tr>
 	<tr>
-	<td><b>longitude</b></td><td>0.5956</td>
+	<td><b>bedrooms</b></td><td>0.6172</td>
 	</tr>
 	<tr>
-	<td><b>bedrooms</b></td><td>0.6024</td>
+	<td><b>longitude</b></td><td>0.6214</td>
 	</tr>
 </tbody>
 </table>
@@ -623,6 +635,7 @@ validate(gbr)
 <h2 id="sec0">The Big Picture</h2>
 
 <p>As a review, and as a reference for future use, let's pack the key concepts and terminology we've learned in this chapter into a few concentrated paragraphs.</p>
+<div class="p_wrapper">
 <span class=sidenote>
 
 <center>
@@ -630,7 +643,9 @@ validate(gbr)
 </center>
 
 <br><b>Figure 3</b>. Feature vectors X and targets y</span>
-<p>Machine learning uses a model to capture the relationship between feature vectors and some target variables within a training data set.  A feature vector is a set of features or attributes that characterize a particular object, such as the number of bedrooms, bathrooms, and location of an apartment. The target is either a scalar value like rent price, or it's an integer classification such as &ldquo;creditworthy&ldquo; or &rdquo;it's not cancer.&rdquo;  Features and targets are presented to the model for training as abstract matrix <span class=inlinecode>X</span> and vector <span class=inlinecode>y</span> (<b>Figure 3</b>) where each row represents everything we know about a particular entity, such as an apartment.</p>
+<p class=p_left>Machine learning uses a model to capture the relationship between feature vectors and some target variables within a training data set.  A feature vector is a set of features or attributes that characterize a particular object, such as the number of bedrooms, bathrooms, and location of an apartment. The target is either a scalar value like rent price, or it's an integer classification such as &ldquo;creditworthy&rdquo; or &ldquo;it's not cancer.&rdquo;  Features and targets are presented to the model for training as abstract matrix <span class=inlinecode>X</span> and vector <span class=inlinecode>y</span> (<b>Figure 3</b>) where each row represents everything we know about a particular entity, such as an apartment.</p>
+</div>
+<div class="p_wrapper">
 <span class=sidenote>
 
 <center>
@@ -656,8 +671,10 @@ validate(gbr)
 </center>
 
 <br><b>Figure 7</b>. Classifiers draw curves through the  space separating classes</span>
-<p>If the target is a scalar value, we're building a predictor (also commonly called a regressor), as shown in <b>Figure 4</b>.  If the target is a discrete category or class, we're building a classifier (<b>Figure 5</b>). We'll learn about classifiers in <span style="color: red">[foo]</span>, but a simple way to think about the difference between predictors and classifiers is illustrated in <b>Figure 6</b> and <b>Figure 7</b>. Predictors are usually fitting curves to data and classifiers are drawing decision boundaries in between data points associated with the various categories. There is a tendency to think of predictors and classifiers as totally different problems with different solutions, but they are really the same core problem and most models have both predictor and classifier variants. In fact, the classifier variant is sometimes nothing more than the predictor variant with an additional function that clips, scales, or tweaks the predictor's output.</p>
+<p class=p_left>If the target is a scalar value, we're building a predictor (also commonly called a regressor), as shown in <b>Figure 4</b>.  If the target is a discrete category or class, we're building a classifier (<b>Figure 5</b>). We'll learn about classifiers in <span style="color: red">[foo]</span>, but a simple way to think about the difference between predictors and classifiers is illustrated in <b>Figure 6</b> and <b>Figure 7</b>. Predictors are usually fitting curves to data and classifiers are drawing decision boundaries in between data points associated with the various categories. There is a tendency to think of predictors and classifiers as totally different problems with different solutions, but they are really the same core problem and most models have both predictor and classifier variants. In fact, the classifier variant is sometimes nothing more than the predictor variant with an additional function that clips, scales, or tweaks the predictor's output.</p>
+</div>
 <p>Machine learning tasks that have both feature vectors <span class=inlinecode>X</span> and known targets <span class=inlinecode>y</span> fall into the <i>supervised learning</i> category and are the focus of this book. <i>Unsupervised learning</i> tasks involve just <span class=inlinecode>X</span> and the target variable is unknown; we say the data is unlabeled. The most common unsupervised task is called <i>clustering</i> that attempts to cluster similar data points together very much like <b>Figure 7</b>. In the supervised case, though, we know not only how many categories there are but we also know which records are associated with which category. The goal of clustering is to discover both the number of categories and assign records to categories. As we mentioned in <b>Chapter 1</b> <i>Welcome!</i>, the vast majority of machine learning problems are supervised and, besides, unsupervised techniques are straightforward to learn after mastering supervised techniques.</p>
+<div class="p_wrapper">
 <span class=sidenote>
 
 <center>
@@ -665,7 +682,8 @@ validate(gbr)
 </center>
 
 <br><b>Figure 8</b>. Distilling model parameters from training data and</span>
-<p>A model is a combination of data structure, algorithm, and mathematics that captures the relationship described by a collection of (feature vector, target) pairs. The model records a condensation of the training data in its data structure, which can be anything from the unaltered training set (nearest neighbor model) to a set of decision trees (random forest model) to a handful of weights (linear model). This data structure comprises the parameters of the model and the parameters are computed from the training data. <b>Figure 8</b> illustrates the process.</p>
+<p class=p_left>A model is a combination of data structure, algorithm, and mathematics that captures the relationship described by a collection of (feature vector, target) pairs. The model records a condensation of the training data in its data structure, which can be anything from the unaltered training set (nearest neighbor model) to a set of decision trees (random forest model) to a handful of weights (linear model). This data structure comprises the parameters of the model and the parameters are computed from the training data. <b>Figure 8</b> illustrates the process.</p>
+</div>
 <p>The process of computing model parameters is called training the model or fitting a model to the data. If a model is unable to capture the relationship between feature vectors and targets, the model is underfitting (assuming there is a relationship to be had). At the other extreme, a model is overfitting if it is too specific to the training data and doesn't generalize well. To generalize means that we get accurate predictions for feature vectors not found in the training set.</p>
 <p>Models also have hyper-parameters, which dictate the overall architecture or other aspects of the model. For example, the nearest neighbor model is more specifically called &ldquo;<span class=eqn>k</span>-nearest neighbor&rdquo; because the model finds the nearest <span class=eqn>k</span> objects then averages their target values to make a prediction. <span class=eqn>k</span> is the model's hyper-parameter. In a random forest, the number of trees in the forest is the most common hyper-parameter.  In a neural network, hyper-parameters typically include the number of layers and number of neurons. Hyper-parameters are specified by the programmer, not computed from the training data, and are often used to tune a model to improve accuracy for a particular data set. The basic code sequence we'll use to train a model looks like this:</p>
 <p><span class=inlinecode>df</span> = <span class=inlinecode>pd.read_csv</span>(<i>datafile</i>)<br><span class=inlinecode>X</span> = <span class=inlinecode>df[[</span><i>feature column names of interest</i><span class=inlinecode>]]</span><br><span class=inlinecode>y</span> = <span class=inlinecode>df[</span><i>target column name</i><span class=inlinecode>]</span><br><span class=inlinecode>m</span> = <i>ChooseYourModel</i>(<i>hyper-parameters</i>)<br><span class=inlinecode>m.fit(X,y)</span></p>

@@ -84,8 +84,10 @@ Book version 0.1
 
 <h2 id="sec0">Machine learning programming is challenging</h2>
 
-<span class=sidenote><span class=sup>1</span>As you start to tackle your own machine learning problems, know that you're not alone when you get angry and frustrated. It's the nature of the beast to have difficulty wrangling large amounts of data, looking for suspected bugs, trying to beat libraries into submission, and so on.  We're all in the same boat!  Some of the mechanics get easier, but even experts find this kind of programming to be exasperating and extremely difficult to get right.</span>
-<p>The ideas behind preparing data and training models are not that hard to understand. In fact, we're going to build up a broadly-applicable recipe as we proceed through the book. On the other hand, the physical act of programming to prepare data and train models can be extremely challenging and frustrating.<span class=sup>1</span> The ease with which we trained our rent model in the last chapter is highly misleading.  You might wonder how hard it can be when those code snippets were so small and straightforward, at least with a bit more experience with the libraries.  (In practice, most machine learning programs are so small we should really call them scripts not programs.)</p>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>1</span>As you start to tackle your own machine learning problems, know that you're not alone when you get angry and frustrated. It's the nature of the beast to have difficulty wrangling large amounts of data, looking for suspected bugs, trying to beat libraries into submission, and so on.  We're all in the same boat!  Some of the mechanics get easier, but even experts find this kind of programming to be exasperating and extremely difficult to get right.</p>
+<p class=p_left>The ideas behind preparing data and training models are not that hard to understand. In fact, we're going to build up a broadly-applicable recipe as we proceed through the book. On the other hand, the physical act of programming to prepare data and train models can be extremely challenging and frustrating.<span class=sup>1</span> The ease with which we trained our rent model in the last chapter is highly misleading.  You might wonder how hard it can be when those code snippets were so small and straightforward, at least with a bit more experience with the libraries.  (In practice, most machine learning programs are so small we should really call them scripts not programs.)</p>
+</div>
 <p>The difficulty lies in that we can't just bash our way to victory like we can when, for example, implementing a graphical interface. In that case, we can just pound on the code until the resulting GUI fits the intended design.  Of course, <b>designing</b> a good GUI is often hard, but the act of GUI programming itself is more of a slugfest than an intellectual endeavor.</p>
 <p>Machine learning programming is difficult for these inescapable reasons:</p>
 <ul>
@@ -103,8 +105,10 @@ Book version 0.1
 <h2 id="sec0">Your machine learning development environment</h2>
 
 <p>Over the last 30 years, there's been remarkable progress in the development of IDEs that make programmers very efficient, such as Intellij, Eclipse, VisualStudio, etc... Their focus, however, is on creating and navigating large programs, the opposite of our small machine learning scripts. More importantly, those IDEs have little to no support for interactive programming, but that's exactly what we need to be effective in machine learning. While Terence and Jeremy are strong advocates of IDEs in general, IDEs are less useful in the special circumstances of machine learning.</p>
-<span class=sidenote><span class=sup>2</span>All of the code snippets you see in this book, even the ones to generate figures, can be found in the <a href="https://mlbook.explained.ai/notebooks/index.html">notebooks</a> generated from this book.</span>
-<p>Instead, we recommend <a href="https://jupyter-notebook.readthedocs.io/en/stable/notebook.html">Jupyter Notebooks</a>, which are  web-based documents with embedded code, akin to <a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a>, that intersperses the generated output with the code.<span class=sup>2</span> Notebooks are well-suited to both development and presentation.   To access notebooks, we're going to use the recently-introduced <a href="http://jupyterlab.readthedocs.io/en/latest/getting_started/overview.html">Jupyter Lab</a> because of its improved user interface. (It should be out of beta by the time you're reading this book.)  Let's fire up a notebook to appreciate the difference between it and a traditional IDE.</p>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>2</span>All of the code snippets you see in this book, even the ones to generate figures, can be found in the <a href="https://mlbook.explained.ai/notebooks/index.html">notebooks</a> generated from this book.</p>
+<p class=p_left>Instead, we recommend <a href="https://jupyter-notebook.readthedocs.io/en/stable/notebook.html">Jupyter Notebooks</a>, which are  web-based documents with embedded code, akin to <a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a>, that intersperses the generated output with the code.<span class=sup>2</span> Notebooks are well-suited to both development and presentation.   To access notebooks, we're going to use the recently-introduced <a href="http://jupyterlab.readthedocs.io/en/latest/getting_started/overview.html">Jupyter Lab</a> because of its improved user interface. (It should be out of beta by the time you're reading this book.)  Let's fire up a notebook to appreciate the difference between it and a traditional IDE.</p>
+</div>
 <p>First, let's make sure that we have the latest version of Jupyter Lab by running this from the Windows/Mac/Unix command line:</p>
 
 
@@ -140,6 +144,7 @@ mkdir data</div>
 ...</div>
 
 
+<div class="p_wrapper">
 <span class=sidenote>
 
 <center>
@@ -153,7 +158,8 @@ mkdir data</div>
 </center>
 
 <br><b>Figure 2</b>. Jupyter Lab after creating Python 3 notebook</span>
-<p>Running that command should also open a browser window that looks like <b>Figure 1</b>.  That notebook communicates with the Jupyter Lab server via good old http, the web protocol. Clicking on the &ldquo;Python 3&ldquo; icon under the &rdquo;Notebook&rdquo; category, will create and open a new notebook window that looks like <b>Figure 2</b>. Cut-and-paste the following code into the empty <i>notebook cell</i>, replacing the data file name as appropriate for your set up (here we've copied and unzipped the <a href="https://mlbook.explained.ai/data/rent-ideal.csv.zip">data/rent-ideal.csv.zip</a> file into the <span class=inlinecode>data</span> directory under <span class=inlinecode>src</span> we just created above).</p>
+<p class=p_left>Running that command should also open a browser window that looks like <b>Figure 1</b>.  That notebook communicates with the Jupyter Lab server via good old http, the web protocol. Clicking on the &ldquo;Python 3&rdquo; icon under the &ldquo;Notebook&rdquo; category, will create and open a new notebook window that looks like <b>Figure 2</b>. Cut-and-paste the following code into the empty <i>notebook cell</i>, replacing the data file name as appropriate for your set up (here we've copied and unzipped the <a href="https://mlbook.explained.ai/data/rent-ideal.csv.zip">data/rent-ideal.csv.zip</a> file into the <span class=inlinecode>data</span> directory under <span class=inlinecode>src</span> we just created above).</p>
+</div>
 
 
 <div class="codeblk">import pandas as pd
@@ -161,6 +167,7 @@ df = pd.read_csv("data/rent-ideal.csv")
 df.head(5) # print the first 5 rows of data</div>
 
 
+<div class="p_wrapper">
 <span class=sidenote>
 
 <center>
@@ -168,7 +175,8 @@ df.head(5) # print the first 5 rows of data</div>
 </center>
 
 <br><b>Figure 3</b>. Jupyter Lab with one code cell</span>
-<p>After pasting, hit control-enter in the cell (hold the control key and then hit enter), which will execute and display results like <b>Figure 3</b>.  Of course, this would also work from the usual interactive Python shell, but it's not as pretty:</p>
+<p class=p_left>After pasting, hit control-enter in the cell (hold the control key and then hit enter), which will execute and display results like <b>Figure 3</b>.  Of course, this would also work from the usual interactive Python shell, but it's not as pretty:</p>
+</div>
 
 
 <div class="codeblk">$ python
@@ -199,6 +207,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 4         4        1.0   40.8241   -73.9493   3350</div>
 
 
+<div class="p_wrapper">
 <span class=sidenote>
 
 <center>
@@ -206,7 +215,8 @@ Type "help", "copyright", "credits" or "license" for more information.
 </center>
 
 <br><b>Figure 4</b>. Notebook with graph output</span>
-<p>Notebooks have two big advantages over the interactive Python shell. Because the Python shell is using an old-school terminal, it has very limited display options whereas notebooks can embed graphs and other images directly. <b>Figure 4</b> illustrates how to generate a histogram of rent prices that appears inline right after the code. Click the &ldquo;+&rdquo; button on the tab of the notebook to get a new cell, paste in the following code, then hit control-enter.</p>
+<p class=p_left>Notebooks have two big advantages over the interactive Python shell. Because the Python shell is using an old-school terminal, it has very limited display options whereas notebooks can embed graphs and other images directly. <b>Figure 4</b> illustrates how to generate a histogram of rent prices that appears inline right after the code. Click the &ldquo;+&rdquo; button on the tab of the notebook to get a new cell, paste in the following code, then hit control-enter.</p>
+</div>
 
 
 <div class="codeblk">import matplotlib.pyplot as plt
@@ -224,17 +234,21 @@ plt.show()</div>
 
 <p>The first step in any machine learning project has nothing to do with programming.  We start by making sure we're solving the right problem. As with any software project, the client often doesn't know exactly what they want or can't articulate what they want very well. Next, we need to figure out if we have the right data and, if not, how or where we can get the data.  There could be multiple data sources to merge and the data might appear in multiple formats, such as Excel(tm), <a href="https://en.wikipedia.org/wiki/XML">XML</a>, <a href="https://www.json.org/">JSON</a>, or CSV (comma-separated values).  Talking to the client and acquiring the right data in the right form is an important part of any project but beyond the scope of this book. For our purposes, we'll assume the data sets we use emerged from such process.</p>
 <p>To begin the actual programming phase of a machine learning project, the first step is to look at the data, but just for a quick sniff (using a Jupyter notebook, Excel, editor, etc...). We need to know what the data looks like, but we have to be careful not to make too many assumptions. For example, our first inspection of the data should yield the column names, their datatypes, and whether the target column has numeric values or categories. (If we're predicting, those values must be numeric; if we're classifying, those values must be categories.)</p>
+<div class="p_wrapper">
 <div class=callout>The more you look at the data the more you risk overfitting. <span style="color: red">{TODO: ask jph for something specific}</span></div>
-<p>Try to avoid looking too much at the data values because it's tempting to start making judgments and assumptions based on eyeballing the data rather than using a machine learning model. Remember that we wouldn't need machine learning if a human could just look at a big data set and make correct, unbiased predictions. For example, if we see a column with lots of missing values, it's tempting to remove that from consideration as a feature. Instead, let the model tell you what features are important.  We might also, erroneously, choose a model that looks like it would work well based upon overzealous examination of the data.</p>
+<p class=p_left>Try to avoid looking too much at the data values because it's tempting to start making judgments and assumptions based on eyeballing the data rather than using a machine learning model. Remember that we wouldn't need machine learning if a human could just look at a big data set and make correct, unbiased predictions. For example, if we see a column with lots of missing values, it's tempting to remove that from consideration as a feature. Instead, let the model tell you what features are important.  We might also, erroneously, choose a model that looks like it would work well based upon overzealous examination of the data.</p>
+</div>
+<div class="p_wrapper">
 <div class=callout>Never train or tune a model using the test set; use the validation set.</div>
-<p>The second step of the programming process is to extract a <i>test set</i> from the training data set, unless the client provides you with a specific test set.  The test set should be hidden away where neither we nor the model can peek at the data. In other words, we never train or tune the model using the test set. If we did use the test set before completing the model, it'd be just another validation set.   Recall from the last chapter the difference between the training set and the validation set. We train the model on the training set and check the generality of the model by comparing its predictions on the validation set against the known correct answers contained in the validation set. We tune the model using hyper-parameters, watching the effect on the validation error, hoping to improve accuracy. (More on validation below.) After constructing what we think is a good model, we can use the test set to get an estimate of the model's generality, that is, how well the model will perform on other previously-unseen data.</p>
+<p class=p_left>The second step of the programming process is to extract a <i>test set</i> from the training data set, unless the client provides you with a specific test set.  The test set should be hidden away where neither we nor the model can peek at the data. In other words, we never train or tune the model using the test set. If we did use the test set before completing the model, it'd be just another validation set.   Recall from the last chapter the difference between the training set and the validation set. We train the model on the training set and check the generality of the model by comparing its predictions on the validation set against the known correct answers contained in the validation set. We tune the model using hyper-parameters, watching the effect on the validation error, hoping to improve accuracy. (More on validation below.) After constructing what we think is a good model, we can use the test set to get an estimate of the model's generality, that is, how well the model will perform on other previously-unseen data.</p>
+</div>
 <p>Let's see what our first two steps look like in practice on the apartment data.</p>
 
 
 <h3 id="">Getting a quick sniff of the data</h3>
 
 <p>The apartment data we've been using was derived from a Kaggle competition called <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Two Sigma Connect: Rental Listing Inquiries</a> and was given in JSON form, but we have converted it to CSV  for the purposes of this chapter; see zipped book data file <a href="https://mlbook.explained.ai/data/rent.csv.zip">rent.csv.zip</a>.</p>
-<p>To get started, let's create a new Jupyter notebook by clicking on the &ldquo;+&ldquo; button again and selecting &ldquo;Python 3&ldquo; under the &ldquo;Notebook&rdquo; tab. This will create a file in the same directory where you started <span class=inlinecode>jupyter lab</span> (unless you have jumped around using the &rdquo;Files&rdquo; tab on the left side of the lab browser window). It's probably a good idea to give the file a decent name like <span class=inlinecode>prep.ipynb</span> by right clicking on the notebook tab that currently says &rdquo;Untitled.ipynb.&rdquo; Now, let's enter some code into the notebook to read in the CSV data using Pandas to get our first look at the original data:</p>
+<p>To get started, let's create a new Jupyter notebook by clicking on the &ldquo;+&rdquo; button again and selecting &ldquo;Python 3&rdquo; under the &ldquo;Notebook&rdquo; tab. This will create a file in the same directory where you started <span class=inlinecode>jupyter lab</span> (unless you have jumped around using the &ldquo;Files&rdquo; tab on the left side of the lab browser window). It's probably a good idea to give the file a decent name like <span class=inlinecode>prep.ipynb</span> by right clicking on the notebook tab that currently says &ldquo;Untitled.ipynb.&rdquo; Now, let's enter some code into the notebook to read in the CSV data using Pandas to get our first look at the original data:</p>
 
 
 <div class="codeblk">import pandas as pd
@@ -373,8 +387,10 @@ df_num.head(2)</div>
 <h3 id="">Extracting a test set</h3>
 
 <p>The true test of model generality is the performance of the model on a test data set not used for training or tuning of model hyper-parameters. It's often the case that we need to create our own test set and, unfortunately, it's not as easy as just extracting a random 10% of the records in practice. Even if there is no date or other time-related column, data is collected over time, which can skew data.  For example, users added to a social media website recently are often quite different from users added much earlier. (Early adopters tend to be younger and so new users to a social media site will skew older as time goes on.)  In our  apartment data, prices could be skewed because of inflation or the introduction of a new subway station near a cluster of apartments. Worse, some data sets are very unbalanced, such as fraud records within credit card activity data. The number of fraud records is vastly smaller then the number of valid credit card records, which also has a strong impact on training. We'll look at this in more detail in <span style="color: red">[testing]</span>, but these issues are good to keep in mind.  <span style="color: red">{TODO: need jph review, augmentation}</span></p>
-<span class=sidenote><span class=sup>3</span>This code snippet illustrates why we used two different names, <span class=inlinecode>df</span> and <span class=inlinecode>df_num</span>, for different views of the data frame around. The notebook code snippets are all sitting in the global Python scope; all of those variables are globals so we need different names to keep them separate.</span>
-<p>For now, we're going to just randomly select 15% of the apartment records to hold out as our test set. Fortunately, such a simple test set selection process will work out fine for this data set. The date range of records is very tight, just three months:<span class=sup>3</span></p>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>5</span>This code snippet illustrates why we used two different names, <span class=inlinecode>df</span> and <span class=inlinecode>df_num</span>, for different views of the data frame around. The notebook code snippets are all sitting in the global Python scope; all of those variables are globals so we need different names to keep them separate.</p>
+<p class=p_left>For now, we're going to just randomly select 15% of the apartment records to hold out as our test set. Fortunately, such a simple test set selection process will work out fine for this data set. The date range of records is very tight, just three months:<span class=sup>5</span></p>
+</div>
 
 
 <div class="codeblk">df.created.min(), df.created.max()</div>
@@ -392,6 +408,7 @@ df_train, df_test = train_test_split(df_num, test_size=0.15) # 15% goes into tes
 </div>
 
 <p>It's a good idea to save the training and test sets to separate CSV files in case we need to reload them. Having consistent data sets means we can reproduce issues, error metrics, and so on across machines and restarts of Jupyter Lab. </p>
+<div class="p_wrapper">
 <span class=sidenote>
 
 <center>
@@ -405,7 +422,8 @@ df_train, df_test = train_test_split(df_num, test_size=0.15) # 15% goes into tes
 </center>
 
 <br><b>Figure 6</b>. Jupyter notebook function argument doc; hit shift-tab inside parentheses</span>
-<p>Pandas data frames have lots of methods and so it's a good idea to get used to using auto completion. Type a few letters of the function name then hit the tab key. <b>Figure 5</b> shows that there is a <span class=inlinecode>to_csv()</span> function available. Once we have the name of a function, we can use shift-tab within the parentheses of a function call itself to get the documentation for that function, as shown in <b>Figure 6</b>.  Execute the following code to save both data sets.</p>
+<p class=p_left>Pandas data frames have lots of methods and so it's a good idea to get used to using auto completion. Type a few letters of the function name then hit the tab key. <b>Figure 5</b> shows that there is a <span class=inlinecode>to_csv()</span> function available. Once we have the name of a function, we can use shift-tab within the parentheses of a function call itself to get the documentation for that function, as shown in <b>Figure 6</b>.  Execute the following code to save both data sets.</p>
+</div>
 
 
 <div class="codeblk">df_train.to_csv("data/rent-train.csv")
@@ -414,15 +432,16 @@ df_test.to_csv("data/rent-test.csv")
 
 <p>A simple <span class=inlinecode>pd.read_csv("data/rent-test.csv")</span> will read the test set back anytime we need it.   </p>
 <p>Now that the test set is saved on the disk, let's forget it even exists until we think we have a decent model.  It's a bad idea to even look at the test set because that glimpse can bias how we tune the model or even affect which model we choose.  To correctly test generality, the test set can in no way affect model development. Given a data set, if you try enough models, you'll eventually find one that finds a relationship between features and target, even if one does not exist! </p>
-<div class=callout><span style="color: red">{TODO: Add a callout about not trying too many models for risking overfit?}</span></div>
 <p>With the data sets prepared, it's time to give it the old smoke test and see what happens when we shove our training data into an RF model.</p>
 
 
 
 <h2 id="sec0">Training an initial model</h2>
 
-<span class=sidenote><span class=sup>4</span>The cool kids say things like, &ldquo;there's no signal there&rdquo; to indicate no relationship exists between features and target.</span>
-<p>We haven't looked at the training data very intensely other than to know all of the columns in the data frame are numeric. We could explore the data some more, but what exactly would we be looking for? There would be an awful temptation to prematurely manipulate the data based upon our flawed human observations. Instead, let's train and test a model, letting the model tell us whether there is a relationship between the features and the target and how strong that &ldquo;signal&rdquo; is.<span class=sup>4</span></p>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>6</span>The cool kids say things like, &ldquo;there's no signal there&rdquo; to indicate no relationship exists between features and target.</p>
+<p class=p_left>We haven't looked at the training data very intensely other than to know all of the columns in the data frame are numeric. We could explore the data some more, but what exactly would we be looking for? There would be an awful temptation to prematurely manipulate the data based upon our flawed human observations. Instead, let's train and test a model, letting the model tell us whether there is a relationship between the features and the target and how strong that &ldquo;signal&rdquo; is.<span class=sup>6</span></p>
+</div>
 <p>Here's the recipe for training a model once we have a properly-prepared data frame, <span class=inlinecode>df_train</span>, that consists only of numeric or boolean columns:</p>
 <ol>
 <li>Separate the features and target columns.
@@ -455,7 +474,7 @@ rf = RandomForestRegressor(n_estimators=100, n_jobs=-1)
 <h2 id="sec0">Estimating prediction error</h2>
 
 <p>There are two kinds of errors we can compute from a model that we use prior to final test set evaluation: the <i>training error</i> and the <i>validation error</i>. The training error compares the predictions made by a model given the data it trained on to the known correct target values (also found in that training data). The validation error compares the predictions made by the model given the validation data to the known correct target values from the validation set. In other words, if <span class=inlinecode>x</span> is a feature vector from the training set (<span class=inlinecode>X_train</span>) and <span class=inlinecode>y</span> is the target (known correct response in <span class=inlinecode>y_train</span>), the training error compares the model's prediction for <span class=inlinecode>x</span> with <span class=inlinecode>y</span>. The overall training error is the average or some other metric computed on such differences for each <span class=inlinecode>x</span> in the training set. The validation error computes the same metric but using <span class=inlinecode>x</span> and <span class=inlinecode>y</span> pairs from the validation set.</p>
-<p>The simplest error metric is likely the average difference between predicted and actual prices, called the <i>residuals</i>, which we can get with scikit's <span class=inlinecode>mean_absolute_error()</span> function (&ldquo;mean&ldquo; is the same thing as &rdquo;average&rdquo;):</p>
+<p>The simplest error metric is likely the average difference between predicted and actual prices, called the <i>residuals</i>, which we can get with scikit's <span class=inlinecode>mean_absolute_error()</span> function (&ldquo;mean&rdquo; is the same thing as &ldquo;average&rdquo;):</p>
 
 
 <div class="codeblk">from sklearn.metrics import mean_absolute_error
@@ -469,8 +488,8 @@ perc_err_train = err_train*100/avg_train
 print(f"{perc_err_train:0.2f}% of average {avg_train:.2f}")
 </div>
 
-<p class="stdout">$306.21 average error on training set
-7.93% of average 3860.48
+<p class="stdout">$297.54 average error on training set
+7.71% of average 3859.00
 </p>
 <p>Function <span class=inlinecode>mean_absolute_error()</span> is just subtracting predicted minus known target values, taking the absolute value, and then computing the average:</p>
 
@@ -481,19 +500,23 @@ err_train = y_diff.mean()</div>
 
 <p><span style="color: red">{TODO: compare MAE to the median as a baseline model?}</span></p>
 <p>Function call <span class=inlinecode>rf.predict(X_train)</span> returns a vector of predictions so <span class=inlinecode>rf.predict(X_train) - y_train</span> does a vector subtraction, yielding a new vector containing the element-wise subtraction of the two vectors. Calling <span class=inlinecode>abs()</span> on that resulting vector applies absolute value to every element of the vector, yielding the <span class=inlinecode>y_diff</span> vector result. These so-called vector operations tend to be much more efficient than Python loops, because the vector operations are done in highly-optimized C code under the hood within the Python libraries.</p>
-<p>That training error tells us that, on average, the model is able to reproduce the data it was trained on to within $306. That's about 7% of the average rent price. (This error value will fluctuate with every new call to <span class=inlinecode>train_test_split()</span>.)</p>
-<p>That error metric sounds pretty good, but unfortunately a decent training error is utterly meaningless.  All it means is that the model is acting kind of like a dictionary, memorizing the training data.  We don't even need machine learning to get that sort of behavior. On the other hand, if the training error is very bad, that does tell us something: as provided to the model, there's no signal in the data or the model is too weak to capture it.  If we can't futz with the features and get a low training error, there's no point in proceeding because such a model will never generalize. In other words, if a model performs poorly on the data it was trained on, the model will never perform well on data it is never seen.  Our training error of $306 is good but all we can conclude is that there is a possible relationship between features and target that an RF model can capture.</p>
+<p>That training error tells us that, on average, the model is able to reproduce the data it was trained on to within $297. That's about 7% of the average rent price. (This error value will fluctuate with every new call to <span class=inlinecode>train_test_split()</span>.)</p>
+<p>That error metric sounds pretty good, but unfortunately a decent training error is utterly meaningless.  All it means is that the model is acting kind of like a dictionary, memorizing the training data.  We don't even need machine learning to get that sort of behavior. On the other hand, if the training error is very bad, that does tell us something: as provided to the model, there's no signal in the data or the model is too weak to capture it.  If we can't futz with the features and get a low training error, there's no point in proceeding because such a model will never generalize. In other words, if a model performs poorly on the data it was trained on, the model will never perform well on data it is never seen.  Our training error of $297 is good but all we can conclude is that there is a possible relationship between features and target that an RF model can capture.</p>
+<div class="p_wrapper">
 <div class=callout>Models that perform poorly on training data will never generalize well to data they have never seen. Models that perform well on training data might or might not generalize well.</div>
-<p>The only thing that matters when building a model is generalization, which we measure with validation error and then, ultimately, with the <i>test error</i> computed using the test set.  The validation error is an estimate of the true prediction error, but it is an underestimate because we use the validation set during training to tune the model. The test set we held out will give the best estimation of the true prediction error, the model's generality.</p>
+<p class=p_left>The only thing that matters when building a model is generalization, which we measure with validation error and then, ultimately, with the <i>test error</i> computed using the test set.  The validation error is an estimate of the true prediction error, but it is an underestimate because we use the validation set during training to tune the model. The test set we held out will give the best estimation of the true prediction error, the model's generality.</p>
+</div>
 <p>As we did with the test set, we could have held out a validation set, but the validation error associated with a single validation set could fluctuate, sometimes dramatically, from run to run. For example, imagine that the held-out validation set happens to include lots of really expensive apartments. In that case, the validation error would be misleadingly high because the model was trained on a data set with different characteristics.</p>
+<div class="p_wrapper">
 <span class=sidenote>
 
 <center>
 <img src="images/prep/cross-valid.png" width="70%">
 </center>
 
-<br><b>Figure 7</b>. Illustration of 3-fold cross validation training on two (blue) chunks, testing on the third (orange) until the model computes an accuracy metric for all three chunks</span><span class=sidenote><span class=sup>5</span>The <span class=inlinecode>neg_mean_absolute_error</span> is negated because of a convention in scikit that higher values are better scores than lower and so mean absolute error is flipped so that larger errors yield smaller numbers.</span>
-<p>We can get a more stable validation error and, hence, more reliable estimate of the prediction error, using <span class=eqn>k</span>-fold <i>cross validation</i>, which computes and averages <span class=eqn>k</span> validation errors. The idea is to split the training set into <span class=eqn>k</span> chunks and compute the validation error on one chunk using a model trained on the other <img style="vertical-align: -1.08pt;" src="images/eqn-14464AC1DFE6FA8AD8FDA94BB6F01571-depth001.08.svg"> chunks, as shown in <b>Figure 7</b> for <span class=eqn>k</span>=3.  Do that for each of <span class=eqn>k</span> chunks and we have <span class=eqn>k</span> validation errors. The overall validation error is the average of the <span class=eqn>k</span> chunks' validation errors. Scikit provides a function called <span class=inlinecode>cross_val_score()</span> to handle all of this for us:<span class=sup>5</span></p>
+<br><b>Figure 7</b>. Illustration of 3-fold cross validation training on two (blue) chunks, testing on the third (orange) until the model computes an accuracy metric for all three chunks</span><p class=sidenote><span class=sup>8</span>The <span class=inlinecode>neg_mean_absolute_error</span> is negated because of a convention in scikit that higher values are better scores than lower and so mean absolute error is flipped so that larger errors yield smaller numbers.</p>
+<p class=p_left>We can get a more stable validation error and, hence, more reliable estimate of the prediction error, using <span class=eqn>k</span>-fold <i>cross validation</i>, which computes and averages <span class=eqn>k</span> validation errors. The idea is to split the training set into <span class=eqn>k</span> chunks and compute the validation error on one chunk using a model trained on the other <img style="vertical-align: -1.08pt;" src="images/eqn-14464AC1DFE6FA8AD8FDA94BB6F01571-depth001.08.svg"> chunks, as shown in <b>Figure 7</b> for <span class=eqn>k</span>=3.  Do that for each of <span class=eqn>k</span> chunks and we have <span class=eqn>k</span> validation errors. The overall validation error is the average of the <span class=eqn>k</span> chunks' validation errors. Scikit provides a function called <span class=inlinecode>cross_val_score()</span> to handle all of this for us:<span class=sup>8</span></p>
+</div>
 
 
 <div class="codeblk">from sklearn.model_selection import cross_val_score
@@ -508,7 +531,7 @@ chunks_valid = -cvscore
 print(chunks_valid)
 </div>
 
-<p class="stdout">[628.58814329 633.22046653 964.38107167 415.15536555 598.27613458]
+<p class="stdout">[400.65142512 459.33618702 380.06088656 989.46754334 820.74890087]
 </p>
 <p>For <span class=eqn>k</span>=5, we get 5 chunk validation errors, which we average to get an overall validation error:</p>
 
@@ -517,12 +540,12 @@ print(chunks_valid)
 print(f"{avg_err_valid:.2f} average error on validation set")
 </div>
 
-<p class="stdout">647.92 average error on validation set
+<p class="stdout">610.05 average error on validation set
 </p>
 <p>But the average value hides a great deal of variability in the chunk validation errors, which shows up as instability in the overall average error across runs.  For example, running the cross validation again three more times gives:</p>
-<p class="stdout">639.74 average error on validation set
-622.89 average error on validation set
-629.07 average error on validation set
+<p class="stdout">596.52 average error on validation set
+614.68 average error on validation set
+621.27 average error on validation set
 </p>
 <p>We can visualize the variability between chunk validation errors with a tiny bit of matplotlib code, plotting the chunk number against the chunk validation error:</p>
 <span class=sidenote>
@@ -563,12 +586,16 @@ std_err_valid = chunks_valid.std()  # compute standard deviation of chunk errors
 print(f"${int(avg_err_valid)} average error +/-${int(std_err_valid)}")
 </div>
 
-<p class="stdout">$629 average error +/-$179
+<p class="stdout">$621 average error +/-$246
 </p>
-<span class=sidenote><span class=sup>6</span>To satisfy the statisticians, note that this rule assumes the data values follow a <a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution</a>, the &ldquo;bell curve.&rdquo;  In this case, the distribution of our cross validation averages will always be a bell curve per the <a href="https://en.wikipedia.org/wiki/Central_limit_theorem">central limit theorem</a>.</span>
-<p>The easiest way to interpret the +/-$179 range of one standard deviation is with the <a href="https://en.wikipedia.org/wiki/68-95-99.7_rule">68-95-99.7 rule</a>. One standard deviation covers 68% of the values. Two standard deviations covers 95% and three standard deviations covers 99.7%, or virtually all of the values. In other words, the standard deviation of our chunk validation errors is $179 so 68% of all validation errors are within $179 of the average validation error. 95% of the chunk validation errors would be within $358 of the average error. 99.7% of the validation errors would be within $539 of the average error.<span class=sup>6</span></p>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>9</span>To satisfy the statisticians, note that this rule assumes the data values follow a <a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution</a>, the &ldquo;bell curve.&rdquo;  In this case, the distribution of our cross validation averages will always be a bell curve per the <a href="https://en.wikipedia.org/wiki/Central_limit_theorem">central limit theorem</a>.</p>
+<p class=p_left>The easiest way to interpret the +/-$246 range of one standard deviation is with the <a href="https://en.wikipedia.org/wiki/68-95-99.7_rule">68-95-99.7 rule</a>. One standard deviation covers 68% of the values. Two standard deviations covers 95% and three standard deviations covers 99.7%, or virtually all of the values. In other words, the standard deviation of our chunk validation errors is $246 so 68% of all validation errors are within $246 of the average validation error. 95% of the chunk validation errors would be within $492 of the average error. 99.7% of the validation errors would be within $739 of the average error.<span class=sup>9</span></p>
+</div>
+<div class="p_wrapper">
 <div class=callout>If the <span class=eqn>k</span>-fold cross validation error standard deviation is high, it's suggestive of outliers in the target variable.</div>
-<p>The average error of $629 is not horrible but a standard deviations of $179 indicates wide variance in the chunk errors, which is a problem. Because we tune models by tweaking hyper-parameters and watching the effect on the validation error, we need a very stable validation error. Otherwise, we wouldn't know whether a change in the validation error was due to an improvement in the model or natural variation. </p>
+<p class=p_left>The average error of $621 is not horrible but a standard deviations of $246 indicates wide variance in the chunk errors, which is a problem. Because we tune models by tweaking hyper-parameters and watching the effect on the validation error, we need a very stable validation error. Otherwise, we wouldn't know whether a change in the validation error was due to an improvement in the model or natural variation.</p>
+</div>
 <p>If a chunk from our training data yields a very different validation error, that implies that the chunk has at least some data that is very different from what's in the other <img style="vertical-align: -1.08pt;" src="images/eqn-14464AC1DFE6FA8AD8FDA94BB6F01571-depth001.08.svg"> chunks.  In other words, the data is very noisy, has errors, or has outliers.   That means our next step is to dive into the data, looking for anomalies that we can hammer out to reduce variability in the validation errors.</p>
 
 
@@ -738,8 +765,10 @@ df_num.isnull().head(5)</div>
 <h3 id=""> Excising the anomalies</h3>
 
 <p>Records with erroneous or extreme values confuse humans and machine learning models alike. For example, the apartment costing over $4 million has two bedrooms and one bathroom, which clearly gives a price that is inconsistent with the majority of apartments having those characteristics.  We can either leave such records as-is, delete, or &ldquo;fix&rdquo; the records but you should err on the side of leaving records as-is. Which alternative we choose depends on knowledge about this domain, the goals of the model, how numerous the anomalies are, and even what we see in the individual records with anomalous values. (Missing data adds another wrinkle.) </p>
+<div class="p_wrapper">
 <div class=callout>There is no substitute for domain knowledge when building a model.</div>
-<p>The most important filter to apply relates to the goals of our model, in this case, reasonably-priced apartments just in New York City. We can delete with confidence any records outside of these bounds. Pandas has excellent facilities to select subsets of the records. For example, <span class=inlinecode>df_num.price>1_000</span> gives a column of true and false values computed by looking at each value in the price column.  We can then use that column of Boolean values as an index into the data frame, which selects only those rows associated with true values. So, <span class=inlinecode>df_num[df_num.price>1_000]</span> returns a subset of the records in <span class=inlinecode>df_num</span> whose price is greater than a $1,000. We can also do both comparisons at once and reassign the data frame back to variable <span class=inlinecode>df_num</span>:</p>
+<p class=p_left>The most important filter to apply relates to the goals of our model, in this case, reasonably-priced apartments just in New York City. We can delete with confidence any records outside of these bounds. Pandas has excellent facilities to select subsets of the records. For example, <span class=inlinecode>df_num.price>1_000</span> gives a column of true and false values computed by looking at each value in the price column.  We can then use that column of Boolean values as an index into the data frame, which selects only those rows associated with true values. So, <span class=inlinecode>df_num[df_num.price>1_000]</span> returns a subset of the records in <span class=inlinecode>df_num</span> whose price is greater than a $1,000. We can also do both comparisons at once and reassign the data frame back to variable <span class=inlinecode>df_num</span>:</p>
+</div>
 
 
 <div class="codeblk"># filter all records (training/testing)
@@ -833,9 +862,9 @@ std_err_valid_denoised = chunks_valid.std()
 print(f"{errors} avg {avg_err_valid_denoised:.2f} +/- {std_err_valid_denoised:.2f}")
 </div>
 
-<p class="stdout">[304, 302, 297, 300, 305] avg 302.13 +/- 2.87
+<p class="stdout">[297, 310, 309, 304, 305] avg 305.48 +/- 4.34
 </p>
-<p>Great! The average error is almost half what it was, the variation is much tighter between runs, and the chunk error standard deviation is small. Compare those values to the average error of 629 and standard deviation of 179 on the noisy data set.</p>
+<p>Great! The average error is almost half what it was, the variation is much tighter between runs, and the chunk error standard deviation is small. Compare those values to the average error of 621 and standard deviation of 246 on the noisy data set.</p>
 <p>Now that we've learned how to clean up data and to get stable prediction error estimates using cross validation, let's think about speeding up our training and testing process. You might've noticed the CPU fan on your computer spinning its little heart out running the cross validation tests. The cross validation error is an excellent measure of generality but, depending on the number of folds, <span class=eqn>k</span>, testing can be very expensive computationally; we have to train the model <span class=eqn>k</span> times. RFs have a trick that gives us the same validation mechanism without having to retrain the model.</p>
 
 
@@ -853,9 +882,9 @@ print(f"{errors} avg {avg_err_valid_denoised:.2f} +/- {std_err_valid_denoised:.2
     print(rf.oob_score_)
 </div>
 
-<p class="stdout">0.8643191350044999
-0.8645846000287748
-0.8646762428150913
+<p class="stdout">0.8610514856544446
+0.8607943224502645
+0.8614653546268711
 </p>
 <p>We've removed outliers and so even splitting out different training sets does not cause the OOB score to fluctuate wildly:</p>
 
@@ -869,9 +898,9 @@ print(f"{errors} avg {avg_err_valid_denoised:.2f} +/- {std_err_valid_denoised:.2
     print(rf.oob_score_)
 </div>
 
-<p class="stdout">0.8641227847250725
-0.864153347120456
-0.8642572037828917
+<p class="stdout">0.8615101323494572
+0.8612492611762212
+0.8604838664602067
 </p>
 <p>(Normally, we grab one test set and squirrel it away rather than testing multiple test sets <i>ala</i> cross validation; we're breaking the rules here to make a point about the stability of <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores in the face of changing train/test set splits.) </p>
 <p>Those <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores are pretty good, meaning that we'll likely have a good test score when we're done. Let's compare those <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores to the scores computed from various training sets extracted from the original, noisy data:</p>
@@ -887,9 +916,9 @@ print(f"{errors} avg {avg_err_valid_denoised:.2f} +/- {std_err_valid_denoised:.2
     print(rf.oob_score_)
 </div>
 
-<p class="stdout">-0.121836521336397
-0.44013422941752556
--0.21361400537050934
+<p class="stdout">0.08245729330733864
+0.5093790751151642
+-0.25065040468325006
 </p>
 <p>Those <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores are not at all good and they vary much more on these noisy training sets than on the clean data set. This highlights the importance of the cleanliness of the data because the error estimate fluctuates with the noisy data set, despite us using the exact same RF model with the exact same hyper-parameter. We should not place great confidence in a model whose prediction errors fluctuate so much.</p>
 <div class=aside><b>Random forest prediction confidence</b><br>
@@ -911,23 +940,25 @@ for i in range(10):
     print(f"Apt {i}: true price ${y:5.0f}, predict ${a:5.0f} +/-${s:4.0f}")
 </div>
 
-<p class="stdout">Apt 0: true price $ 3995, predict $ 3640 +/-$ 173
-Apt 1: true price $ 4995, predict $ 6424 +/-$ 308
-Apt 2: true price $ 3011, predict $ 3036 +/-$ 101
-Apt 3: true price $ 4195, predict $ 3978 +/-$  60
-Apt 4: true price $ 6295, predict $ 6067 +/-$ 146
-Apt 5: true price $ 4600, predict $ 4049 +/-$ 591
-Apt 6: true price $ 5995, predict $ 6091 +/-$  77
-Apt 7: true price $ 4000, predict $ 3882 +/-$  62
-Apt 8: true price $ 1660, predict $ 1736 +/-$  10
-Apt 9: true price $ 2525, predict $ 2516 +/-$  10
+<p class="stdout">Apt 0: true price $ 3350, predict $ 3335 +/-$ 109
+Apt 1: true price $ 1850, predict $ 1873 +/-$  10
+Apt 2: true price $ 2700, predict $ 2676 +/-$ 169
+Apt 3: true price $ 1850, predict $ 1774 +/-$  48
+Apt 4: true price $ 4200, predict $ 3443 +/-$ 125
+Apt 5: true price $ 3375, predict $ 3533 +/-$ 805
+Apt 6: true price $ 2150, predict $ 2550 +/-$ 467
+Apt 7: true price $ 5225, predict $ 3389 +/-$ 106
+Apt 8: true price $ 5800, predict $ 5455 +/-$ 190
+Apt 9: true price $ 5600, predict $ 6359 +/-$1251
 </p>
 <p>We should be more cautious of predictions for feature vectors with higher standard deviations.</p>
 
 </div>
-<p>We've now got a prediction model that gets a decent and stable prediction error.  Are we done yet? That depends on the definition of &ldquo;good enough&ldquo; and whether we think we can do better. Imagine a website that used our model to predictor rent prices using apartment features entered by a user. There is likely a threshold below which users don't find the predictions useful. If we have a suitable way to test &rdquo;good enough,&rdquo; this should guide whether we keep looking for improvements. </p>
-<p>Let's assume that we'd like to improve the model's accuracy.  We can try different models, but it's unlikely they would perform significantly better and many would perform worse.   For example, a linear prediction model called <a href="https://goo.gl/A9C1Sf">Lasso Regression</a> is often a good baseline and here's a snippet to train the model and print the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores for the training and test sets:</p>
+<p>We've now got a prediction model that gets a decent and stable prediction error.  Are we done yet? That depends on the definition of &ldquo;good enough&rdquo; and whether we think we can do better. Imagine a website that used our model to predictor rent prices using apartment features entered by a user. There is likely a threshold below which users don't find the predictions useful. If we have a suitable way to test &ldquo;good enough,&rdquo; this should guide whether we keep looking for improvements. </p>
+<div class="p_wrapper">
 <div class=callout>Don't try too many models because it's a form of overfitting a model. Eventually, you'll find a model that spuriously finds a relationship.</div>
+<p class=p_left>Let's assume that we'd like to improve the model's accuracy.  We can try different models, but it's unlikely they would perform significantly better and many would perform worse.   For example, a linear prediction model called <a href="https://goo.gl/A9C1Sf">Lasso Regression</a> is often a good baseline and here's a snippet to train the model and print the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores for the training and test sets:</p>
+</div>
 
 
 <div class="codeblk">from sklearn.linear_model import Lasso
@@ -938,7 +969,7 @@ lm.fit(X_train, y_train)
 print("training score", lm.score(X_train, y_train))
 </div>
 
-<p class="stdout">training score 0.5772572476778493
+<p class="stdout">training score 0.5726277348652362
 </p>
 <p>Even the linear model's training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> is significantly worse than the .86 we get with the RF. It's unable to capture the relationship between features and apartment price even for training data.</p>
 <p>The <a href="https://en.wikipedia.org/wiki/Gradient_boosting">gradient boosting</a> model is another popular and powerful model based upon decision trees, but it also fails to capture the relationship as well as an RF:</p>
@@ -951,7 +982,7 @@ gbr.fit(X_train, y_train)
 print("training score", gbr.score(X_train, y_train))
 </div>
 
-<p class="stdout">training score 0.7824235306750502
+<p class="stdout">training score 0.7828458268711532
 </p>
 <p>Normally, a grid search over the hyper parameters is required to tune the model and get the best accuracy, but out-of-the-box gradient boosting does not perform as well as an RF for this data set.</p>
 <p>As we've discussed, it's more about the data than the model so let's take another look at the data to see if we've left some meat on the bone.</p>
@@ -987,7 +1018,7 @@ m, s = stable_oob_score(X_train, y_train)
 print(f"OOB score {m:.5f} +/-{s:.5f}")
 </div>
 
-<p class="stdout">OOB score 0.86428 +/-0.00023
+<p class="stdout">OOB score 0.86066 +/-0.00027
 </p>
 <span class=sidenote>
 &#187; <i>Graph generated by code to left</i><br>
@@ -1001,8 +1032,10 @@ print(f"OOB score {m:.5f} +/-{s:.5f}")
 I = oob_importances(rf, X_train, y_train)
 I.plot(kind='barh', legend=False)
 plt.show()</div>
-<span class=sidenote><span class=sup>7</span>One way to compute feature importance is to get a baseline performance score then drop a column entirely, retrain the model, and recompute the performance score. The importance value of a feature is the difference between the baseline and the score from the model missing that feature. See <span style="color: red">[importances]</span>.</span>
-<p>We can have confidence in these feature importances<span class=sup>7</span> because the model is  stable and accurate; if a model is no good, feature importances are suspect.</p>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>13</span>One way to compute feature importance is to get a baseline performance score then drop a column entirely, retrain the model, and recompute the performance score. The importance value of a feature is the difference between the baseline and the score from the model missing that feature. See <span style="color: red">[importances]</span>.</p>
+<p class=p_left>We can have confidence in these feature importances<span class=sup>13</span> because the model is  stable and accurate; if a model is no good, feature importances are suspect.</p>
+</div>
 <p>Let's create three new boolean columns that indicate whether the apartment has a doorman, parking, or laundry.  To do this, we have to backtrack a little bit because we haven't carried the <span class=inlinecode>features</span> column forward as we cleaned up <span class=inlinecode>df_num</span>. The following code makes a copy of the numeric columns plus the <span class=inlinecode>features</span> column from the original data set and then filters it in the same way we did to get <span class=inlinecode>df_clean</span> above:</p>
 
 
@@ -1014,7 +1047,7 @@ df_aug = df_aug[(df_aug['latitude']>40.55) & (df_aug['latitude']<40.94) &
                 (df_aug['longitude']>-74.1) & (df_aug['longitude']<-73.67)]
 </div>
 
-<p>Then we normalize the <span class=inlinecode>features</span> column so that missing <span class=inlinecode>features</span> values become blanks and we lowercase all of the strings so that we can test for &ldquo;Doorman&ldquo; and &rdquo;doorman&rdquo; simultaneously:</p>
+<p>Then we normalize the <span class=inlinecode>features</span> column so that missing <span class=inlinecode>features</span> values become blanks and we lowercase all of the strings so that we can test for &ldquo;Doorman&rdquo; and &ldquo;doorman&rdquo; simultaneously:</p>
 
 
 <div class="codeblk"># rewrite features column
@@ -1022,8 +1055,10 @@ df_aug['features'] = df_aug['features'].fillna('') # fill missing w/blanks
 df_aug['features'] = df_aug['features'].str.lower() # normalize to lower case
 </div>
 
-<span class=sidenote><span class=sup>8</span>You might run into an error &ldquo;<i>A value is trying to be set on a copy of a slice from a DataFrame</i>&rdquo; when creating new columns. The error indicates that you are trying to create a new column in a view of a data frame rather than a data frame. Here is a snippet that exhibits the error.<br><br><span class=inlinecode>p = df[['price']]</span><br><span class=inlinecode>p['discount'] = p.price * 0.10</span><br><br>To avoid this, use<br><br><span class=inlinecode>p = df[['price']].copy()</span><br><br>(possibly with <span class=inlinecode>deep=False</span> argument).</span>
-<p>Next, we create the three boolean columns by checking for the presence or absence of a string in the <span class=inlinecode>features</span> column. Creating a new column is easy with Pandas data frames; just use <span class=inlinecode>df_aug[</span><i>name</i><span class=inlinecode>]</span> on the left side of an assignment; notation <span class=inlinecode>df_aug.</span><i>name</i> only works in expressions, not on the left side of an assignment.<span class=sup>8</span> By accessing the <span class=inlinecode>str</span> field of column <span class=inlinecode>df_aug['features']</span>, we get access to a number of useful string utilities, such as the <span class=inlinecode>contains()</span> function:</p>
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>14</span>You might run into an error &ldquo;<i>A value is trying to be set on a copy of a slice from a DataFrame</i>&rdquo; when creating new columns. The error indicates that you are trying to create a new column in a view of a data frame rather than a data frame. Here is a snippet that exhibits the error.<br><br><span class=inlinecode>p = df[['price']]</span><br><span class=inlinecode>p['discount'] = p.price * 0.10</span><br><br>To avoid this, use<br><br><span class=inlinecode>p = df[['price']].copy()</span><br><br>(possibly with <span class=inlinecode>deep=False</span> argument).</p>
+<p class=p_left>Next, we create the three boolean columns by checking for the presence or absence of a string in the <span class=inlinecode>features</span> column. Creating a new column is easy with Pandas data frames; just use <span class=inlinecode>df_aug[</span><i>name</i><span class=inlinecode>]</span> on the left side of an assignment; notation <span class=inlinecode>df_aug.</span><i>name</i> only works in expressions, not on the left side of an assignment.<span class=sup>14</span> By accessing the <span class=inlinecode>str</span> field of column <span class=inlinecode>df_aug['features']</span>, we get access to a number of useful string utilities, such as the <span class=inlinecode>contains()</span> function:</p>
+</div>
 
 
 <div class="codeblk">df_aug['doorman'] = df_aug['features'].str.contains("doorman")
@@ -1060,15 +1095,17 @@ m, s = stable_oob_score(X_train, y_train)
 print(f"OOB score {m:.5f} +/-{s:.5f}")
 </div>
 
-<p class="stdout">OOB score 0.86654 +/-0.00028
+<p class="stdout">OOB score 0.86217 +/-0.00024
 </p>
 <p>(The <span class=inlinecode>axis=1</span> argument to <span class=inlinecode>drop()</span> indicates that <span class=inlinecode>price</span> refers to a column not a row; indicate rows by <span class=inlinecode>axis=0</span>.)</p>
+<div class="p_wrapper">
 <span class=sidenote>
 <img src="images/prep/prep_sniff_59.svg"
   width="100%"
 >
 <br><b>Figure 8</b>. Boolean feature importance</span>
-<p>The OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> for a model with these features usually slightly higher (though we've seen it slightly lower, depending on how the train/test set split was drawn).  Let's look at the importances graph in <b>Figure 8</b> to see if any synthetic feature stands out. It looks like there is some predictive value in the doorman feature, but the laundry and parking features seem relatively unimportant compared to our original numeric columns. That could be useful information to real estate agents. It says that laundry and parking might sound great, but people aren't willing to pay for them. On the other hand, people seem willing to pay a bit for a doorman.  </p>
+<p class=p_left>The OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> for a model with these features usually slightly higher (though we've seen it slightly lower, depending on how the train/test set split was drawn).  Let's look at the importances graph in <b>Figure 8</b> to see if any synthetic feature stands out. It looks like there is some predictive value in the doorman feature, but the laundry and parking features seem relatively unimportant compared to our original numeric columns. That could be useful information to real estate agents. It says that laundry and parking might sound great, but people aren't willing to pay for them. On the other hand, people seem willing to pay a bit for a doorman.  </p>
+</div>
 <p>Let's try dropping the low-importance parking feature to see its effect on accuracy:</p>
 
 
@@ -1076,7 +1113,7 @@ print(f"OOB score {m:.5f} +/-{s:.5f}")
 print(f"OOB score {m:.5f} +/-{s:.5f}")
 </div>
 
-<p class="stdout">OOB score 0.86580 +/-0.00026
+<p class="stdout">OOB score 0.86143 +/-0.00022
 </p>
 <p>Dropping the parking feature reduces <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg">, so let's keep it.  In practice, however, there are business reasons why we might want to drop that feature, regardless of its small bump in accuracy. Each new column requires storage, training time, and prediction time. It's also another feature to explain to management or users.  When there are 50 or 100 features instead of a 5 or 6, reducing the number of columns would also help us interpret the model.</p>
 <p>Let's see what we can do with the numeric features.   For some models, it's useful to synthesize a new column from the multiplication or division of other columns. For example, we can imagine that the ratio of bedrooms to bathrooms is useful because it's captures how much contention there might be for, say, the shower in the morning:</p>
@@ -1089,15 +1126,17 @@ m, s = stable_oob_score(X_train, y_train)
 print(f"OOB score {m:.5f} +/-{s:.5f}")
 </div>
 
-<p class="stdout">OOB score 0.86723 +/-0.00031
+<p class="stdout">OOB score 0.86270 +/-0.00039
 </p>
 <p>Notice the trick of dividing by the number of bathrooms plus 1 because through error, or strange New York City apartments, some records show no bathrooms. This avoids a division by zero and doesn't affect the predictive nature of the feature because it is uniformly scaling the feature values.</p>
+<div class="p_wrapper">
 <span class=sidenote>
 <img src="images/prep/prep_sniff_62.svg"
   width="100%"
 >
 <br><b>Figure 9</b>. Synthesized feature importance</span>
-<p>It doesn't look like that synthesized numeric feature affects the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> in any significant way.  The feature important graph in <b>Figure 9</b> shows that <span class=inlinecode>beds_to_baths</span> has some decent importance, which is odd because the  feature did not improve accuracy. This counterintuitive result is expected but, to explain, requires a bit more of an understanding of RF construction than we have at the moment. Just keep in mind that RFs are able to simulate arithmetic between multiple columns, such as we manually computed for <span class=inlinecode>beds_to_baths</span>. If such interactions are important, tree construction has to work harder and the resulting trees are bigger, but RFs can often do implicit arithmetic-based feature synthesis for us.</p>
+<p class=p_left>It doesn't look like that synthesized numeric feature affects the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> in any significant way.  The feature important graph in <b>Figure 9</b> shows that <span class=inlinecode>beds_to_baths</span> has some decent importance, which is odd because the  feature did not improve accuracy. This counterintuitive result is expected but, to explain, requires a bit more of an understanding of RF construction than we have at the moment. Just keep in mind that RFs are able to simulate arithmetic between multiple columns, such as we manually computed for <span class=inlinecode>beds_to_baths</span>. If such interactions are important, tree construction has to work harder and the resulting trees are bigger, but RFs can often do implicit arithmetic-based feature synthesis for us.</p>
+</div>
 <p>The importance graph also seems to show that feature <span class=inlinecode>beds_to_baths</span> pulls down the importance of the <span class=inlinecode>bedrooms</span> feature. We'll learn a lot more about this in <span style="color: red">[importances]</span>, but those two columns affect each other's importance because they are <i>collinear</i> (correlated in some way but not necessarily with a strictly linear relationship). Because of the way RFs are constructed, strongly correlated features share importance roughly per the strength of the correlation.   From just its effect on the importance of <span class=inlinecode>bedrooms</span>, we would conclude that <span class=inlinecode>beds_to_baths</span> is correlated in some way with <span class=inlinecode>bedrooms</span>. This also helps explain why adding <span class=inlinecode>beds_to_baths</span> did not affect accuracy: the RF model already had the information it needed to make accurate predictions. Let's drop that feature:</p>
 
 
@@ -1105,8 +1144,10 @@ print(f"OOB score {m:.5f} +/-{s:.5f}")
 X_test = X_test.drop('beds_to_baths', axis=1)
 </div>
 
+<div class="p_wrapper">
 <div class=callout>If adding a feature does not improve accuracy and pulls down the importance of another feature, the new and existing feature are collinear to some degree.</div>
-<p>Let's compare the effect of adding the boolean features extracted from the apartment <span class=inlinecode>features</span> column to adding the  collinear numerical feature <span class=inlinecode>beds_to_baths</span>. RFs can't dig into text strings automatically to pull out relevant features; that requires domain knowledge. That explains why those features had the potential to improve accuracy because the model couldn't implicitly compute the features for itself. That also explains why adding those columns did not drop the importance of any previous columns. The new features are not collinear with any previous features.</p>
+<p class=p_left>Let's compare the effect of adding the boolean features extracted from the apartment <span class=inlinecode>features</span> column to adding the  collinear numerical feature <span class=inlinecode>beds_to_baths</span>. RFs can't dig into text strings automatically to pull out relevant features; that requires domain knowledge. That explains why those features had the potential to improve accuracy because the model couldn't implicitly compute the features for itself. That also explains why adding those columns did not drop the importance of any previous columns. The new features are not collinear with any previous features.</p>
+</div>
 <p>Unless we're willing to find and merge in external data sources, such as proximity to subway stations, we've reached the end of the road in terms of training our model.  We've got a clean training set and a good set of features that yields a pretty good out-of-bag <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score. It's time to run the test set through the model.</p>
 
 
@@ -1129,8 +1170,8 @@ err_cv = chunks_valid.mean()
 print(f"${err_cv:.2f} average cross-validation error")
 </div>
 
-<p class="stdout">OOB R^2 0.86621
-$299.23 average cross-validation error
+<p class="stdout">OOB R^2 0.86187
+$303.11 average cross-validation error
 </p>
 <p>Now, let's compare those with the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> and accuracy computed using the test set:</p>
 
@@ -1140,10 +1181,10 @@ err_test = mean_absolute_error(y_test, rf.predict(X_test))
 print(f"${err_test:.2f} average error on test set")
 </div>
 
-<p class="stdout">Test R^2 0.85985
-$296.39 average error on test set
+<p class="stdout">Test R^2 0.87040
+$283.34 average error on test set
 </p>
-<p>The good news is that the out-of-bag <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> closely matches the test set score and the average prediction error on the test set is just $296, close to the cross validation error of $299. We can conclude that our model is likely to generalize well to previously-unseen apartment feature vectors.</p>
+<p>The good news is that the out-of-bag <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> closely matches the test set score and the average prediction error on the test set is just $283, close to the cross validation error of $303. We can conclude that our model is likely to generalize well to previously-unseen apartment feature vectors.</p>
 <p>Before finishing up, let's see how a model trained on the original, noisy data set would perform on a test set.  We need to run a number of trials because the data is peppered with outliers and, therefore, test prediction error will fluctuate greatly, depending on how the test set is (randomly) extracted:</p>
 
 
@@ -1164,14 +1205,14 @@ avg_test_error = int(np.mean(errors))
 print(f"Average of average errors is ${avg_test_error}")
 </div>
 
-<p class="stdout">$407.54 average error on test set, test R^2 is -0.5238
-$997.62 average error on test set, test R^2 is 0.0014
-$385.23 average error on test set, test R^2 is 0.2964
-$375.52 average error on test set, test R^2 is 0.7020
-$392.14 average error on test set, test R^2 is -0.1164
-Average of average errors is $511
+<p class="stdout">$420.67 average error on test set, test R^2 is 0.9201
+$589.36 average error on test set, test R^2 is -45.5337
+$1030.26 average error on test set, test R^2 is 0.0481
+$538.73 average error on test set, test R^2 is 0.0145
+$425.24 average error on test set, test R^2 is 0.8754
+Average of average errors is $600
 </p>
-<p>The <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> prediction error is very often much worse for this noisy model and the $511 average prediction error is significantly larger. The point here is that a noisy data set leads to unstable prediction errors and an unstable model. Cleaning up the data set not only makes the model more accurate but also more reliable (stable).</p>
+<p>The <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> prediction error is very often much worse for this noisy model and the $600 average prediction error is significantly larger. The point here is that a noisy data set leads to unstable prediction errors and an unstable model. Cleaning up the data set not only makes the model more accurate but also more reliable (stable).</p>
 
 
 <h2 id="sec0">Interpreting training, validation, and testing errors</h2>
