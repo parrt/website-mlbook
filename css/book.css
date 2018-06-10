@@ -225,8 +225,10 @@ h1 {
                 width: 100%;
                 margin-top: 10px;
                 margin-bottom: 10px;
-                float: none;
         }
+        .codeblk {
+             display: table-header-group;
+        }       
         .p_wrapper {
              display:table;
         }
@@ -245,5 +247,28 @@ h1 {
 		margin-right: 3%;
                 width: 100%;
                 font-size: 100%;
+        }
+        .sidenote {
+                float: none;
+                width: 100%;
+                margin-top: 3px;
+                margin-bottom: 3px;
+                border-top: solid 1px #dee9ed;
+                border-bottom: solid 1px #dee9ed;
+        }
+        .callout {
+                float: none;
+                width: 100%;
+                margin-top: 10px;
+                margin-bottom: 10px;
+        }
+        .codeblk {
+             display: table-header-group;
+        }
+        .p_wrapper {
+             display:table;
+        }
+        .p_left {
+             display: table-header-group;
         }
 }
