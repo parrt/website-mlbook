@@ -26,28 +26,28 @@ Book version 0.1
 <div id="toc">
 <p class="toc_title">Contents</p>
 <ul>
-	<li><a href="#sec0">Learning to Learn about Apartment Data</a></li>
+	<li><a href="#sec:2.1">Learning to Learn about Apartment Data</a></li>
 	<ul>
-			<li><a href="#">Learning by rote</a></li>
-			<li><a href="#">Getting to know the neighbors</a></li>
-			<li><a href="#">Drawing the line</a></li>
-			<li><a href="#">Walking through the trees</a></li>
+			<li><a href="#sec:2.1.1">Learning by rote</a></li>
+			<li><a href="#sec:2.1.2">Getting to know the neighbors</a></li>
+			<li><a href="#sec:2.1.3">Drawing the line</a></li>
+			<li><a href="#sec:2.1.4">Walking through the trees</a></li>
 
 	</ul>
-	<li><a href="#sec0">Predicting New York City Apartment Rent</a></li>
+	<li><a href="#sec:2.2">Predicting New York City Apartment Rent</a></li>
 	<ul>
-			<li><a href="#">Computer environment sanity check</a></li>
-			<li><a href="#">Loading and sniffing the training data</a></li>
-			<li><a href="#">Training a random forest model</a></li>
-			<li><a href="#">Does the model capture training data relationships?</a></li>
-			<li><a href="#">Improving the model</a></li>
-			<li><a href="#">Checking model generality</a></li>
-			<li><a href="#">Fiddling with model hyper-parameters</a></li>
-			<li><a href="#">What the model says about the data</a></li>
-			<li><a href="#">Swapping out the model</a></li>
+			<li><a href="#sec:2.2.1">Computer environment sanity check</a></li>
+			<li><a href="#sec:2.2.2">Loading and sniffing the training data</a></li>
+			<li><a href="#sec:2.2.3">Training a random forest model</a></li>
+			<li><a href="#sec:2.2.4">Does the model capture training data relationships?</a></li>
+			<li><a href="#sec:2.2.5">Improving the model</a></li>
+			<li><a href="#sec:2.2.6">Checking model generality</a></li>
+			<li><a href="#sec:2.2.7">Fiddling with model hyper-parameters</a></li>
+			<li><a href="#sec:2.2.8">What the model says about the data</a></li>
+			<li><a href="#sec:2.2.9">Swapping out the model</a></li>
 
 	</ul>
-	<li><a href="#sec0">The Big Picture</a></li>
+	<li><a href="#sec:2.3">The Big Picture</a></li>
 	<ul>
 	</ul>
 
@@ -63,7 +63,7 @@ Book version 0.1
 <p>In this first chapter, our goal is to show just how easy it is apply machine learning to get excellent rent price predictions from an idealized New York City rent data set (derived from a <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Kaggle competition</a>).  Along the way, we'll define a number of important terms and concepts commonly used by machine learning practitioners and give a general overview of the machine learning process. For the Python code snippets in this chapter, feel free to just cut-and-paste them blindly and don't sweat the details. In the next chapter, <span style="color: red">[tour]</span>, we're going to solve the same problem but in more detail and using the original data set, which needs to be cleaned up. We'll also recommend a work environment and give the key libraries a workout as we demonstrate the mechanics of machine learning.</p>
 
 
-<h2 id="sec0">Learning to Learn about Apartment Data</h2>
+<h2 id="sec:2.1">Learning to Learn about Apartment Data</h2>
 
 <p>Instead of leaping immediately to our recommended solution, let's try to invent a technique for predicting apartment rent prices in New York City. It'll highlight the difficulty of the problem and help us understand the machine learning approach.  Without understanding the underlying algorithms, we can't successfully apply machine learning.   We must be able to choose the right algorithm for a particular problem and be able to properly prepare data for that algorithm. By starting simply and going down a few dead ends, we'll also motivate the construction of more sophisticated techniques. </p>
 <p>First, we have to clearly define the problem. Given four attributes of an apartment, the number of bedrooms, the number of bathrooms, and location (longitude, latitude) we want to <i>predict</i> (determine) the price. Those apartment attributes are called <i>features</i> and the price is called the <i>target</i>.  We're usually given data in the form of a table like the following (see file <span class=inlinecode>data/rent-ideal.csv</span>).</p>
@@ -74,7 +74,7 @@ Book version 0.1
 <p>Memorization doesn't generalize beyond the training data but is precise.  Blurring all apartments together obviously yields a prediction for any apartment we present but is not precise at all.   Somewhere in between lies effective machine learning. Let's start with just memorizing the training data and work our way towards a system that properly generalizes.</p>
 
 
-<h3 id="">Learning by rote</h3>
+<h3 id="sec:2.1.1">Learning by rote</h3>
 
 <p>Given the training data, we can reasonably predict a price of $5,465 for an apartment with two bedrooms and one bathroom at location coordinates 40.7947,-73.9667 because that comes straight from the second row of the table.  To get perfect accuracy, we can interpret the learning process conceptually as just filling up a dictionary that maps a four-element key to a single value (price), something like this:</p>
 
@@ -112,7 +112,7 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 <p>Aggregating records for identical apartment feature vectors and recording their average rent dips a toe into the as-yet murky waters of machine learning.  We are creating an aggregate price for a prototypical apartment of a particular type, in a sense learning what the price should be or is expected to be for that type of apartment. This gives us a hint that machine learning is a just a sensible combination of data structures, algorithms, and statistics.  As we continue, hopefully you'll see that machine learning is not some mysterious and arcane mechanism that takes forever to learn.</p>
 
 
-<h3 id="">Getting to know the neighbors</h3>
+<h3 id="sec:2.1.2">Getting to know the neighbors</h3>
 
 <p>The problem with the rudimentary dictionary model is that it's super rigid in that it can't deal with uncertainty in the apartment feature vectors themselves.  (Previously-unseen apartment feature combination raise a &ldquo;key error&rdquo; during look up.) How should we predict the price of an apartment whose features don't exactly match an entry in the training data?</p>
 <p>An interesting solution is to keep the original training data as-is and then scan for the apartment record whose features most closely match the features of the apartment for which we'd like a price. As before, there could be multiple prices for that closest matching record and so we'd want to average those prices to yield the prediction.  Believe it or not, such a simple model is very powerful (for appropriate data sets) and is variation on the <i>nearest neighbor</i> predictor, which we'll study in detail later (<span style="color: red">[kNN]</span>).</p>
@@ -152,7 +152,7 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 <p>At the cost of specificity, merging dramatically reduces the size of the data set, from 48,266 records down to 51 records for this data set. A dictionary or linear scan could quickly find the bedrooms/bathrooms combination to make a prediction. Of course, this approach completely ignores location, which we know to be important. The group averages are hiding a lot of variability between apartments. We could make a secondary index that grouped apartments by latitude/longitude to get a second estimate based solely on the location.  But it's unclear how we would merge the two rent estimates into a single prediction.  Such an ad hoc approach sometimes works but requires a lot of thought and is highly dependent upon the data set. We need a more systematic approach.</p>
 
 
-<h3 id="">Drawing the line</h3>
+<h3 id="sec:2.1.3">Drawing the line</h3>
 
 <p>We could try a &ldquo;mathy&rdquo; approach where we weight each feature by how important it is then use a weighted sum to estimate rent prices:</p>
 <p><img style="vertical-align: -2.7825pt;" src="images/eqn-576FAA65E2A17721D10E7261E68917A0-depth002.65.svg"></p>
@@ -169,7 +169,7 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 <p>The &ldquo;best fit,&rdquo; red line minimizes the difference between the line and the actual average price but is clearly a terrible predictor of price. In this case, there is something weird going on beyond 4 bathrooms. (10 bathrooms and only $3500/month? One can only imagine what those places look like.) Consequently, a single line is a poor fit and does not capture jagged relationships like this very well.</p>
 
 
-<h3 id="">Walking through the trees</h3>
+<h3 id="sec:2.1.4">Walking through the trees</h3>
 
 <p>A more sophisticated approach would treat different ranges of a feature's values  separately, giving a different rent estimate per range.  Each feature range would have a different prototypical apartment.  But, we have to be careful not to create a model that is too specific to the training data because it won't generalize well. We don't want to go lurching back to the other extreme towards a dictionary model that memorizes exact apartment feature vector to price relationships.</p>
 <p>We want a model that gracefully throttles up, splitting a feature's values into as many ranges as necessary to get decent accuracy but without creating so many tight ranges it kills generality.  To see how such a model might work, let's consider the rent prices for one-bath, one- and two-bedroom apartments in a very small rectangular region of New York:</p>
@@ -259,12 +259,12 @@ if bedrooms==2 and bathrooms==1.0 and \
 
 
 
-<h2 id="sec0">Predicting New York City Apartment Rent</h2>
+<h2 id="sec:2.2">Predicting New York City Apartment Rent</h2>
 
 <p>Ok, we've got some idea of what's going on at a high level, so let's dig into the actual mechanics of applying machine learning to this real problem. You might be surprised at how little code it takes! Again, don't worry about the details, which we'll go over again in the next chapter anyway. The main take away should be the basic process and some idea of what machine learning code looks like. We're going to train and compare multiple random forest predictors, test models appropriately, and learn something about the rental market from the models. (Hint: New Yorkers apparently <i>really</i> care about bathrooms.) Before we  get started, let's make sure that we all have the same version of Python 3 and the necessary libraries.</p>
 
 
-<h3 id="">Computer environment sanity check</h3>
+<h3 id="sec:2.2.1">Computer environment sanity check</h3>
 
 <div class="p_wrapper">
 <span class=sidenote><span class=sup>2</span>&nbsp;<tt>https://anaconda.org</tt></span>
@@ -304,7 +304,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 
 
-<h3 id="">Loading and sniffing the training data</h3>
+<h3 id="sec:2.2.2">Loading and sniffing the training data</h3>
 
 <p>The first step in the machine learning process is to load our training data, <span class=inlinecode>rent-ideal.csv</span> from this book's <a href="https://mlbook.explained.ai/data/index.html">data</a> directory, which we'll do with the help of your new BFF (best friend forever) <a href="https://pandas.pydata.org/">Pandas</a>. Once we import the Pandas library, giving it the standard short alias <span class=inlinecode>pd</span>, we can call function <span class=inlinecode>read_csv()</span> to open a file of comma-separated value records (one apartment record per line and with a header row with column names):</p>
 
@@ -374,7 +374,7 @@ plt.show()</div>
 </div> <!-- end div for p_wrapper -->
 
 
-<h3 id="">Training a random forest model</h3>
+<h3 id="sec:2.2.3">Training a random forest model</h3>
 
 <p>To train a model, we split the data frame into the feature columns (the predictors) and the target (predicted) column, which practitioners typically call variables <span class=inlinecode>X</span> and <span class=inlinecode>y</span>. Let's train a model that just considers the number of bathrooms for prediction purposes. Here's how to extract the appropriate feature vectors and target column:</p>
 
@@ -413,7 +413,7 @@ rf.fit(X, y)
 <p>Those predictions seem a bit off because it appears an apartment with no bathroom is slightly more expensive than an apartment with one bathroom, but that's exactly what the training data shows in the scatterplot above. The model has captures the underlying bathrooms versus price relationship in the training data well.</p>
 
 
-<h3 id="">Does the model capture training data relationships?</h3>
+<h3 id="sec:2.2.4">Does the model capture training data relationships?</h3>
 
 <p>Once we've trained a model, we have to test it, just like we do with software before deployment. There are two things to test. First, we verify that the model fits the training data well, meaning that the model captures the relationship in the training data between feature vectors and the targets. In this case, we assume there is a relationship between the number of bathrooms and the rent so we'd like to know how well the model captures that relationship. Second, we verify that the model generalizes, yielding reasonable rent predictions for feature vectors not in the training set. We'll worry about generalization later, after we've built a stronger model.</p>
 <p>To see how well the model fits the training data, we pass the feature vectors of the training data back into the model and compare the predictions to the known actual prices.  At this point in our process, we don't care about generality. We're just checking that our model can reproduce the original training data with some degree of accuracy. If the model can't make accurate predictions for apartments it trained on, then there's no hope the model will generalize to previously-unseen apartments.</p>
@@ -432,7 +432,7 @@ print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
 <p>That means a user of this model can expect the predicted price for an apartment in the training data to be off by about $808, which is not great but we're only using single predictor feature.  Let's add some more features to the model to see if we can improve the average error.</p>
 
 
-<h3 id="">Improving the model</h3>
+<h3 id="sec:2.2.5">Improving the model</h3>
 
 <p>Creating a good model is more about <i>feature engineering</i> than it is about choosing the right model.  Feature engineering means acquiring or even <i>synthesizing</i> features that are strong predictors of the target.   Synthesizing features means deriving new features from existing features or injecting features from other data sources. For example, we could synthesize the name of the neighborhood from the latitude and longitude in the apartment data.  It doesn't matter how sophisticated our model is if we don't give it something useful to chew on. If there is no relationship to discover, because the features are not predictive, no machine learning model is going to give accurate predictions.</p>
 <p>At this point, we've only used one of the four apartment attributes as features in our model, so the natural thing to do is to try adding another feature and see how it affects model accuracy on the training set. Let's add in the number of bedrooms to our feature set and retrain model:</p>
@@ -483,7 +483,7 @@ print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
 <p>Great!  The average error in the predicted price for an apartment in the training data is down to only $190. Alas, we shouldn't get too excited because all we've shown so far is that our model captures the relationships in the training data. We know nothing about the model's generality.</p>
 
 
-<h3 id="">Checking model generality</h3>
+<h3 id="sec:2.2.6">Checking model generality</h3>
 
 <p>The true measure of model quality is its generality: how accurately it predicts prices for apartment feature vectors not found in the training data. Even a crappy model like a dictionary can memorize training data and spit back accurate prices for that same training data.  To test for model generality, we need a validation strategy. This is a big, important topic and one that we'll revisit throughout the book. For now, let's look at the two most common validation strategies: <i>hold out</i> and <span class=eqn>k</span>-<i>fold cross validation</i>.</p>
 <p>We were given a single data set: the training data. If we train on that entire data set, how can we measure accuracy on data not in the training set? We don't have any other data to use for validation. The answer is to hold out, say, 20% of the training data, splitting the original data set into two: a smaller training set and a <i>validation set</i>. Validation set is data used only for generality testing of our model, not in training the model. Which 20% to hold out is sometimes nontrivial, but for the apartment data, a random subset is perfect.</p>
@@ -538,7 +538,7 @@ print(f"${m_err:.0f} average error +/-${2*std_err:.2f}; {m_err*100.0/y.mean():.2
 <p>Then we can call <span class=inlinecode>validate(rf)</span> to validate our models.</p>
 
 
-<h3 id="">Fiddling with model hyper-parameters</h3>
+<h3 id="sec:2.2.7">Fiddling with model hyper-parameters</h3>
 
 <p>Now that we have a decent and stable metric of model generality, we can use it to tweak model architecture in an effort to improve accuracy. The idea is to wiggle some aspect(s) of the model and see if the validation error goes up or down. For example, the number of trees in our forest affects accuracy and so let's increase the number of trees to 100 from the default of 10:</p>
 
@@ -554,7 +554,7 @@ validate(rf)
 <p>At the cost of a little more computing power, the accuracy of our model improves just a little, but every little bit helps.</p>
 
 
-<h3 id="">What the model says about the data</h3>
+<h3 id="sec:2.2.8">What the model says about the data</h3>
 
 <p>Machine learning models do much more for us than make predictions. Depending on the model, we can learn quite a bit about the data itself.  The idea is that models trained on different data sets will have different guts (parameters) inside. Instead of examining those individual parameters, however, we can learn much more by interrogating the model. For example, a key marketing question for real estate agents is &ldquo;what do people care about in this market?&rdquo; More generally, we'd like to know which features have the most predictive power. </p>
 <p>To compute such feature importance, we can compare the validation errors from a model trained using all features and the same model trained with a single feature removed. This difference tells us something about the relative importance of that missing feature. If the validation error goes way up, we know that feature is important. But if the error stays about the same, we can conclude that feature, in isolation, has very little predictive power.  Practitioners do this all the time with random forests, but this querying approach to feature importance applies to any model. (This brute force retraining method works and illustrates the idea, but it's more efficient to randomize a feature's column and retest rather than removing and retraining the model.)  Here's how to print out feature importances with a little help from the <span class=inlinecode>rfpimp</span> package:</p>
@@ -602,7 +602,7 @@ I.plot(kind='barh', legend=False)</div>
 <p>From this, we can conclude that New Yorkers care the least about bathrooms because that feature has the least predictive power, by a small margin, over other features. This compares features in isolation, though, and so we don't have a true measure of location importance because location is broken into two features, latitude and longitude. Nonetheless, this graph gives us good information about the predictive power of the various features.</p>
 
 
-<h3 id="">Swapping out the model</h3>
+<h3 id="sec:2.2.9">Swapping out the model</h3>
 
 <p>We pointed out earlier that achieving good model generality is more about the features than the model, but the model can still matter.  Until you get more experience, though, picking a model is not something you should worry about. Just use a random forest because it will work in just about any common business application where the data sits nicely in a spreadsheet-like table. </p>
 <p>To demonstrate that random forests do a good job and to show how easy it is to swap out a model for a different one, here's how to create and validate a linear model using the same data set:</p>
@@ -636,7 +636,7 @@ validate(gbr)
 
 
 
-<h2 id="sec0">The Big Picture</h2>
+<h2 id="sec:2.3">The Big Picture</h2>
 
 <p>As a review, and as a reference for future use, let's pack the key concepts and terminology we've learned in this chapter into a few concentrated paragraphs.</p>
 <div class="p_wrapper">

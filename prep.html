@@ -26,45 +26,45 @@ Book version 0.1
 <div id="toc">
 <p class="toc_title">Contents</p>
 <ul>
-	<li><a href="#sec0">Machine learning programming is challenging</a></li>
+	<li><a href="#sec:3.1">Machine learning programming is challenging</a></li>
 	<ul>
 	</ul>
-	<li><a href="#sec0">Your machine learning development environment</a></li>
+	<li><a href="#sec:3.2">Your machine learning development environment</a></li>
 	<ul>
 	</ul>
-	<li><a href="#sec0">How to start a machine learning project </a></li>
+	<li><a href="#sec:3.3">How to start a machine learning project </a></li>
 	<ul>
-			<li><a href="#">Getting a quick sniff of the data</a></li>
-			<li><a href="#">Extracting a test set</a></li>
+			<li><a href="#sec:3.3.1">Getting a quick sniff of the data</a></li>
+			<li><a href="#sec:3.3.2">Extracting a test set</a></li>
 
 	</ul>
-	<li><a href="#sec0">Training an initial model</a></li>
+	<li><a href="#sec:3.4">Training an initial model</a></li>
 	<ul>
 	</ul>
-	<li><a href="#sec0">Estimating prediction error</a></li>
+	<li><a href="#sec:3.5">Estimating prediction error</a></li>
 	<ul>
 	</ul>
-	<li><a href="#sec0">Exploring and denoising the apartment rent data</a></li>
+	<li><a href="#sec:3.6">Exploring and denoising the apartment rent data</a></li>
 	<ul>
-			<li><a href="#">Examining the data distributions</a></li>
-			<li><a href="#">Checking for missing values</a></li>
-			<li><a href="#"> Excising the anomalies</a></li>
-			<li><a href="#">Retraining the model</a></li>
+			<li><a href="#sec:3.6.1">Examining the data distributions</a></li>
+			<li><a href="#sec:3.6.2">Checking for missing values</a></li>
+			<li><a href="#sec:3.6.3"> Excising the anomalies</a></li>
+			<li><a href="#sec:3.6.4">Retraining the model</a></li>
 
 	</ul>
-	<li><a href="#sec0">Out-of-bag prediction scores</a></li>
+	<li><a href="#sec:3.7">Out-of-bag prediction scores</a></li>
 	<ul>
 	</ul>
-	<li><a href="#sec0">Synthesizing new features</a></li>
+	<li><a href="#sec:3.8">Synthesizing new features</a></li>
 	<ul>
 	</ul>
-	<li><a href="#sec0">Checking model generality with the test set</a></li>
+	<li><a href="#sec:3.9">Checking model generality with the test set</a></li>
 	<ul>
 	</ul>
-	<li><a href="#sec0">Interpreting training, validation, and testing errors</a></li>
+	<li><a href="#sec:3.10">Interpreting training, validation, and testing errors</a></li>
 	<ul>
 	</ul>
-	<li><a href="#sec0">A Recipe for Training a Machine Learning Model</a></li>
+	<li><a href="#sec:3.11">A Recipe for Training a Machine Learning Model</a></li>
 	<ul>
 	</ul>
 
@@ -82,7 +82,7 @@ Book version 0.1
 <p>We're going to begin this chapter with another recommendation, that you use <a href="http://jupyter.org">Jupyter notebooks</a> for all of your development work. We'll motivate their use by pointing out how machine learning programming is different than normal application development.  Next, we're going to explore the original apartment data set, looking for and correcting suspicious records and elements. To do that, we'll learn a multitude of useful techniques to examine and manipulate Pandas data frames. Along the way, we'll also use matplotlib to generate some cool looking graphs. Once we've got a decent model based upon the cleaned up data, we'll try to improve accuracy by <i>synthesizing</i> (conjuring up) new apartment features from the existing features. We'll finish up by summarizing the model training process followed in this chapter. </p>
 
 
-<h2 id="sec0">Machine learning programming is challenging</h2>
+<h2 id="sec:3.1">Machine learning programming is challenging</h2>
 
 <div class="p_wrapper">
 <p class=sidenote><span class=sup>1</span>As you start to tackle your own machine learning problems, know that you're not alone when you get angry and frustrated. It's the nature of the beast to have difficulty wrangling large amounts of data, looking for suspected bugs, trying to beat libraries into submission, and so on.  We're all in the same boat!  Some of the mechanics get easier, but even experts find this kind of programming to be exasperating and extremely difficult to get right.</p>
@@ -102,7 +102,7 @@ Book version 0.1
 <p>Much of the frustration and trouble with building machine learning models stems from these reasons.  To make the best of the situation, it's important that we take advantage of an important development environment called a &ldquo;notebook&rdquo; to improve our productivity.</p>
 
 
-<h2 id="sec0">Your machine learning development environment</h2>
+<h2 id="sec:3.2">Your machine learning development environment</h2>
 
 <p>Over the last 30 years, there's been remarkable progress in the development of IDEs that make programmers very efficient, such as Intellij, Eclipse, VisualStudio, etc... Their focus, however, is on creating and navigating large programs, the opposite of our small machine learning scripts. More importantly, those IDEs have little to no support for interactive programming, but that's exactly what we need to be effective in machine learning. While Terence and Jeremy are strong advocates of IDEs in general, IDEs are less useful in the special circumstances of machine learning.</p>
 <div class="p_wrapper">
@@ -230,7 +230,7 @@ plt.show()</div>
 <p>So notebooks combine the important interactive nature of the Python shell with the persistence of files.  Because notebooks keep graphics and other output within the document containing the code, it's very easy to see what a program is doing. That's particularly useful for presenting results or continuing someone else's work.  You're free to use whatever development environment you find comfortable, of course, but we strongly recommend Jupyter notebooks. If you follow this recommendation, it's a good idea to go through some of the Jupyter tutorials and videos out there to get familiar with your tools.</p>
 
 
-<h2 id="sec0">How to start a machine learning project </h2>
+<h2 id="sec:3.3">How to start a machine learning project </h2>
 
 <p>The first step in any machine learning project has nothing to do with programming.  We start by making sure we're solving the right problem. As with any software project, the client often doesn't know exactly what they want or can't articulate what they want very well. Next, we need to figure out if we have the right data and, if not, how or where we can get the data.  There could be multiple data sources to merge and the data might appear in multiple formats, such as Excel(tm), <a href="https://en.wikipedia.org/wiki/XML">XML</a>, <a href="https://www.json.org/">JSON</a>, or CSV (comma-separated values).  Talking to the client and acquiring the right data in the right form is an important part of any project but beyond the scope of this book. For our purposes, we'll assume the data sets we use emerged from such process.</p>
 <p>To begin the actual programming phase of a machine learning project, the first step is to look at the data, but just for a quick sniff (using a Jupyter notebook, Excel, editor, etc...). We need to know what the data looks like, but we have to be careful not to make too many assumptions. For example, our first inspection of the data should yield the column names, their datatypes, and whether the target column has numeric values or categories. (If we're predicting, those values must be numeric; if we're classifying, those values must be categories.)</p>
@@ -245,7 +245,7 @@ plt.show()</div>
 <p>Let's see what our first two steps look like in practice on the apartment data.</p>
 
 
-<h3 id="">Getting a quick sniff of the data</h3>
+<h3 id="sec:3.3.1">Getting a quick sniff of the data</h3>
 
 <p>The apartment data we've been using was derived from a Kaggle competition called <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Two Sigma Connect: Rental Listing Inquiries</a> and was given in JSON form, but we have converted it to CSV  for the purposes of this chapter; see zipped book data file <a href="https://mlbook.explained.ai/data/rent.csv.zip">rent.csv.zip</a>.</p>
 <p>To get started, let's create a new Jupyter notebook by clicking on the &ldquo;+&rdquo; button again and selecting &ldquo;Python 3&rdquo; under the &ldquo;Notebook&rdquo; tab. This will create a file in the same directory where you started <span class=inlinecode>jupyter lab</span> (unless you have jumped around using the &ldquo;Files&rdquo; tab on the left side of the lab browser window). It's probably a good idea to give the file a decent name like <span class=inlinecode>prep.ipynb</span> by right clicking on the notebook tab that currently says &ldquo;Untitled.ipynb.&rdquo; Now, let's enter some code into the notebook to read in the CSV data using Pandas to get our first look at the original data:</p>
@@ -384,7 +384,7 @@ df_num.head(2)</div>
 <p> At this point, we've got the data looking very similar to what we had in <span class=inlinecode>rent-idea.csv</span> from the last chapter. But, this time, we're going to extract a test set before training our model.</p>
 
 
-<h3 id="">Extracting a test set</h3>
+<h3 id="sec:3.3.2">Extracting a test set</h3>
 
 <p>The true test of model generality is the performance of the model on a test data set not used for training or tuning of model hyper-parameters. It's often the case that we need to create our own test set and, unfortunately, it's not as easy as just extracting a random 10% of the records in practice. Even if there is no date or other time-related column, data is collected over time, which can skew data.  For example, users added to a social media website recently are often quite different from users added much earlier. (Early adopters tend to be younger and so new users to a social media site will skew older as time goes on.)  In our  apartment data, prices could be skewed because of inflation or the introduction of a new subway station near a cluster of apartments. Worse, some data sets are very unbalanced, such as fraud records within credit card activity data. The number of fraud records is vastly smaller then the number of valid credit card records, which also has a strong impact on training. We'll look at this in more detail in <span style="color: red">[testing]</span>, but these issues are good to keep in mind.  <span style="color: red">{TODO: need jph review, augmentation}</span></p>
 <div class="p_wrapper">
@@ -436,7 +436,7 @@ df_test.to_csv("data/rent-test.csv")
 
 
 
-<h2 id="sec0">Training an initial model</h2>
+<h2 id="sec:3.4">Training an initial model</h2>
 
 <div class="p_wrapper">
 <p class=sidenote><span class=sup>6</span>The cool kids say things like, &ldquo;there's no signal there&rdquo; to indicate no relationship exists between features and target.</p>
@@ -471,7 +471,7 @@ rf = RandomForestRegressor(n_estimators=100, n_jobs=-1)
 <p>We've trained an RF predictor model. Are we done?  Unfortunately, this is just the beginning. We have no idea what the prediction accuracy of this model is.  Until we know something about the model's generality, we've got more work to do.  Metrics we compute about model performance will, conveniently, also tell us something about the data set.</p>
 
 
-<h2 id="sec0">Estimating prediction error</h2>
+<h2 id="sec:3.5">Estimating prediction error</h2>
 
 <p>There are two kinds of errors we can compute from a model that we use prior to final test set evaluation: the <i>training error</i> and the <i>validation error</i>. The training error compares the predictions made by a model given the data it trained on to the known correct target values (also found in that training data). The validation error compares the predictions made by the model given the validation data to the known correct target values from the validation set. In other words, if <span class=inlinecode>x</span> is a feature vector from the training set (<span class=inlinecode>X_train</span>) and <span class=inlinecode>y</span> is the target (known correct response in <span class=inlinecode>y_train</span>), the training error compares the model's prediction for <span class=inlinecode>x</span> with <span class=inlinecode>y</span>. The overall training error is the average or some other metric computed on such differences for each <span class=inlinecode>x</span> in the training set. The validation error computes the same metric but using <span class=inlinecode>x</span> and <span class=inlinecode>y</span> pairs from the validation set.</p>
 <p>The simplest error metric is likely the average difference between predicted and actual prices, called the <i>residuals</i>, which we can get with scikit's <span class=inlinecode>mean_absolute_error()</span> function (&ldquo;mean&rdquo; is the same thing as &ldquo;average&rdquo;):</p>
@@ -601,7 +601,7 @@ print(f"${int(avg_err_valid)} average error +/-${int(std_err_valid)}")
 <p>If a chunk from our training data yields a very different validation error, that implies that the chunk has at least some data that is very different from what's in the other <img style="vertical-align: -1.08pt;" src="images/eqn-14464AC1DFE6FA8AD8FDA94BB6F01571-depth001.08.svg"> chunks.  In other words, the data is very noisy, has errors, or has outliers.   That means our next step is to dive into the data, looking for anomalies that we can hammer out to reduce variability in the validation errors.</p>
 
 
-<h2 id="sec0">Exploring and denoising the apartment rent data</h2>
+<h2 id="sec:3.6">Exploring and denoising the apartment rent data</h2>
 
 <p>As we've mentioned, we want to avoid doing excessive snooping around in the data because it's tempting to start making judgments that negatively impact the generality of our model.  But, in this case, the unstable validation error is a legitimate reason. The general concept of snooping around is called <i>exploratory data analysis</i> (EDA).  We're going to explore the data with the explicit purpose of finding anomalies. The focus of our model is on typically-priced apartments and only within New York City proper, which means we're going to look for extreme values outside of these ranges.</p>
 <p>Take care that you decide what these bounds are before looking at the data. Don't look at the data first and then decide on a definition of anomalous. You risk removing or altering data simply because it looks inconvenient or looks like it might confuse the model. For the apartment data, it's safe to say that an apartment for less than $1,000 in New York City is probably missing some key elements like windows and doors, so that should be our lowest price. At the high-end, let's call $10,000 outside the range of &ldquo;reasonably priced.&rdquo; </p>
@@ -646,7 +646,7 @@ df_num.describe()</div>
 <p>A number of anomalies pop out from the minimum and maximum for each column. There's a place with 10 bathrooms and another with 8 bedrooms.  There is a reference to longitude 0, which is the prime meridian (Greenwich, England), and a reference to latitude zero, the equator. Oh, and let's not forget the apartment that costs $4,490,000 per month or the intriguing place that costs $43 per month (probably an abandoned vehicle or an apartment that is currently on fire). </p>
 
 
-<h3 id="">Examining the data distributions</h3>
+<h3 id="sec:3.6.1">Examining the data distributions</h3>
 
 <p>Before we start slashing and burning the data set, let's look more closely at the <i>distribution</i> of the data.   The distribution of a feature is a term that, loosely speaking, describes how the values of that feature are spread across the range of that feature.  There are number of ways we can look at the distribution, such as sorting in reverse order and looking at the top 10 price values:</p>
 
@@ -720,7 +720,7 @@ plt.show()</div>
 <p>You can think of a histogram as an estimate of a feature's distribution (which is, itself, an estimate of the true New York City distribution because we only have a sample of apartments).</p>
 
 
-<h3 id="">Checking for missing values</h3>
+<h3 id="sec:3.6.2">Checking for missing values</h3>
 
 <p>Another standard check to run is to see whether or not there any missing values in the data set:</p>
 
@@ -766,7 +766,7 @@ df_num.isnull().head(5)</div>
 <p>Then the <span class=inlinecode>any()</span> function returns true for every column that has at least one true value. Fortunately, in this case, there are no missing values. We won't be so lucky in <span style="color: red">[missing]</span>.</p>
 
 
-<h3 id=""> Excising the anomalies</h3>
+<h3 id="sec:3.6.3"> Excising the anomalies</h3>
 
 <p>Records with erroneous or extreme values confuse humans and machine learning models alike. For example, the apartment costing over $4 million has two bedrooms and one bathroom, which clearly gives a price that is inconsistent with the majority of apartments having those characteristics.  We can either leave such records as-is, delete, or &ldquo;fix&rdquo; the records but you should err on the side of leaving records as-is. Which alternative we choose depends on knowledge about this domain, the goals of the model, how numerous the anomalies are, and even what we see in the individual records with anomalous values. (Missing data adds another wrinkle.) </p>
 <div class="p_wrapper">
@@ -845,7 +845,7 @@ len(df_missing)</div>
 <p>We're ready to train a model on this denoised data set to see if the accuracy has improved and if the variability of the validation error has dampened.</p>
 
 
-<h3 id="">Retraining the model</h3>
+<h3 id="sec:3.6.4">Retraining the model</h3>
 
 <p>Let's go through the procedure again of splitting out feature vectors and target column from the new <span class=inlinecode>df_train</span> set:</p>
 
@@ -877,7 +877,7 @@ print(f"{errors} avg {avg_err_valid_denoised:.2f} +/- {std_err_valid_denoised:.2
 
 
 
-<h2 id="sec0">Out-of-bag prediction scores</h2>
+<h2 id="sec:3.7">Out-of-bag prediction scores</h2>
 
 <p>Another reason to favor RFs, is that they can efficiently compute an estimate of the prediction error while training the model, completely avoiding the need for cross validation. The error metric is called the &ldquo;out-of-bag score.&rdquo; (<i>Bag</i> is an abbreviation of <i>bootstrap aggregation</i>, which we'll look at in detail in <span style="color: red">[RF]</span>.) Recall that RFs are a collection of decision trees, each of which is trained on a subset of the training data. The out-of-bag (OOB) score looks at the prediction accuracy for a particular record using only those trees that did not train on that record. Statisticians have shown that the out-of-bag score gives an excellent estimate of a model's generality, its test set prediction error.  </p>
 <p>The actual out-of-bag score computation can differ depending on the RF implementation, but SciKit's implementation uses a common error metric called <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> (literally pronounced &ldquo;<a href="https://en.wikipedia.org/wiki/Coefficient_of_determination">R squared</a>&rdquo;).   Think about the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score as measuring how well our model performs compared to a trivial model that always returns the average of the target (apartment price) for any requested prediction.  A perfect <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> validation score is 1.0, meaning that the model should generalize perfectly. Any value less than that, all away down to negative infinity, indicates the model performs imperfectly to some degree. A <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score of 0 means the model performs as well as always returning the average price. Because our model can be arbitrarily bad, the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score can be arbitrarily negative.   A nice feature of the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is that it is normalized: scores are always in the range of 1.0 down to negative infinity, rather than in units of apartment rent price or average rainfall in Nairobi.</p>
@@ -996,7 +996,7 @@ print("training score", gbr.score(X_train, y_train))
 <p>As we've discussed, it's more about the data than the model so let's take another look at the data to see if we've left some meat on the bone.</p>
 
 
-<h2 id="sec0">Synthesizing new features</h2>
+<h2 id="sec:3.8">Synthesizing new features</h2>
 
 <p>We've just filtered records in our data set to achieve better accuracy, but we can also inject new features or even delete features from consideration. All such data set manipulations fall under the term <i>feature engineering</i> and practitioners rely on it heavily to achieve good results.  (We'll do lots more in <span style="color: red">[feateng]</span>.) One of the most productive ways to improve model accuracy is to inject new <i>synthesized attributes</i> derived from existing features or from external data sources. </p>
 <p>For example,  adding a feature that measured distance from the nearest subway station might improve performance. We have location information, but nothing about what's at that location, and proximity to a subway is important to New Yorkers. We also understand that having a doorman is important to many people, so it would be great to add a feature that indicated whether the building has a doorman. (Again, domain knowledge is important here.) It turns out that the original data set has a <span class=inlinecode>features</span> attribute (of type string) with a list of features about the apartment, and the <span class=inlinecode>features</span> list includes &ldquo;doorman&rdquo; for some records. Here are the first five values from the <span class=inlinecode>features</span> column:</p>
@@ -1161,7 +1161,7 @@ X_test = X_test.drop('beds_to_baths', axis=1)
 <p>Unless we're willing to find and merge in external data sources, such as proximity to subway stations, we've reached the end of the road in terms of training our model.  We've got a clean training set and a good set of features that yields a pretty good out-of-bag <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score. It's time to run the test set through the model.</p>
 
 
-<h2 id="sec0">Checking model generality with the test set</h2>
+<h2 id="sec:3.9">Checking model generality with the test set</h2>
 
 <p>The out-of-bag <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score provided by RFs is an excellent estimate of the prediction error, but the true test of generality is running the test set through the model. It's crucial that we never peek at the test set, nor run it through the model during development. We only compute the test score when we have a model that we consider done.  Let's start with a freshly trained RF using the training set augmented with synthesized features to get an <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> and measure the accuracy using cross validation:</p>
 
@@ -1225,7 +1225,7 @@ Average of average errors is $600
 <p>The <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> prediction error is very often much worse for this noisy model and the $600 average prediction error is significantly larger. The point here is that a noisy data set leads to unstable prediction errors and an unstable model. Cleaning up the data set not only makes the model more accurate but also more reliable (stable).</p>
 
 
-<h2 id="sec0">Interpreting training, validation, and testing errors</h2>
+<h2 id="sec:3.10">Interpreting training, validation, and testing errors</h2>
 
 <p>A comparison of the various prediction error estimates, such as average cross-validation error or <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg">, provides an indication of model fitness. Ideally, our model would show a low training, validation, and testing error (high accuracy or high <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score), but we're happy with consistent validation and testing errors.  Any other situation suggests a bug in the code or an important difference in the nature of the sets. The following table  compares extremes of training and validation errors, indicating the likely fitness of the model.</p>
 <center>
@@ -1268,7 +1268,7 @@ Average of average errors is $600
 <p>We can declare victory if the model gives a low testing error and the metric is consistent with the validation error. Consistently high validation and testing errors is sad but no cause for alarm.  We expected our model to generalize poorly and it does.  Trouble lurks when the validation and testing errors differ considerably. When the validation error is low and the testing error is unexpectedly high, our first reaction should be that the validation and testing sets are different in an important way; we'll see how to address that issue in <span style="color: red">[testing]</span>. If the validation error is high but the testing error is low, we either got lucky or there's a bug in the code.</p>
 
 
-<h2 id="sec0">A Recipe for Training a Machine Learning Model</h2>
+<h2 id="sec:3.11">A Recipe for Training a Machine Learning Model</h2>
 
 <p>Congratulations, you've just solved your first real machine learning problem!  There's a lot packed into this chapter, but it's a complete walk-through from setting up the Jupyter development environment to testing a model for generality on a test set. We learned how to examine and denoise a data set to improve model accuracy then to inject synthesized attributes. Along the way, we learned lots of useful Pandas data frame manipulation commands. We also now have a good understanding of the difference between data subsets used for training, validation, and testing.</p>
 <p>We learned how to interpret feature importance graphs, both in terms of selecting model features for accuracy reasons but also interpreting the model to understand the market. For example, there's no surprise that the number of bedrooms and location are the most important predictors of price, but the number of bathrooms also matters.  Renters are also willing to pay a little bit for a doorman and laundry, but not so much for parking.</p>
