@@ -1,6 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118361649-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118361649-1');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 <link rel="stylesheet" type="text/css" href="css/book.css"/>
@@ -488,8 +497,8 @@ perc_err_train = err_train*100/avg_train
 print(f"{perc_err_train:0.2f}% of average {avg_train:.2f}")
 </div>
 
-<p class="stdout">$297.54 average error on training set
-7.71% of average 3859.00
+<p class="stdout">$300.88 average error on training set
+7.80% of average 3856.11
 </p>
 <p>Function <span class=inlinecode>mean_absolute_error()</span> is just subtracting predicted minus known target values, taking the absolute value, and then computing the average:</p>
 
@@ -500,8 +509,8 @@ err_train = y_diff.mean()</div>
 
 <p><span style="color: red">{TODO: compare MAE to the median as a baseline model?}</span></p>
 <p>Function call <span class=inlinecode>rf.predict(X_train)</span> returns a vector of predictions so <span class=inlinecode>rf.predict(X_train) - y_train</span> does a vector subtraction, yielding a new vector containing the element-wise subtraction of the two vectors. Calling <span class=inlinecode>abs()</span> on that resulting vector applies absolute value to every element of the vector, yielding the <span class=inlinecode>y_diff</span> vector result. These so-called vector operations tend to be much more efficient than Python loops, because the vector operations are done in highly-optimized C code under the hood within the Python libraries.</p>
-<p>That training error tells us that, on average, the model is able to reproduce the data it was trained on to within $297. That's about 7% of the average rent price. (This error value will fluctuate with every new call to <span class=inlinecode>train_test_split()</span>.)</p>
-<p>That error metric sounds pretty good, but unfortunately a decent training error is utterly meaningless.  All it means is that the model is acting kind of like a dictionary, memorizing the training data.  We don't even need machine learning to get that sort of behavior. On the other hand, if the training error is very bad, that does tell us something: as provided to the model, there's no signal in the data or the model is too weak to capture it.  If we can't futz with the features and get a low training error, there's no point in proceeding because such a model will never generalize. In other words, if a model performs poorly on the data it was trained on, the model will never perform well on data it is never seen.  Our training error of $297 is good but all we can conclude is that there is a possible relationship between features and target that an RF model can capture.</p>
+<p>That training error tells us that, on average, the model is able to reproduce the data it was trained on to within $300. That's about 7% of the average rent price. (This error value will fluctuate with every new call to <span class=inlinecode>train_test_split()</span>.)</p>
+<p>That error metric sounds pretty good, but unfortunately a decent training error is utterly meaningless.  All it means is that the model is acting kind of like a dictionary, memorizing the training data.  We don't even need machine learning to get that sort of behavior. On the other hand, if the training error is very bad, that does tell us something: as provided to the model, there's no signal in the data or the model is too weak to capture it.  If we can't futz with the features and get a low training error, there's no point in proceeding because such a model will never generalize. In other words, if a model performs poorly on the data it was trained on, the model will never perform well on data it is never seen.  Our training error of $300 is good but all we can conclude is that there is a possible relationship between features and target that an RF model can capture.</p>
 <div class="p_wrapper">
 <div class=callout>Models that perform poorly on training data will never generalize well to data they have never seen. Models that perform well on training data might or might not generalize well.</div>
 <p class=p_left>The only thing that matters when building a model is generalization, which we measure with validation error and then, ultimately, with the <i>test error</i> computed using the test set.  The validation error is an estimate of the true prediction error, but it is an underestimate because we use the validation set during training to tune the model. The test set we held out will give the best estimation of the true prediction error, the model's generality.</p>
@@ -531,7 +540,7 @@ chunks_valid = -cvscore
 print(chunks_valid)
 </div>
 
-<p class="stdout">[400.65142512 459.33618702 380.06088656 989.46754334 820.74890087]
+<p class="stdout">[544.44954178 392.68976308 428.08027412 999.7682175  472.52607073]
 </p>
 <p>For <span class=eqn>k</span>=5, we get 5 chunk validation errors, which we average to get an overall validation error:</p>
 
@@ -540,12 +549,12 @@ print(chunks_valid)
 print(f"{avg_err_valid:.2f} average error on validation set")
 </div>
 
-<p class="stdout">610.05 average error on validation set
+<p class="stdout">567.50 average error on validation set
 </p>
 <p>But the average value hides a great deal of variability in the chunk validation errors, which shows up as instability in the overall average error across runs.  For example, running the cross validation again three more times gives:</p>
-<p class="stdout">596.52 average error on validation set
-614.68 average error on validation set
-621.27 average error on validation set
+<p class="stdout">566.40 average error on validation set
+562.80 average error on validation set
+563.65 average error on validation set
 </p>
 <p>We can visualize the variability between chunk validation errors with a tiny bit of matplotlib code, plotting the chunk number against the chunk validation error:</p>
 <div class="p_wrapper">
@@ -588,15 +597,15 @@ std_err_valid = chunks_valid.std()  # compute standard deviation of chunk errors
 print(f"${int(avg_err_valid)} average error +/-${int(std_err_valid)}")
 </div>
 
-<p class="stdout">$621 average error +/-$246
+<p class="stdout">$563 average error +/-$214
 </p>
 <div class="p_wrapper">
 <p class=sidenote><span class=sup>9</span>To satisfy the statisticians, note that this rule assumes the data values follow a <a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution</a>, the &ldquo;bell curve.&rdquo;  In this case, the distribution of our cross validation averages will always be a bell curve per the <a href="https://en.wikipedia.org/wiki/Central_limit_theorem">central limit theorem</a>.</p>
-<p class=p_left>The easiest way to interpret the +/-$246 range of one standard deviation is with the <a href="https://en.wikipedia.org/wiki/68-95-99.7_rule">68-95-99.7 rule</a>. One standard deviation covers 68% of the values. Two standard deviations covers 95% and three standard deviations covers 99.7%, or virtually all of the values. In other words, the standard deviation of our chunk validation errors is $246 so 68% of all validation errors are within $246 of the average validation error. 95% of the chunk validation errors would be within $492 of the average error. 99.7% of the validation errors would be within $739 of the average error.<span class=sup>9</span></p>
+<p class=p_left>The easiest way to interpret the +/-$214 range of one standard deviation is with the <a href="https://en.wikipedia.org/wiki/68-95-99.7_rule">68-95-99.7 rule</a>. One standard deviation covers 68% of the values. Two standard deviations covers 95% and three standard deviations covers 99.7%, or virtually all of the values. In other words, the standard deviation of our chunk validation errors is $214 so 68% of all validation errors are within $214 of the average validation error. 95% of the chunk validation errors would be within $428 of the average error. 99.7% of the validation errors would be within $644 of the average error.<span class=sup>9</span></p>
 </div>
 <div class="p_wrapper">
 <div class=callout>If the <span class=eqn>k</span>-fold cross validation error standard deviation is high, it's suggestive of outliers in the target variable.</div>
-<p class=p_left>The average error of $621 is not horrible but a standard deviations of $246 indicates wide variance in the chunk errors, which is a problem. Because we tune models by tweaking hyper-parameters and watching the effect on the validation error, we need a very stable validation error. Otherwise, we wouldn't know whether a change in the validation error was due to an improvement in the model or natural variation.</p>
+<p class=p_left>The average error of $563 is not horrible but a standard deviations of $214 indicates wide variance in the chunk errors, which is a problem. Because we tune models by tweaking hyper-parameters and watching the effect on the validation error, we need a very stable validation error. Otherwise, we wouldn't know whether a change in the validation error was due to an improvement in the model or natural variation.</p>
 </div>
 <p>If a chunk from our training data yields a very different validation error, that implies that the chunk has at least some data that is very different from what's in the other <img style="vertical-align: -1.08pt;" src="images/eqn-14464AC1DFE6FA8AD8FDA94BB6F01571-depth001.08.svg"> chunks.  In other words, the data is very noisy, has errors, or has outliers.   That means our next step is to dive into the data, looking for anomalies that we can hammer out to reduce variability in the validation errors.</p>
 
@@ -870,9 +879,9 @@ std_err_valid_denoised = chunks_valid.std()
 print(f"{errors} avg {avg_err_valid_denoised:.2f} +/- {std_err_valid_denoised:.2f}")
 </div>
 
-<p class="stdout">[297, 310, 309, 304, 305] avg 305.48 +/- 4.34
+<p class="stdout">[300, 305, 299, 308, 301] avg 303.13 +/- 3.62
 </p>
-<p>Great! The average error is almost half what it was, the variation is much tighter between runs, and the chunk error standard deviation is small. Compare those values to the average error of 621 and standard deviation of 246 on the noisy data set.</p>
+<p>Great! The average error is almost half what it was, the variation is much tighter between runs, and the chunk error standard deviation is small. Compare those values to the average error of 563 and standard deviation of 214 on the noisy data set.</p>
 <p>Now that we've learned how to clean up data and to get stable prediction error estimates using cross validation, let's think about speeding up our training and testing process. You might've noticed the CPU fan on your computer spinning its little heart out running the cross validation tests. The cross validation error is an excellent measure of generality but, depending on the number of folds, <span class=eqn>k</span>, testing can be very expensive computationally; we have to train the model <span class=eqn>k</span> times. RFs have a trick that gives us the same validation mechanism without having to retrain the model.</p>
 
 
@@ -890,9 +899,9 @@ print(f"{errors} avg {avg_err_valid_denoised:.2f} +/- {std_err_valid_denoised:.2
     print(rf.oob_score_)
 </div>
 
-<p class="stdout">0.8610514856544446
-0.8607943224502645
-0.8614653546268711
+<p class="stdout">0.861620033880882
+0.8615205589573746
+0.8614187946793377
 </p>
 <p>We've removed outliers and so even splitting out different training sets does not cause the OOB score to fluctuate wildly:</p>
 
@@ -906,9 +915,9 @@ print(f"{errors} avg {avg_err_valid_denoised:.2f} +/- {std_err_valid_denoised:.2
     print(rf.oob_score_)
 </div>
 
-<p class="stdout">0.8615101323494572
-0.8612492611762212
-0.8604838664602067
+<p class="stdout">0.861166575577798
+0.8607685894699812
+0.8615909471043297
 </p>
 <p>(Normally, we grab one test set and squirrel it away rather than testing multiple test sets <i>ala</i> cross validation; we're breaking the rules here to make a point about the stability of <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores in the face of changing train/test set splits.) </p>
 <p>Those <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores are pretty good, meaning that we'll likely have a good test score when we're done. Let's compare those <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores to the scores computed from various training sets extracted from the original, noisy data:</p>
@@ -924,9 +933,9 @@ print(f"{errors} avg {avg_err_valid_denoised:.2f} +/- {std_err_valid_denoised:.2
     print(rf.oob_score_)
 </div>
 
-<p class="stdout">0.08245729330733864
-0.5093790751151642
--0.25065040468325006
+<p class="stdout">-0.229315342456492
+-0.13389092655011048
+-0.07238343792420365
 </p>
 <p>Those <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores are not at all good and they vary much more on these noisy training sets than on the clean data set. This highlights the importance of the cleanliness of the data because the error estimate fluctuates with the noisy data set, despite us using the exact same RF model with the exact same hyper-parameter. We should not place great confidence in a model whose prediction errors fluctuate so much.</p>
 <div class=aside><b>Random forest prediction confidence</b><br>
@@ -948,16 +957,16 @@ for i in range(10):
     print(f"Apt {i}: true price ${y:5.0f}, predict ${a:5.0f} +/-${s:4.0f}")
 </div>
 
-<p class="stdout">Apt 0: true price $ 3350, predict $ 3335 +/-$ 109
-Apt 1: true price $ 1850, predict $ 1873 +/-$  10
-Apt 2: true price $ 2700, predict $ 2676 +/-$ 169
-Apt 3: true price $ 1850, predict $ 1774 +/-$  48
-Apt 4: true price $ 4200, predict $ 3443 +/-$ 125
-Apt 5: true price $ 3375, predict $ 3533 +/-$ 805
-Apt 6: true price $ 2150, predict $ 2550 +/-$ 467
-Apt 7: true price $ 5225, predict $ 3389 +/-$ 106
-Apt 8: true price $ 5800, predict $ 5455 +/-$ 190
-Apt 9: true price $ 5600, predict $ 6359 +/-$1251
+<p class="stdout">Apt 0: true price $ 3295, predict $ 3520 +/-$  94
+Apt 1: true price $ 2395, predict $ 2329 +/-$  67
+Apt 2: true price $ 3250, predict $ 3249 +/-$   7
+Apt 3: true price $ 1950, predict $ 3019 +/-$ 308
+Apt 4: true price $ 3200, predict $ 2778 +/-$ 104
+Apt 5: true price $ 2250, predict $ 2324 +/-$ 129
+Apt 6: true price $ 5695, predict $ 6100 +/-$ 191
+Apt 7: true price $ 3100, predict $ 3349 +/-$ 331
+Apt 8: true price $ 2699, predict $ 2786 +/-$ 375
+Apt 9: true price $ 7195, predict $ 6435 +/-$1177
 </p>
 <p>We should be more cautious of predictions for feature vectors with higher standard deviations.</p>
 
@@ -977,7 +986,7 @@ lm.fit(X_train, y_train)
 print("training score", lm.score(X_train, y_train))
 </div>
 
-<p class="stdout">training score 0.5726277348652362
+<p class="stdout">training score 0.5785023145351245
 </p>
 <p>Even the linear model's training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> is significantly worse than the .86 we get with the RF. It's unable to capture the relationship between features and apartment price even for training data.</p>
 <p>The <a href="https://en.wikipedia.org/wiki/Gradient_boosting">gradient boosting</a> model is another popular and powerful model based upon decision trees, but it also fails to capture the relationship as well as an RF:</p>
@@ -990,7 +999,7 @@ gbr.fit(X_train, y_train)
 print("training score", gbr.score(X_train, y_train))
 </div>
 
-<p class="stdout">training score 0.7828458268711532
+<p class="stdout">training score 0.7817488655555103
 </p>
 <p>Normally, a grid search over the hyper parameters is required to tune the model and get the best accuracy, but out-of-the-box gradient boosting does not perform as well as an RF for this data set.</p>
 <p>As we've discussed, it's more about the data than the model so let's take another look at the data to see if we've left some meat on the bone.</p>
@@ -1026,7 +1035,7 @@ m, s = stable_oob_score(X_train, y_train)
 print(f"OOB score {m:.5f} +/-{s:.5f}")
 </div>
 
-<p class="stdout">OOB score 0.86066 +/-0.00027
+<p class="stdout">OOB score 0.86142 +/-0.00025
 </p>
 <div class="p_wrapper">
 <span class=sidenote>
@@ -1105,7 +1114,7 @@ m, s = stable_oob_score(X_train, y_train)
 print(f"OOB score {m:.5f} +/-{s:.5f}")
 </div>
 
-<p class="stdout">OOB score 0.86217 +/-0.00024
+<p class="stdout">OOB score 0.86322 +/-0.00032
 </p>
 <p>(The <span class=inlinecode>axis=1</span> argument to <span class=inlinecode>drop()</span> indicates that <span class=inlinecode>price</span> refers to a column not a row; indicate rows by <span class=inlinecode>axis=0</span>.)</p>
 <div class="p_wrapper">
@@ -1123,7 +1132,7 @@ print(f"OOB score {m:.5f} +/-{s:.5f}")
 print(f"OOB score {m:.5f} +/-{s:.5f}")
 </div>
 
-<p class="stdout">OOB score 0.86143 +/-0.00022
+<p class="stdout">OOB score 0.86203 +/-0.00015
 </p>
 <p>Dropping the parking feature reduces <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg">, so let's keep it.  In practice, however, there are business reasons why we might want to drop that feature, regardless of its small bump in accuracy. Each new column requires storage, training time, and prediction time. It's also another feature to explain to management or users.  When there are 50 or 100 features instead of a 5 or 6, reducing the number of columns would also help us interpret the model.</p>
 <p>Let's see what we can do with the numeric features.   For some models, it's useful to synthesize a new column from the multiplication or division of other columns. For example, we can imagine that the ratio of bedrooms to bathrooms is useful because it's captures how much contention there might be for, say, the shower in the morning:</p>
@@ -1136,7 +1145,7 @@ m, s = stable_oob_score(X_train, y_train)
 print(f"OOB score {m:.5f} +/-{s:.5f}")
 </div>
 
-<p class="stdout">OOB score 0.86270 +/-0.00039
+<p class="stdout">OOB score 0.86366 +/-0.00029
 </p>
 <p>Notice the trick of dividing by the number of bathrooms plus 1 because through error, or strange New York City apartments, some records show no bathrooms. This avoids a division by zero and doesn't affect the predictive nature of the feature because it is uniformly scaling the feature values.</p>
 <div class="p_wrapper">
@@ -1180,8 +1189,8 @@ err_cv = chunks_valid.mean()
 print(f"${err_cv:.2f} average cross-validation error")
 </div>
 
-<p class="stdout">OOB R^2 0.86187
-$303.11 average cross-validation error
+<p class="stdout">OOB R^2 0.86278
+$301.50 average cross-validation error
 </p>
 <p>Now, let's compare those with the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> and accuracy computed using the test set:</p>
 
@@ -1191,10 +1200,10 @@ err_test = mean_absolute_error(y_test, rf.predict(X_test))
 print(f"${err_test:.2f} average error on test set")
 </div>
 
-<p class="stdout">Test R^2 0.87040
-$283.34 average error on test set
+<p class="stdout">Test R^2 0.87148
+$285.88 average error on test set
 </p>
-<p>The good news is that the out-of-bag <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> closely matches the test set score and the average prediction error on the test set is just $283, close to the cross validation error of $303. We can conclude that our model is likely to generalize well to previously-unseen apartment feature vectors.</p>
+<p>The good news is that the out-of-bag <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> closely matches the test set score and the average prediction error on the test set is just $285, close to the cross validation error of $301. We can conclude that our model is likely to generalize well to previously-unseen apartment feature vectors.</p>
 <p>Before finishing up, let's see how a model trained on the original, noisy data set would perform on a test set.  We need to run a number of trials because the data is peppered with outliers and, therefore, test prediction error will fluctuate greatly, depending on how the test set is (randomly) extracted:</p>
 
 
@@ -1215,14 +1224,14 @@ avg_test_error = int(np.mean(errors))
 print(f"Average of average errors is ${avg_test_error}")
 </div>
 
-<p class="stdout">$420.67 average error on test set, test R^2 is 0.9201
-$589.36 average error on test set, test R^2 is -45.5337
-$1030.26 average error on test set, test R^2 is 0.0481
-$538.73 average error on test set, test R^2 is 0.0145
-$425.24 average error on test set, test R^2 is 0.8754
-Average of average errors is $600
+<p class="stdout">$522.48 average error on test set, test R^2 is 0.0284
+$511.85 average error on test set, test R^2 is 0.0211
+$436.65 average error on test set, test R^2 is -0.1759
+$364.85 average error on test set, test R^2 is 0.7710
+$567.57 average error on test set, test R^2 is -59.8766
+Average of average errors is $480
 </p>
-<p>The <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> prediction error is very often much worse for this noisy model and the $600 average prediction error is significantly larger. The point here is that a noisy data set leads to unstable prediction errors and an unstable model. Cleaning up the data set not only makes the model more accurate but also more reliable (stable).</p>
+<p>The <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> prediction error is very often much worse for this noisy model and the $480 average prediction error is significantly larger. The point here is that a noisy data set leads to unstable prediction errors and an unstable model. Cleaning up the data set not only makes the model more accurate but also more reliable (stable).</p>
 
 
 <h2 id="sec:3.10">Interpreting training, validation, and testing errors</h2>
