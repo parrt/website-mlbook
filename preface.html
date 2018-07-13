@@ -1,55 +1,78 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118361649-2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-118361649-2');
-</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 <link rel="stylesheet" type="text/css" href="css/book.css"/>
 <title>Welcome!</title>
+<!-- META -->
+<!-- LinkedIn meta -->
+<meta property='og:title' content="The Mechanics of Machine Learning"/>
+<meta property='og:image' content="https://mlbook.explained.ai/images/intro/training.svg">
+<meta property='og:description' content="This book is a primer on machine learning for programmers trying to get up to speed quickly."/>
+<meta property='og:url' content="https://mlbook.explained.ai"/>
+
+<!-- Facebook meta -->
+<meta property="og:type" content="article" />
+
+<!-- Twitter meta -->
+<meta name="twitter:title" content="The Mechanics of Machine Learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@the_antlr_guy">
+<meta name="twitter:creator" content="@the_antlr_guy">
+<meta name="twitter:description" content="This book is a primer on machine learning for programmers trying to get up to speed quickly.">
+<meta name="twitter:image" content="https://mlbook.explained.ai/images/intro/training.svg">
+<!-- END META -->
 </head>
 <body>
-<h1>Welcome!</h1>
-
 <div class="watermark">
 <i>Work in progress</i><br>
 Book version 0.1
 </div>
 
+<h1>Welcome!</h1>
+
 <p><a href="http://parrt.cs.usfca.edu">Terence Parr</a> and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
 
-<p style="font-size: 80%">Copyright &copy; 2018 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
-<p>Please send comments, suggestions, or fixes to <a href="mailto:parrt@cs.usfca.edu">Terence</a>.</p>
-</p>
+<p></p>
 
+<p style="font-size: 80%">Copyright &copy; 2018 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
+<p>
+<p>
+You can make <b>comments or annotate</b> this page by going to the <a id="annotatelink" href="">annotated version of this page</a>. You'll see existing annotated bits highlighted in yellow. They are <i>PUBLICLY VISIBLE</i>. Or, you can send comments, suggestions, or fixes directly to <a href="mailto:parrt@cs.usfca.edu">Terence</a>.
+</p>
+<script>
+var me = window.location.href;
+document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
+</script>
+</p>
+</p>
 
 
 
 <div id="toc">
 <p class="toc_title">Contents</p>
 <ul>
-	<li><a href="#sec:1.1">Is this book right for you?</a></li>
+	<li><a href="#sec:1.1">Is this book right for you?</a>
 	<ul>
 	</ul>
-	<li><a href="#sec:1.2">Tools of the trade</a></li>
+	</li>
+	<li><a href="#sec:1.2">Tools of the trade</a>
 	<ul>
 	</ul>
-	<li><a href="#sec:1.3">What you'll learn</a></li>
+	</li>
+	<li><a href="#sec:1.3">What you'll learn</a>
 	<ul>
 	</ul>
-	<li><a href="#sec:1.4">Supporting materials online</a></li>
+	</li>
+	<li><a href="#sec:1.4">Supporting materials online</a>
 	<ul>
 	</ul>
-	<li><a href="#sec:1.5">Acknowledgements</a></li>
+	</li>
+	<li><a href="#sec:1.5">Acknowledgements</a>
 	<ul>
 	</ul>
+	</li>
 
 </ul>
 </div>
@@ -80,7 +103,7 @@ Book version 0.1
 </center>
 
 <br><b>Figure 1</b>. Pythagorus' theorem was expressed geometrically initially not algebraically.</span>
-<p class=p_left>Even when mathematics is necessary to understand a model, it's important to remember that the math notation is really just a precise and concise way to express the results of someone's intuitive leap. Consider the Pythagorean theorem we all learned in middle school: <img style="vertical-align: -1.05942pt;" src="images/eqn-D459699AB031562A6C4FBB577DB204BC-depth001.06.svg">. Pythagoras could never have expressed his theorem with such a formula. As Steven Weinberg points out, &ldquo;<i>The Greeks never learned to write and manipulate algebraic formulas</i>.&rdquo;<span class=sup>3</span> (Terence highly recommends this book.) Instead, Pythagoras arranged three squares so their edges formed a right triangle (one angle is 90 degrees) then observed that the area of the square whose edge formed the hypotenuse had the same area as the combined area of the other two squares; see <b>Figure 1</b>. It's pretty hard to start from the mathematics and work backwards to the intuition, which is why we're going to spend most of our time with the ideas and mechanisms behind machine learning.</p>
+<p class=p_left>Even when mathematics is necessary to understand a model, it's important to remember that the math notation is really just a precise and concise way to express the results of someone's intuitive leap. Consider the Pythagorean theorem we all learned in middle school: <img style="vertical-align: -1.06pt;" src="images/eqn-D459699AB031562A6C4FBB577DB204BC-depth001.06.svg">. Pythagoras could never have expressed his theorem with such a formula. As Steven Weinberg points out, &ldquo;<i>The Greeks never learned to write and manipulate algebraic formulas</i>.&rdquo;<span class=sup>3</span> (Terence highly recommends this book.) Instead, Pythagoras arranged three squares so their edges formed a right triangle (one angle is 90 degrees) then observed that the area of the square whose edge formed the hypotenuse had the same area as the combined area of the other two squares; see <b>Figure 1</b>. It's pretty hard to start from the mathematics and work backwards to the intuition, which is why we're going to spend most of our time with the ideas and mechanisms behind machine learning.</p>
 </div>
 
 
