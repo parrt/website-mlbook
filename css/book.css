@@ -48,13 +48,13 @@
 	margin-left: 100px;
 }
 .inlinecode {
-    font-family: Monaco;
-    font-size: 80%;	
+    font-family: "Monaco", "Lucida Console", "Lucida Sans Typewriter", monospace;
+    font-size: 95%;	
 }
 .codeblk {
-        font-family: Monaco;
-        font-size: 80%;
-        box-sizing: border-box;
+    font-family: "Monaco", "Lucida Console", "Lucida Sans Typewriter", monospace;
+    font-size: 80%;
+    box-sizing: border-box;
     margin: 0 0 1em 0;
     border: #E3EDF3 1px solid;
     width: 100%;
