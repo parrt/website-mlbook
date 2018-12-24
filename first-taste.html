@@ -1,0 +1,965 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118361649-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118361649-2');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+<link rel="stylesheet" type="text/css" href="css/book.css"/>
+<title>A First Taste of Applied Machine Learning</title>
+<!-- META -->
+<!-- LinkedIn meta -->
+<meta property='og:title' content="The Mechanics of Machine Learning"/>
+<meta property='og:image' content="https://mlbook.explained.ai/images/intro/training.svg">
+<meta property='og:description' content="This book is a primer on machine learning for programmers trying to get up to speed quickly."/>
+<meta property='og:url' content="https://mlbook.explained.ai"/>
+
+<!-- Facebook meta -->
+<meta property="og:type" content="article" />
+
+<!-- Twitter meta -->
+<meta name="twitter:title" content="The Mechanics of Machine Learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@the_antlr_guy">
+<meta name="twitter:creator" content="@the_antlr_guy">
+<meta name="twitter:description" content="This book is a primer on machine learning for programmers trying to get up to speed quickly.">
+<meta name="twitter:image" content="https://mlbook.explained.ai/images/intro/training.svg">
+<!-- END META -->
+</head>
+<body>
+<div class="watermark">
+<i>Work in progress</i><br>
+Book version 0.2
+</div>
+
+<h1>3 A First Taste of Applied Machine Learning</h1>
+
+<p><a href="http://parrt.cs.usfca.edu">Terence Parr</a> and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
+
+<p></p>
+
+<p style="font-size: 80%">Copyright &copy; 2018 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
+<p>
+<p>
+You can make <b>comments or annotate</b> this page by going to the <a id="annotatelink" href="">annotated version of this page</a>. You'll see existing annotated bits highlighted in yellow. They are <i>PUBLICLY VISIBLE</i>. Or, you can send comments, suggestions, or fixes directly to <a href="mailto:parrt@cs.usfca.edu">Terence</a>.
+</p>
+<script>
+var me = window.location.href;
+document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
+</script>
+</p>
+</p>
+
+
+
+<div id="toc">
+<p class="toc_title">Contents</p>
+<ul>
+	<li><a href="#sec:3.1">Computer environment sanity check</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:3.2">Predicting New York City Apartment Rent</a>
+	<ul>
+			<li><a href="#sec:3.2.1">Loading and sniffing the training data</a></li>
+			<li><a href="#sec:3.2.2">Training a random forest model</a></li>
+			<li><a href="#sec:3.2.3">Does the model capture training data relationships?</a></li>
+			<li><a href="#sec:generality">Checking model generality</a></li>
+			<li><a href="#sec:3.2.5">Fiddling with model hyper-parameters</a></li>
+			<li><a href="#sec:3.2.6">What the model says about the data</a></li>
+
+	</ul>
+	</li>
+	<li><a href="#sec:3.3">Predicting breast cancer</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:3.4">Classifying handwritten digits</a>
+	<ul>
+			<li><a href="#sec:3.4.1">Representing and loading image data</a></li>
+			<li><a href="#sec:3.4.2">Classifying test digits 6-4-0</a></li>
+			<li><a href="#sec:3.4.3">Comparing the digit classifier's performance to a linear model</a></li>
+
+	</ul>
+	</li>
+	<li><a href="#sec:3.5">Summary</a>
+	<ul>
+	</ul>
+	</li>
+
+</ul>
+</div>
+
+<p>&ldquo;<i>In God we trust; all others bring data.</i>&rdquo; &mdash; <a href="https://blog.deming.org/w-edwards-deming-quotes/large-list-of-quotes-by-w-edwards-deming">Attributed</a> to W. Edwards Deming and George Box</p>
+<p>Let's dig into the actual mechanics of applying machine learning to a few real problems. You might be surprised at how little code it takes! For the Python code snippets in this chapter, feel free to just cut-and-paste them blindly and don't sweat the details. We'll go over the material again in the following chapters. The main take aways are the basic regression and classification modeling process and a rough idea of what machine learning code looks like. Before we get started, let's make sure that we all have the same version of Python 3 and the necessary libraries.</p>
+
+
+
+<h2 id="sec:3.1">3.1 Computer environment sanity check</h2>
+
+
+<p>Because we assume you know how to program in Python, we assume your machine is set up reasonably to edit and execute Python code.  We need to make sure, however, that all of the machine learning libraries you'll need are installed and that Python 3 is the default on your systems. The easiest way is to download and install <a href="https://anaconda.org">Anaconda</a> for Python 3.</p>
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>1</span>During installation on Windows, make sure to check the box that adds Python to your <span class=inlinecode>PATH</span> environment variable, for which you will need administrator privileges. Or, just go to the Start menu and execute the <span class=inlinecode>Anaconda Prompt</span>.</p>
+<p class=p_left>Download and install the Python 3.6 or higher version of Anaconda using the &ldquo;64-bit graphical installer.&rdquo; <span class=sup>1</span> Use the &ldquo;just for me&rdquo; option so that the installer puts Anaconda in your home directory so we all have it in the same spot: <span class=inlinecode>C:\Users\YOURID\Anaconda3</span> on Windows and <span class=inlinecode>/Users/YOURID/anaconda3</span> on Mac (similar on any UNIX machine). The libraries are big and so you'll need 2.4G of disk space. To verify everything is installed properly, you should try to import a library, as Terence demonstrates here on his computer from the Mac (UNIX) command line:</p>
+</div>
+
+
+<div class="codeblk">$ which python3
+/Users/parrt/anaconda3/bin/python3
+$ python3
+Python 3.6.5 |Anaconda custom (64-bit)| (default, Apr 26 2018, 08:42:37) 
+[GCC 4.2.1 Compatible Clang 4.0.1 (tags/RELEASE_401/final)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import pandas as pd
+>>></div>
+
+
+<p>On windows, you can start the Python 3 interpreter from the PowerShell (if <span class=inlinecode>python</span> is in your <span class=inlinecode>PATH</span>) or via the  &ldquo;anaconda prompt&rdquo; launched from the start menu:</p>
+
+
+<div class="codeblk">(C:\Users\parrt\Anaconda3) C:\Users\parrt>python
+Python 3.6.5 |Anaconda custom (64-bit)| (default, Apr 26 2018, 08:42:37) 
+[GCC 4.2.1 Compatible Clang 4.0.1 (tags/RELEASE_401/final)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import pandas as pd
+>>></div>
+
+
+<p>If you get the <span class=inlinecode>>>></span> prompt back and don't get any errors, you are good to go!</p>
+
+<p>We will also need a package called <span class=inlinecode>rfpimp</span> that gives us a reliable way to compare the predictive power of the various apartment features:</p>
+
+
+<div class="codeblk">$ pip install rfpimp</div>
+
+
+<p>In the next chapter, <b>Chapter 4</b> <i>Development Tools</i>, we'll introduce the right development environment, but for now you can use any old Python editing tool.</p>
+
+
+
+<h2 id="sec:3.2">3.2 Predicting New York City Apartment Rent</h2>
+
+
+<p>As a first example, let's train a random forest model to predict apartment rent prices in New York City. The rent data set is an idealized version of data from a <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Kaggle competition</a>.</p>
+
+
+
+<h3 id="sec:3.2.1">3.2.1 Loading and sniffing the training data</h3>
+
+
+<p>Let's get started by loading our training data, <span class=inlinecode>rent-ideal.csv</span> from this book's <a href="https://mlbook.explained.ai/data/index.html">data</a> directory, which we'll do with the help of your new BFF (best friend forever) <a href="https://pandas.pydata.org/">Pandas</a>. Once we import the Pandas library, giving it the standard short alias <span class=inlinecode>pd</span>, we can call function <span class=inlinecode>read_csv()</span> to open a file of comma-separated value records (one apartment record per line and with a header row with column names):</p>
+
+
+<div class="codeblk">import pandas as pd # Import the library and give a short alias: pd
+rent = pd.read_csv("data/rent-ideal.csv")
+</div>
+
+
+<p>The result stored into variable <span class=inlinecode>rent</span> is called a <i>data frame</i> and works like a spreadsheet or a database table, with rows and named columns. Here's how to print out the first five records:</p>
+
+
+<div class="codeblk">print(rent.head(5))
+</div>
+
+<p class="stdout">   bedrooms  bathrooms  latitude  longitude  price
+0         3        1.5   40.7145   -73.9425   3000
+1         2        1.0   40.7947   -73.9667   5465
+2         1        1.0   40.7388   -74.0018   2850
+3         1        1.0   40.7539   -73.9677   3275
+4         4        1.0   40.8241   -73.9493   3350
+</p>
+
+<p>You can literally just cut-and-paste those three lines into a Python file and run the file to get that output, assuming you give <span class=inlinecode>read_csv()</span> the correct path to the data file. All of the code snippets in this section are pieces of the same large script.</p>
+
+<p>Once we have a data frame, we can ask it all sorts of questions. For example, we can pull out the price column using <span class=inlinecode>rent['price']</span> and then ask for the average (statisticians call the average the <i>mean</i>) rent:</p>
+
+
+<div class="codeblk">prices = rent['price']
+avg_rent = prices.mean()
+print(f"Average rent is ${avg_rent:.0f}")
+</div>
+
+<p class="stdout">Average rent is $3439
+</p>
+
+<p>Just like spreadsheet <a href="https://en.wikipedia.org/wiki/Pivot_table">pivot tables</a> or the database <a href="https://www.w3schools.com/sql/sql_groupby.asp">group by</a> operator, we can do some pretty fancy data aggregation with Pandas. The following code groups the training data by the number of bathrooms and computes the mean price (actually the mean of all of the other columns too):</p>
+
+
+<div class="codeblk">bybaths = rent.groupby(['bathrooms']).mean()
+bybaths = bybaths.reset_index() # overcome quirk in Pandas
+print(bybaths[['bathrooms','price']]) # print just num baths, avg price
+</div>
+
+<p class="stdout">   bathrooms        price
+0        0.0  3144.870000
+1        1.0  3028.111035
+2        1.5  4226.336449
+3        2.0  5278.595739
+4        2.5  6869.047368
+5        3.0  6897.974576
+6        3.5  7635.357143
+7        4.0  7422.888889
+8        4.5  2050.000000
+9       10.0  3600.000000
+</p>
+
+<p>Pandas also has excellent graphing facilities, courtesy of your next best friend, a sophisticated plotting library called <a href="https://matplotlib.org/">matplotlib</a>. Here's how to plot the price against the number of bathrooms:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_go_5.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">import matplotlib.pyplot as plt
+
+bybaths.plot.line('bathrooms','price', style='-o')
+plt.show()</div>
+</div> <!-- end div for p_wrapper -->
+
+
+
+<h3 id="sec:3.2.2">3.2.2 Training a random forest model</h3>
+
+
+<p>To train a model, we split the data frame into the feature columns (the predictors) and the target (predicted) column, which practitioners typically call variables <span class=inlinecode>X</span> and <span class=inlinecode>y</span>. Let's train a model using all apartment features to predict rent prices. Here's how to extract the appropriate feature vectors and target column:</p>
+
+
+<div class="codeblk">X, y = rent[['bedrooms','bathrooms','latitude','longitude']], rent['price']
+</div>
+
+
+<p>Variable <span class=inlinecode>X</span> is a data frame (list of columns) with the bathrooms column whereas <span class=inlinecode>y</span> is the price column (<span class=inlinecode>Series</span> in Pandas terminology):</p>
+
+
+<div class="codeblk">print(type(X), type(y))
+</div>
+
+<p class="stdout">&lt;class 'pandas.core.frame.DataFrame'> &lt;class 'pandas.core.series.Series'>
+</p>
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>2</span>The surface area of the Python libraries for machine learning is vast and it's difficult to tell where one library stops and the other starts, because they are so intertwined.</p>
+<p class=p_left>The RF implementation we're going to use is from yet another awesome library called <a href="http://scikit-learn.org/stable/">scikit-learn</a>.<span class=sup>2</span> In particular, we'll use class <span class=inlinecode>RandomForestRegressor</span>. Here is the simple incantation that trains an RF model on our apartment rent data:</p>
+</div>
+
+
+<div class="codeblk">from sklearn.ensemble import RandomForestRegressor
+
+rf = RandomForestRegressor(n_estimators=10) # use 10 trees
+rf.fit(X, y)
+</div>
+
+
+<p>To actually make a prediction, we call <span class=inlinecode>predict()</span> with a list of one or more feature vectors.  Let's make up an unknown apartment feature vector to make a single rent prediction:</p>
+
+
+<div class="codeblk">unknown_x = [2, 1, 40.7957, -73.97] # 2 bedrooms, 1 bathroom, ...
+</div>
+
+
+<p>Because <span class=inlinecode>predict()</span> expects a list of feature vectors, we wrap <span class=inlinecode>unknown_x</span> in a list before passing it to <span class=inlinecode>predict()</span>:</p>
+
+
+<div class="codeblk">predicted_y = rf.predict([unknown_x])
+print(predicted_y)
+</div>
+
+<p class="stdout">[4309.90793836]
+</p>
+
+<p>The <span class=inlinecode>predict()</span> function returns a list of predicted rent prices, one per apartment passed in the list of apartments as the <span class=inlinecode>X</span> parameter.  The model predicts rent of about $4309 given the apartment characteristics in <span class=inlinecode>unknown_x</span>.</p>
+
+
+
+<h3 id="sec:3.2.3">3.2.3 Does the model capture training data relationships?</h3>
+
+
+<p>Once we've trained a model, we have to test it, just like we do with software before deployment. There are two things to test. First, we verify that the model fits the training data well, meaning that the model captures the relationship in the training data between feature vectors and the targets.  Second, we verify that the model generalizes, yielding reasonable rent predictions for feature vectors not in the training set.</p>
+
+<p>To see how well the model fits the training data, we pass the feature vectors of the training data back into the model and compare the predictions to the known actual prices.  At this point in our process, we don't care about generality. We're just checking that our model can reproduce the original training data with some degree of accuracy. If the model can't make accurate predictions for apartments it trained on, then there's no hope the model will generalize to previously-unseen apartments.</p>
+
+<p>There are number of common error metrics that practitioners use, but in this case, measuring the average difference between predicted and actual prices is a good metric. In other words, we'll make a prediction for every apartment and subtract that from the actual price found in the training data (and take absolute value). The average of those differences is the <i>mean absolute error</i>, abbreviated <i>MAE</i>, and sklearn provides a ready-made function to compute that. Here's how to run the training data back into the model and print out how far off model is on average (and the percentage of the average that represents):</p>
+
+
+<div class="codeblk">from sklearn.metrics import mean_absolute_error
+
+predictions = rf.predict(X)
+e = mean_absolute_error(y, predictions)
+ep = e*100.0/y.mean()
+print(f"${e:.0f} average error; {ep:.2f}% error")
+</div>
+
+<p class="stdout">$189 average error; 5.50% error
+</p>
+
+<p>That means a user of this model can expect the predicted price for an apartment in the training data to be off by about $189, which is pretty good! We call this the <i>training error</i>.</p>
+
+<p>They say that three most important property attributes in real estate are: location, location, location. Let's test that hypothesis with our rental data, using just the two columns associated with map location:</p>
+
+
+<div class="codeblk">X, y = rent[['latitude','longitude']], rent['price']
+rf = RandomForestRegressor(n_estimators=100)
+rf.fit(X, y)
+location_e = mean_absolute_error(y, rf.predict(X))
+location_ep = location_e*100.0/y.mean()
+print(f"${location_e:.0f} average error; {location_ep:.2f}% error")
+</div>
+
+<p class="stdout">$519 average error; 15.09% error
+</p>
+
+<p>Using just the location, and no information about the number of bedrooms or bathrooms, the average prediction error on the training set is $519. That's more than the error with all features ($189) but is still not bad.</p>
+
+<p>You might compare the difference between the 5.50% error for the model fit on all features and this 15.09% error and think &ldquo;it's only 9%.&rdquo; It's better to think of this as the ratio 5.50/15.09 is 36% rather than the difference 5.50-15.09. The ratio indicates that dropping the number of bedrooms and bathrooms from the model reduces prediction accuracy by 36%.  This information is extremely useful because it tells us something about the predictive power of those features. </p>
+
+<p>Alas, we shouldn't get too excited by the $189 training error because that just shows our model captures the relationships in the training data. We know nothing about the model's generality.</p>
+
+
+
+<h3 id="sec:generality">3.2.4 Checking model generality</h3>
+
+
+<p>The true measure of model quality is its generality: how accurately it predicts prices for apartment feature vectors not found in the training data. Even a crappy model like a dictionary can memorize training data and spit back accurate prices for that same training data.  To test for model generality, we need a validation strategy. This is a big, important topic and one that we'll revisit throughout the book. For now, let's look at a common validation strategies called the <i>hold out</i> method.</p>
+
+<p>We were given a single data set: the training data. If we train on that entire data set, how can we measure accuracy on data not in the training set? We don't have any other data to use for validation. The answer is to hold out, say, 20% of the training data, splitting the original data set into two: a smaller training set and a <i>validation set</i>. Validation set is data used only for generality testing of our model, not in training the model. Which 20% to hold out is sometimes nontrivial, but for the apartment data, a random subset is fine.</p>
+
+<p>Scikit has a built-in function to split data sets, so let's retrain our RF model using 80% of the data and check the average price error using the 20% in the validation set this time:</p>
+
+
+<div class="codeblk">from sklearn.model_selection import train_test_split
+
+X, y = rent[['bedrooms','bathrooms','latitude','longitude']], rent['price']
+# 20% of data goes into test set, 80% into training set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) 
+
+rf = RandomForestRegressor(n_estimators=10)
+rf.fit(X_train, y_train)
+
+validation_e = mean_absolute_error(y_test, rf.predict(X_test))
+print(f"${validation_e:.0f} average error; {validation_e*100.0/y.mean():.2f}% error")
+</div>
+
+<p class="stdout">$308 average error; 8.96% error
+</p>
+
+<p>Comparing the average error $308 from the validation set and the $189 training error, we see that the model performs much better on the training data. This is as we'd expect because the training error is our &ldquo;do not exceed speed.&rdquo; (The training error is analogous to the score we'd get on a quiz for which we'd seen the answers beforehand.) We want the validation error to be as close to the training error as possible.</p>
+
+<p>If you run that code multiple times, you'll notice that different runs get different validation errors because of the variability in selecting the validation subset. That's not a good characteristic, but we'll tackle this problem in <b>Chapter 7</b> <i>Evaluating Regressor Performance</i> using a more stable validation strategy called <span class=eqn>k</span>-fold cross validation.</p>
+
+
+
+<h3 id="sec:3.2.5">3.2.5 Fiddling with model hyper-parameters</h3>
+
+
+<p>Now that we have a metric of model generality, we can use it to tweak model architecture in an effort to improve accuracy. The idea is to wiggle some aspect(s) of the model and see if the validation error goes up or down. For example, the number of trees in our forest affects accuracy and so let's increase the number of trees to 100 from 10:</p>
+
+
+<div class="codeblk">rf = RandomForestRegressor(n_estimators=100)
+rf.fit(X_train, y_train)
+
+e = mean_absolute_error(y_test, rf.predict(X_test))
+print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
+</div>
+
+<p class="stdout">$301 average error; 8.74% error
+</p>
+
+<p>The number of trees, and any other aspect of the model that affects its architecture, statisticians call a <i>hyper-parameter</i>. (I think we programmers would call this a meta-parameter.) The elements inside the model like the trees themselves are called the model parameters. As another example, the four <span class=eqn>w<sub>i</sub></span> weights and minimum rent value from a linear model (that we considererd briefly in <b>Section 2.1.3</b> <i>Drawing the line</i>) are the model parameters.</p>
+
+<p>At the cost of a little more computing power, the accuracy of our model improves just a little, but every little bit helps.</p>
+
+
+
+<h3 id="sec:3.2.6">3.2.6 What the model says about the data</h3>
+
+
+<p>Machine learning models do much more for us than make predictions. Depending on the model, we can learn quite a bit about the data itself.  The idea is that models trained on different data sets will have different guts (parameters) inside. Instead of examining those individual parameters, however, we can learn much more by interrogating the model. For example, a key marketing question for real estate agents is &ldquo;what do people care about in this market?&rdquo; More generally, we'd like to know which features have the most predictive power. </p>
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>3</span>The scikit-learn Random Forest feature importance strategy is sometimes biased, so we use <span class=inlinecode>rfpimp</span>. See <a href="http://explained.ai/rf-importance/index.html">Beware Default Random Forest Importances</a> for more information.</p>
+<p class=p_left>To compute such feature importance, we can compare the validation errors from a model trained using all features and the same model trained with a single feature removed. This difference tells us something about the relative importance of that missing feature. If the validation error goes way up, we know that feature is important. But if the error stays about the same, we can conclude that feature, in isolation, has very little predictive power.  Practitioners do this all the time with RFs, but this querying approach to feature importance applies to any model. (This brute force retraining method works and illustrates the idea, but it's more efficient to randomize a feature's column and retest rather than removing and retraining the model.)  Here's how to print out feature importances with a little help from the <span class=inlinecode>rfpimp</span> package:<span class=sup>3</span></p>
+</div>
+
+
+<div class="codeblk">from rfpimp import *
+rf = RandomForestRegressor(n_estimators=100)
+rf.fit(X_train, y_train)
+I = importances(rf, X_test, y_test)
+I</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>Importance</th></tr>
+    <tr><td>Feature</td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>bedrooms</td><td>0.5027</td>
+	</tr>
+	<tr>
+	<td>longitude</td><td>0.4905</td>
+	</tr>
+	<tr>
+	<td>bathrooms</td><td>0.4320</td>
+	</tr>
+	<tr>
+	<td>latitude</td><td>0.4252</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Notice that the RF model is trained using the training set, but the importances are computed using the validation set. Feature importances, therefore, measure the drop in the model's validation set accuracy when each feature is removed (or randomly permuted).  It makes sense to examine the predictive power of features in this context because we care most about how well a model generalizes to test vectors outside of the training set.</p>
+
+<p>The actual value of each feature importance indicates the magnitude of its importance to model accuracy but most often we care about the relative differences between the feature importances. It's easier to see their relative strengths if we get fancy and look at the importances visually:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_go_30.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">plot_importances(I, color='#4575b4', vscale=1.8)</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>Using rfpimp, we can even ask it to group latitude and longitude together as a meta-feature when computing feature importances:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_go_31.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">I = importances(rf, X_test, y_test,
+                features=['bedrooms','bathrooms',['latitude','longitude']])
+plot_importances(I, color='#4575b4', vscale=1.8)</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>From this, we can conclude that New Yorkers care the least about bathrooms because that feature has the least predictive power compared to the other features.  Together, latitude and longitude have a great deal of predictive power (it's all about the location). Interrogating the model in this way gives us useful information about the New York City rental market, which we can pass on to the consumers of our model.</p>
+
+<p>Often our training data has many more features and we can use a feature importance graph to drop unimportant features. Simpler models are easier to explain to end users and result in faster training times.</p>
+
+<p>Now that we've seen how to train a regression model, let's train a classifier model to see just how similar the process of training and testing is for regressors and classifiers. The only difference is that we use a <span class=inlinecode>RandomForestClassifier</span> object instead of a <span class=inlinecode>RandomForestRegressor</span> to handle the classifier's binary target variable (rather than the regressor's continuous target value).</p>
+
+
+
+
+<h2 id="sec:3.3">3.3 Predicting breast cancer</h2>
+
+
+<p>To build our first classifier, we're going to train a model using the well-known <a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29">Wisconsin Breast Cancer data set</a>. This is a good introductory data set because it readily surrenders to a number of different machine learning models, including RFs. There are 569 observations (patients) in the breast cancer data set and each observation has 30 numeric predictive features. The target variable (diagnosis) is a binary variable that indicates malignant (uh oh) or benign (yay!). The features describe the shape, size, and other characteristics of cell nuclei in digitized images; there are no missing feature values, which we'll learn how to deal with in <b>Chapter 5</b> <i>Exploring and Denoising Your Data Set</i>. </p>
+
+<p>Sklearn has a convenient function called <span class=inlinecode>load_breast_cancer()</span>, so let's get started by populating a data frame:</p>
+
+
+<div class="codeblk">from sklearn.datasets import load_breast_cancer
+import pandas as pd
+
+cancer = load_breast_cancer()
+
+X = cancer.data
+y = cancer.target
+df = pd.DataFrame(X, columns=cancer.feature_names)
+</div>
+
+
+<p>Many of the cell nuclei features are redundant in the sense that they measure the same or almost the same thing. For example, if we know the radius of the circle, we also know the perimeter, so features such as <span class=inlinecode>mean radius</span> and <span class=inlinecode>mean perimeter</span> are likely to be very similar variables. Features that are not independent are said to be <i>collinear</i> and, in practice, features are rarely completely independent. <b>Chapter 14</b> <i>Understanding the Relationship Between Variables</i> considers the collinearity of this breast-cancer data set and shows how to pick the most important features.  Using the analysis in that chapter, let's restrict ourselves to 7 key features (out of 30) for simplicity reasons and display some of the data to get a sense of what it looks like:</p>
+
+
+<div class="codeblk">features = ['radius error', 'texture error', 'concave points error',
+            'symmetry error', 'worst texture', 'worst smoothness',
+            'worst symmetry']
+df = df[features] # select just these features
+print("target[0:30] =", y[0:30]) # show 30 values of malignant/benign target
+df.head()</div>
+<p class="stdout">target[0:30] = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 0 0]
+</p>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>radius error</th><th>texture error</th><th>concave points error</th><th>symmetry error</th><th>worst texture</th><th>worst smoothness</th><th>worst symmetry</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>1.0950</td><td>0.9053</td><td>0.0159</td><td>0.0300</td><td>17.3300</td><td>0.1622</td><td>0.4601</td>
+	</tr>
+	<tr>
+	<td>1</td><td>0.5435</td><td>0.7339</td><td>0.0134</td><td>0.0139</td><td>23.4100</td><td>0.1238</td><td>0.2750</td>
+	</tr>
+	<tr>
+	<td>2</td><td>0.7456</td><td>0.7869</td><td>0.0206</td><td>0.0225</td><td>25.5300</td><td>0.1444</td><td>0.3613</td>
+	</tr>
+	<tr>
+	<td>3</td><td>0.4956</td><td>1.1560</td><td>0.0187</td><td>0.0596</td><td>26.5000</td><td>0.2098</td><td>0.6638</td>
+	</tr>
+	<tr>
+	<td>4</td><td>0.7572</td><td>0.7813</td><td>0.0189</td><td>0.0176</td><td>16.6700</td><td>0.1374</td><td>0.2364</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Just as we did with rent price prediction, we need to split our data set into training and validation sets (using 15% not 20% for validation as the data set is very small):</p>
+
+
+<div class="codeblk">from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.15)
+</div>
+
+
+<p>Then, we're ready to train and test our classifier:</p>
+
+
+<div class="codeblk">from sklearn.ensemble import RandomForestClassifier
+
+cl = RandomForestClassifier(n_estimators=300)
+cl.fit(X_train, y_train)
+validation_e = cl.score(X_test, y_test)
+print(f"{validation_e*100:.2f}% correct")
+</div>
+
+<p class="stdout">94.19% correct
+</p>
+
+<p>For classifiers, the <span class=inlinecode>score()</span> function returns the simplest metric for correctness (accuracy), which measures how many the model predicted correctly out of 569 observations divided by 569.  Testing classifiers is usually a lot more involved than testing regressors, as we'll see in <b>Chapter 10</b> <i>Evaluating classifier performance</i>, but accuracy is fine for now.  Given that we are only using 7 features, the 94.19% accuracy is very good. Using all 30 features, we see an average validation accuracy of about 96%, but the validation accuracy fluctuates a lot because of the randomness inherent in splitting the data set into training and validation sets, not to mention the randomness used during RF construction. </p>
+
+<p>We can compute feature importances for classifiers just as we did for regressors. (In fact we can compute feature importances for any model.) In this case, we see that <span class=inlinecode>radius error</span> is the most important feature for distinguishing between malignant versus benign masses based upon these 7 features.</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_class_6.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">from rfpimp import *
+I = importances(cl, X_test, y_test)
+plot_importances(I, color='#4575b4', vscale=1.4)</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>Such feature importance graphs suggest which cell characteristics pathologist should focus on.</p>
+
+<p>At this point, we've trained both a regressor and a classifier on <i>structured data</i>. Structured data is what we normally see in spreadsheets or database tables. <i>Unstructured data</i> sets, on the other hand, contain things like images, documents, and tweets. Because this book focuses on RF models applied to structured data, we won't do much with unstructured data. (As a general rule, we recommend neural networks for unstructured data.)  That said, it's possible to apply RFs to many unstructured data problems, such as optical character recognition, which we'll do in the next section. It gives us an opportunity to internalize some important concepts about  the applicability of models, while exploring a fun application of machine learning.</p>
+
+
+
+<h2 id="sec:3.4">3.4 Classifying handwritten digits</h2>
+
+
+<div class="p_wrapper">
+<span class=sidenote>
+
+<center>
+<img src="images/first-taste/640.png" width="50%">
+</center>
+
+<br><b>Figure 3.1</b>. Letter carrier misinterpreted 640 as 690</span>
+<p class=p_left>The other day, Terence received a letter  in the US Mail addressed to number 640, though he lives at 690, because the letter carrier (understandably) misclassified the digit &ldquo;4&rdquo; as a &ldquo;9&rdquo; (see <b>Figure 3.1</b>). Let's see if we can train a model to recognize digits more accurately than the letter carrier.</p>
+</div>
+
+<p>To train the model we need some sample images of handwritten digits labeled properly with known digit values, which we can find in the well-known <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> data set.  Our strategy will be to train a RF classifier using the pixels of an image as features and known digit labels as targets values. Then we'll ask the model to classify the images of the 6-4-0 digits scanned from the address written on the envelope. The model's prediction results are surprising at first glance but, on closer inspection of the training data, teaches us an important lesson about the expected behavior of machine learning models. Next, we'll  compare the performance of the RF to another kind of model then finish up by compressing the images and re-comparing the performance of the models.</p>
+
+
+
+<h3 id="sec:3.4.1">3.4.1 Representing and loading image data</h3>
+
+
+<p>The full data set has 60,000 images, but we extracted 10,000 images, converted them to comma-separated values (<i>CSV</i>) from binary, and compressed them into <a href="https://mlbook.explained.ai/data/mnist-10k-sample.csv.zip">mnist-10k-sample.csv.zip</a> for use with this example. You can download and unzip that file into your data directory. Also grab <a href="https://mlbook.explained.ai/data/640.csv">640.csv</a>, which contains  the image data of the three 6-4-0 digits in the same format as the MNIST data set.</p>
+
+<div class="p_wrapper">
+<span class=sidenote>
+
+<center>
+<img src="images/first-taste/640-scanned.png" width="35%">
+</center>
+
+<br><b>Figure 3.2</b>. Digits 6-4-0 scanned and scaled to 28x28 pixel images</span>
+<p class=p_left>Let's start by loading the 6-4-0 digits as 28x28 pixel images (<b>Figure 3.2</b>) into a data frame and see what we've got:</p>
+</div>
+
+
+<div class="codeblk">import pandas as pd
+addr640 = pd.read_csv("data/640.csv")
+</div>
+
+
+<div class="p_wrapper">
+<span class=sidenote>
+
+<center>
+<img src="images/first-taste/image-format.svg" width="">
+</center>
+
+<br><b>Figure 3.3</b>. Images from 640.csv as data frame</span>
+<p class=p_left>Each row contains the complete set of pixels for a single image and, as the last column, the known digit value (0..9). (See <b>Figure 3.3</b>.) Let's print the <span class=inlinecode>digit</span> column values using <span class=inlinecode>addr640.digit</span> then drop it as we know the digits are 6-4-0:</p>
+</div>
+
+
+<div class="codeblk">print(addr640.digit.values)
+addr640 = addr640.drop('digit', axis=1) # drop digit column
+</div>
+
+<p class="stdout">[6 4 0]
+</p>
+
+<p>Each pixel is a floating-point value between 0 and 1 that represents the pixel intensity (greyscale), where 0 means white and 1 means black. For example, a blank image would be all zeros and an image someone scribbled all over would be mostly dark values close to 1.  Images are 28 x 28 pixels and so each row in the data frame has 784 columns of pixels as well as the known digit value column.  The pixels of the visual rows of an image get concatenated together or &ldquo;flattened&rdquo; to form a single long row of numbers in the data set. </p>
+
+<p>Because there are so many numbers, looking at the pixel values in the data frame is not as easy as just printing the data frame. It's better to reverse the flattening by reshaping the 784-element one-dimensional pixel array into a 28 x 28 two-dimensional array and then ask matplotlib to show the 2D array as an image:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_mnist_3.svg"
+  width="55%%"
+>
+</span>
+
+
+<div class="codeblk">six_img_as_row = addr640.iloc[0].values  # digit '6' is first row
+img28x28 = six_img_as_row.reshape(28,28) # unflatten as 2D array
+plt.imshow(img28x28, cmap='binary')
+plt.show()</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>Another way to visualize the data representing a digit's image is to print out the pixel values, 28 lines of 28 values per line. To reduce the size of the print out, let's flip any value greater than 0 to be 1 and pixel values to integers. Then, we can just print the 2D matrix:</p>
+
+
+<div class="codeblk">six_img_as_row[six_img_as_row>0] = 1  # convert 0..1 to 0 or 1
+six_img_as_row = six_img_as_row.astype(int)
+img28x28 = six_img_as_row.reshape(28,28)
+s = str(img28x28).replace(' ','')     # remove spaces
+print(s)
+</div>
+
+<p class="stdout">[[0000000000000000000000000000]
+[0000000000000000000000000000]
+[0000000000000000000000000000]
+[0000000000000000000000000000]
+[0000000000000011111000000000]
+[0000000000000111101000000000]
+[0000000000001110000000000000]
+[0000000000011100000000000000]
+[0000000000011000000000000000]
+[0000000000110000000000000000]
+[0000000000100000000000000000]
+[0000000001100000000000000000]
+[0000000001100000000000000000]
+[0000000001100000000000000000]
+[0000000001100000000000000000]
+[0000000011000011111100000000]
+[0000000011000111111100000000]
+[0000000011101100000110000000]
+[0000000011101000000110000000]
+[0000000001100100000110000000]
+[0000000000100000000100000000]
+[0000000000110000000100000000]
+[0000000000011000001100000000]
+[0000000000000111111100000000]
+[0000000000000111111000000000]
+[0000000000000000000000000000]
+[0000000000000000000000000000]
+[0000000000000000000000000000]]
+</p>
+
+<p>And, <i>voila</i>, the pattern of 0's and 1's visually forms a 6 digit!  We'll dig deeper into such useful data manipulations in <b>Section 4.2</b> <i>Dataframe Dojo</i>.</p>
+
+<p>Now, let's load our training data into a data frame, just like we did for our 6-4-0 test images:</p>
+
+
+<div class="codeblk">digits = pd.read_csv("data/mnist-10k-sample.csv")
+images = digits.drop('digit', axis=1) # get just pixels
+targets = digits['digit']             # get just digit value
+</div>
+
+
+<p>Using the matplotlib <span class=inlinecode>imshow()</span> function repeatedly, we can get a grid of images taken from the training data frame and annotate them with their true digit value.  Here's how to plot the first 50 images in a 10x5 grid:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_mnist_6.svg"
+  width="100%%"
+>
+</span>
+
+
+<div class="codeblk">fig, axes = plt.subplots(10, 5, figsize=(4, 6.5)) # make 10x5 grid of plots
+
+for i, ax in enumerate(axes.flat):
+    img_as_row = images.iloc[i].values
+    img28x28 = img_as_row.reshape(28,28)
+    ax.axis('off') # don't show x, y axes
+    ax.imshow(img28x28, cmap='binary')
+    ax.text(0, 8, targets[i], color='#313695', fontsize=18)
+plt.show()</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>You can play around with the subplots grid to plot more images to get a feel for the training set. See <b>Section 4.3</b> <i>Generating plots with matplotlib</i> to learn the basics of the matplotlib graphics library.</p>
+
+
+
+<h3 id="sec:3.4.2">3.4.2 Classifying test digits 6-4-0</h3>
+
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>4</span>We chose hyper-parameter <span class=inlinecode>n_estimators</span>=900 trees in our RF because we found, through experimentation, that fewer trees resulted in less consistent and accurate predictions.</p>
+<p class=p_left>Now that we have a suitable training set of handwritten digits and their true digit values in <span class=inlinecode>images</span> and <span class=inlinecode>targets</span>, let's train an RF classifier and see what it predicts for the 6-4-0 images:<span class=sup>4</span></p>
+</div>
+
+
+<div class="codeblk">from sklearn.ensemble import RandomForestClassifier
+
+cl = RandomForestClassifier(n_estimators=900, n_jobs=-1)
+cl.fit(images, targets)
+pred = cl.predict(addr640)
+print(pred)</div>
+
+<p class="stdout">[6 7 0]</p>
+
+
+<p>The model predicts that the first digit is 6, the second is 7, and the third is 0.  The letter carrier, the model, and we agree on the 6 and 0, but we all disagree on the second digit. The letter carrier thought it was 9, the model thinks it's a 7, but we think that the second digit is actually a 4.   To our human eye, the second digit in <b>Figure 3.2</b> is clearly not a 7.  Something strange is going on, so let's investigate. First, let's see how confident the model is in its 7 prediction using <span class=inlinecode>predict_proba()</span> rather than just <span class=inlinecode>predict()</span>:</p>
+
+
+<div class="codeblk">import numpy as np;
+np.set_printoptions(precision=3)
+
+digit_values = range(10)
+prob = cl.predict_proba(addr640)
+prob_for_2nd_digit = prob[1]
+print(prob_for_2nd_digit)
+</div>
+
+<p class="stdout">[0.021 0.123 0.073 0.129 0.094 0.1   0.063 0.236 0.033 0.127]
+</p>
+
+<p>Function <span class=inlinecode>predict_proba()</span> returns a probability for each possible target class, digits 0-9 in this case. The probability in position 7 (indexed from 0) is the highest, which is why the model predicts 7:</p>
+
+
+<div class="codeblk">pred_digit = np.argmax(prob_for_2nd_digit)
+print("predicted digit is", pred_digit)
+</div>
+
+<p class="stdout">predicted digit is 7
+</p>
+
+<p>It's easier to compare the different probabilities visually, so let's generate bar graphs showing the prediction probabilities for each test image. Here's the code to show one of the bar graphs, that for the second test digit:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_mnist_10.svg"
+  width="100%"
+>
+</span>
+</div> <!-- end div for p_wrapper -->
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_mnist_11.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">pred_digit = np.argmax(prob_for_2nd_digit)
+bars = plt.bar(digit_values, prob_for_2nd_digit, color='#4575b4')
+bars[pred_digit].set_color('#fdae61')
+plt.xlabel("predicted digit")
+plt.xticks(digit_values)
+plt.ylabel("likelihood 2nd image\nis a specific digit")
+plt.show()</div>
+</div> <!-- end div for p_wrapper -->
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_mnist_12.svg"
+  width="100%"
+>
+</span>
+</div> <!-- end div for p_wrapper -->
+
+<p>The model predicts digit 7 for the second test digit by a wide margin. It does not consider digit 4 to be a likely choice at all.  That prediction is concerning because it does not match our expectations. From a human perspective, the second digit is 4 or 9, definitely not a 7. </p>
+
+<p>Debugging machine learning code is often very challenging because so many issues can manifest themselves as poor models. There could be a bug in our code, we could have chosen an inappropriate model, we might not have enough data, the data might be noisy, and so on. We can assume that the MNIST training data set is okay and that 10,000 images is enough training data. The code to train and test the model is tiny so that's unlikely the problem.</p>
+
+<p>When confronted with misbehaving code, experienced programmers know that, because nothing mysterious is going on, the program is doing exactly what we told it to do.  In a data science context, this principle might be: the model is making predictions based solely on the experience (training data) we gave it.  That's a big hint that we should take another look at the data, this time focusing on just the images known to be 4's. The following code isolates the images for 4's and displays the first 15*8=120 images in a grid.</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/first-taste/first-taste_mnist_13.svg"
+  width="100%%"
+>
+</span>
+
+
+<div class="codeblk">fours = images[targets==4] # find all "4" images
+
+fig, axes = plt.subplots(15, 8, figsize=(4,6.5))
+for i, ax in enumerate(axes.flat):
+    img = fours.iloc[i,:].values.reshape(28,28)
+    ax.axis('off')
+    ax.imshow(img, cmap='binary')</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>If we compare those images with the 4 digit from the envelope in <b>Figure 3.2</b>, it's clear that none of the training images look like our 4 test image. A few of the images have a triangular top like the test image, but the horizontal lines in training images cross the vertical lines whereas the horizontal line in the test image terminates at the vertical line. Given the &ldquo;experience&rdquo; provided to the model, it's easy to see why it does not predict digit 4.</p>
+
+<p>This brings us to an important lesson that's worth emphasizing: models can only make predictions based upon the  training data provided to them. They don't necessarily have the same experience we do, so we have to match our prediction expectations to the training data when judging a model. Or, we can remedy the situation by providing a more extensive training set.</p>
+
+<p>The lesson applies to regressors, not just classifiers. Imagine you're a real estate agent and that every two-bedroom one-bath apartment you've ever seen is about $4,000/month. Given that experience, clients should expect you to predict $4,000 when asked about the rent for an unknown two-bedroom one-bath apartment.  In other words, machine learning models do the best they can, given the constraints placed on them by the training data, even if the model's predictions are wildly different than our expectations.</p>
+
+<p>In the end, our machine learning model did no better than the letter carrier; it just predicted a digit that a human would be less likely to pick. It would be interesting to measure the accuracy of the model in general, rather than on a single test case, so let's do that next.</p>
+
+
+
+<h3 id="sec:3.4.3">3.4.3 Comparing the digit classifier's performance to a linear model</h3>
+
+
+<p>As we did with the breast cancer data, let's split (80/20) the MNIST data into training and validation sets, train an RF classifier, and measure the overall accuracy:</p>
+
+
+<div class="codeblk">X_train, X_test, y_train, y_test = \
+    train_test_split(images, targets, test_size=.2)
+
+cl = RandomForestClassifier(n_estimators=900, n_jobs=-1)
+cl.fit(X_train, y_train)
+rfaccur = cl.score(X_test, y_test)
+print(rfaccur)</div>
+
+<p class="stdout">0.9525</p>
+
+
+<p>An accuracy of 95.25% sounds pretty good, and it could be entirely satisfactory from a business point of view for many applications.  But, it's still a good idea to compare the RF's performance to that of another model as a gauge of quality. Practitioners commonly use a linear model as a lower bound benchmark and sklearn provides a linear classifier model called  <span class=inlinecode>LogisticRegression</span>:</p>
+
+
+<div class="codeblk">from sklearn.linear_model import LogisticRegression
+
+# create linear model
+lm = LogisticRegression(solver='newton-cg', multi_class='multinomial')
+lm.fit(X_train, y_train)
+
+lmaccur = lm.score(X_test, y_test)
+print(lmaccur)</div>
+
+<p class="stdout">0.9035</p>
+
+
+<p>While the linear model's accuracy of 90.35% is less than the RF's 95.25%, it is not too bad considering the difficulty of this image classification problem. Because RFs are generally more powerful than linear models, we'd expect the RF to perform better on average. If, on the other hand, a linear model trained on the same data performs better, that could indicate a bug or other problem with our RF.</p>
+
+<p>While we won't study them in this book, linear models are useful to know about for three other reasons. First, linear models compress the entire image training set down to a small collection of floating-point coefficients (on the order of 784 for 784 features).  Model size might be important if the model must run on, say, a microcontroller in an autonomous vehicle. In contrast to the small footprint of the linear model, our RF has 900 large trees. Here's how to sum up the number of nodes across all trees (estimators):</p>
+
+
+<div class="codeblk">ntrees = cl.n_estimators
+nnodes = sum([cl.estimators_[i].tree_.node_count for i in range(ntrees)])
+print(f"{nnodes:,}") # print with commas
+</div>
+
+<p class="stdout">1,691,176
+</p>
+
+<p>That's a lot of tree nodes, so the RF requires a lot more memory than the linear model. </p>
+
+<div class="p_wrapper">
+<span class=sidenote>
+<img src="images/first-taste/first-taste_lm_vs_rf_1.svg"
+  width="100%"
+>
+<br><b>Figure 3.4</b>. Linear regression model versus random forest trained on linear relationship</span>
+<p class=p_left>Second, linear models can be useful when we know there is a linear relationship between features and the target variable. For example, given the number sequence 1, 2, 3, 4, 5 all of us would predict 6 as the 6th value. (That data follows the linear relationship described by line <span class=eqn>y</span>=<span class=eqn>x</span>.) An RF, in contrast, would predict roughly 4.5, as shown in <b>Figure 3.4</b>. This behavior highlights that there is at least one data set that is better served by a linear model than an RF.  An advantage of RFs is that they don't need to make assumptions about the kind of relationship between features and target variables, unlike linear models.  On the other hand, that means RF models don't extrapolate well beyond the range of their experience.  In practice, the relationship between features and target variable is rarely a simple linear relationship and, in fact, we usually have no idea what the relationship is. That is one reason we recommend using RFs (because they don't require knowledge of the underlying feature-target relationship). </p>
+</div>
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>5</span>The notation to get 1..5 into a column matrix and a vector is a bit awkward because NumPy is designed to be convenient for more complicated data sets than these single-feature training sets and single-record test vectors.</p>
+<p class=p_left>For completeness, though, let's run through the code for the 1..5 sequence to see how the two models behave. Here's how to get the sequence 1..5 into some training vectors and a test element:<span class=sup>5</span></p>
+</div>
+
+
+<div class="codeblk">import numpy as np
+X_train = np.array([1,2,3,4,5]).reshape(5,1) # 5 rows of 1 column
+y_train = np.array([1,2,3,4,5])              # 1 column
+X_test = np.array([6]).reshape(1,1)          # 1 row of 1 column
+</div>
+
+
+<p>Then, let's train a linear regression model and predict a <span class=eqn>y</span> target value for <span class=eqn>x</span>=6:</p>
+
+
+<div class="codeblk">from sklearn.linear_model import LinearRegression   
+lm = LinearRegression()
+lm.fit(X_train,y_train)
+print("y =", lm.predict(X_test))
+</div>
+
+<p class="stdout">y = [6.]
+</p>
+
+<p>A prediction of 6 is what we would expect because our human eye clearly sees the linear relationship. Let's see what the RF model predicts:</p>
+
+
+<div class="codeblk">from sklearn.ensemble import RandomForestRegressor
+rf = RandomForestRegressor(n_estimators=100)
+rf.fit(X_train,y_train)
+print("y =", rf.predict(X_test) )
+</div>
+
+<p class="stdout">y = [4.58]
+</p>
+
+<p>RF models are doing a kind of &ldquo;average of the nearest neighbor&rdquo; prediction. Here, the nearest neighbors are 4 and 5, which the RF averages to get its prediction.  In this case, the linear model makes more sense but remember the poor linear fit we saw in <b>Figure 2.1</b> on some real data.</p>
+
+<p>The third reason to know about linear models is that logistic regression is the basic building block of neural networks.  Logistic regression is equivalent to a neural network of limited depth (just input and output layers), while more accurate neural networks have many so-called <i>hidden layers</i> between the input and output layers.  The best neural network based classifiers achieve accuracies above 99% but transform the pixels into higher-level features and use a 50,000 image training set. (See the <a href="http://yann.lecun.com/exdb/mnist/">MNIST database page</a> for more performance scores.)  </p>
+
+<p>There are a number of important lessons here. Different models can perform differently on the same data set, and a linear model is a good lower bound benchmark.  Comparing an RF with a linear model gives us an idea of the difficulty of the problem and could identify problems with our RF model. RFs perform very well in general and do not make assumptions about the underlying feature-target relationship, unlike linear models, but have difficulty extrapolating beyond the training feature ranges.  Different models also have different memory footprints and this must be weighed against model strength, according to your project requirements.</p>
+
+
+
+
+<h2 id="sec:3.5">3.5 Summary</h2>
+
+
+<p>In this chapter, we built and tested both regressor and classifier models, which are really just two sides of the same coin. Regressors learn the relationship between features and numeric target variables whereas classifiers learn the relationship between features and a set of target classes or categories.  (One way to think about classifiers is that classifiers are regressors that predict the probability of being in a particular target class.)  Thanks to the uniformity of sklearn API, we can abstract from this chapter's examples a basic code sequence for training any model:</p>
+
+<p><span class=inlinecode>df</span> = <span class=inlinecode>pd.read_csv</span>(<i>datafile</i>) # load dataframe<br><span class=inlinecode>X</span> = <span class=inlinecode>df[[</span><i>feature column names of interest</i><span class=inlinecode>]]</span><br><span class=inlinecode>y</span> = <span class=inlinecode>df[</span><i>target column name</i><span class=inlinecode>]</span><br><span class=inlinecode>m</span> = <i>ChooseYourModel</i>(<i>hyper-parameters</i>)<br><span class=inlinecode>m.fit(X,y)</span></p>
+
+<p>We'll primarily be using <span class=inlinecode>RandomForestRegressor</span> and <span class=inlinecode>RandomForestClassifier</span> in the <i>ChooseYourModel</i> slot. The hyper-parameters of a model represent the key structural or mathematical arguments, such as the number of trees in a random forest or the number of neuron layers in a neural network. Using hyper-parameters <span class=inlinecode>n_estimators</span>=100 to get 100 RF trees is a good default. For performance reasons, it's also a good idea to use <span class=inlinecode>n_jobs</span>=-1, which says to use as many processor core as possible in parallel while training the RF.</p>
+
+<p>To make a prediction using model <span class=inlinecode>m</span> for some test record, call method <span class=inlinecode>predict()</span>:</p>
+
+<p><span class=inlinecode>y_pred = m.predict(</span><i>test record</i><span class=inlinecode>) # make predictions</span></p>
+
+<p>For basic testing purposes, we split the data set into 80% training and 20% validation sets (the hold out method):</p>
+
+
+<div class="codeblk">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)</div>
+
+
+<p>Determining a good validation set is sometimes not as simple as taking a 20% random sample, as we'll see in <b>Chapter 7</b> <i>Evaluating Regressor Performance</i> and <b>Chapter 12</b> <i>Testing Time-Sensitive Models</i>, but that method is okay for now.  </p>
+
+<p>Computing a validation score for any sklearn model is as simple as:</p>
+
+
+<div class="codeblk">s = m.score(X_test, y_test)    # measure performance</div>
+
+
+<p>Method <span class=inlinecode>score()</span> returns accuracy (in range 0-1) for classifiers and a common metric called <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination">R^2</a> (&ldquo;R squared&rdquo;) for regressors. <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> measures how well a regressor performs compared to a trivial model that always returns the average of the target (such as apartment price) for any prediction. 1.0 is a perfect score, 0 means the model does no better than predicting the average, and a value < 0 indicates the model is worse than just predicting the average. (We'll learn more about <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> in the next chapter.) Of course, we can also compute other metrics that are more meaningful to end-users when necessary, such as the mean absolute error we computed for apartment prices.</p>
+
+<p>As you can see from this simple recipe, the actual task of training and testing a model is straightforward, once you have appropriate training and testing data.  Most of the work building a model involves data collection, data cleaning, filling in missing values, feature engineering, and proper test set identification.  Furthermore, all features fed to a model must be numeric, rather than strings like names or categorical variables like low/medium/high, so we have some data conversions to do.  Much of this book is devoted to preparing data so that this code recipe applies.</p>
+
+<p>Even with perfect training data, remember that a model can only make predictions based on the training data we provide.  Models don't necessarily have the same experience we do, and certainly don't have a human's modeling power.  Some models will perform better than others on the same data set, but we recommend sticking with a random forest (regressor or classifier) then comparing it to a linear model to get a sense of the RF's performance. In the end, as long as you pick a decent model like random forest, building an accurate machine learning model is more about making sure you have strongly predictive features. Also keep in mind that models are not black boxes. We can interrogate them to extract useful information, such as feature importances. More on this in <b>Chapter 13</b> <i>Interpreting Model Prediction Results</i> and <b>Chapter 14</b> <i>Understanding the Relationship Between Variables</i>.</p>
+
+
+
+</body>
+</html>

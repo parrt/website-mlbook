@@ -53,8 +53,8 @@
 }
 .codeblk {
     font-family: "Monaco", "Lucida Console", "Lucida Sans Typewriter", monospace;
-    font-size: 80%;
-    box-sizing: border-box;
+        font-size: 80%;
+        box-sizing: border-box;
     margin: 0 0 1em 0;
     border: #E3EDF3 1px solid;
     width: 100%;
@@ -101,6 +101,9 @@
 	line-height: 1.3em;
 	vertical-align: baseline;
 	position: relative;
+}
+
+.figure {	
 }
 
 .p_wrapper { }
@@ -166,6 +169,17 @@ body {
 	max-width: 780px;
 	-webkit-text-size-adjust: 100%;
 }
+.greyout {/* Used to dehighlight uninteresting code */
+/*      color: #A9A9A9;*/
+}
+.highlight {/* Used to highlight interesting code */
+      color: #000000;
+}
+.highlight:before {
+        content: "\279E";
+        position:absolute;
+        left:1.8%;
+}
 .scrollbar_wrapper {
 	overflow: auto;
 }
@@ -186,6 +200,9 @@ table.dataframe td {
         padding: 2px 10px;
         line-height: 1.1em;
 }
+table.dataframe-indexed td:first-child {
+  font-weight: bold;
+}       
 table.dataframe th {
 		font-family: "Helvetica", sans-serif;
         font-size: 85%;
@@ -202,7 +219,7 @@ h1 {
         line-height: 1.2em;
 }
 
-@media (max-width: 415px) {
+@media screen and (max-width: 415px) {
         /* iphone 6+ 414x628 browser window, iphone 6 is 375 x 559 in browser */
         .blkeqn {
                 padding: 0px;
@@ -239,7 +256,7 @@ h1 {
             position: static;
         }
 }
-@media (max-width: 736px) {
+@media screen and (max-width: 736px) {
         /* iphone7+ 736 wide */
         .blkeqn {
                 padding: 0px;
@@ -278,3 +295,12 @@ h1 {
             position: static;
         }
 }
+@media print {
+    body {
+        font-size: 9pt;
+    }
+    .sidenote {
+        font-size: 9pt;
+    }
+}
+

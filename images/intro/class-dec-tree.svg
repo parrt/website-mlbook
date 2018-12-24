@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="32.4 519.84 181.53356 147.67999" width="181.53356" height="147.67999">
+  <defs>
+    <font-face font-family="Monaco" font-size="9" units-per-em="1000" underline-position="-37.597656" underline-thickness="75.68359" slope="0" x-height="545.41016" cap-height="757.8125" ascent="1e3" descent="-250" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Monaco"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Times New Roman" font-size="9" panose-1="2 2 8 3 7 5 5 2 3 4" units-per-em="1000" underline-position="-108.88672" underline-thickness="95.21484" slope="0" x-height="456.54297" cap-height="662.1094" ascent="891.1133" descent="-216.3086" font-weight="700">
+      <font-face-src>
+        <font-face-name name="TimesNewRomanPS-BoldMT"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.9.2 
+    <dc:date>2018-10-11 23:27:49 +0000</dc:date>
+  </metadata>
+  <g id="intro" stroke-opacity="1" stroke-dasharray="none" stroke="none" fill="none" fill-opacity="1">
+    <title>intro</title>
+    <rect fill="white" x="32.4" y="519.84" width="181.53356" height="147.67999"/>
+    <g id="intro: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_87">
+        <text transform="translate(37.4 524.96426)" fill="black">
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="black" x=".19604492" y="9">bathrooms</tspan>
+        </text>
+      </g>
+      <g id="Graphic_86">
+        <text transform="translate(72.9 565.95095)" fill="black">
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="black" x=".0925293" y="9">2000&lt;=price&lt;=2500</tspan>
+        </text>
+      </g>
+      <g id="Line_84">
+        <line x1="146.54875" y1="613.8533" x2="120.77829" y2="637.12" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Line_83">
+        <line x1="154.88208" y1="614.18665" x2="186.3783" y2="637.52" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_82">
+        <text transform="translate(127.57828 600.64425)" fill="black">
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="black" x=".39648438" y="9">bedrooms</tspan>
+        </text>
+      </g>
+      <g id="Graphic_81">
+        <text transform="translate(125.77829 616.64425)" fill="black">
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="black" x=".29956055" y="9">2</tspan>
+        </text>
+      </g>
+      <g id="Graphic_80">
+        <text transform="translate(173.3783 616.64425)" fill="black">
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="black" x=".29956055" y="9">3</tspan>
+        </text>
+      </g>
+      <g id="Graphic_79">
+        <text transform="translate(170.93356 638.7685)" fill="#4675b4">
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="#4675b4" x=".09692383" y="9">hi,med,</tspan>
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="#4675b4" x="5.497803" y="20.751465">hi,hi</tspan>
+        </text>
+      </g>
+      <g id="Graphic_78">
+        <text transform="translate(101.77829 638.64425)" fill="#4675b4">
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="#4675b4" x=".09692383" y="9">med,med</tspan>
+        </text>
+      </g>
+      <g id="Line_77">
+        <line x1="116.21731" y1="577.52" x2="147.71352" y2="600.8533" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Line_76">
+        <line x1="72.78783" y1="539.8" x2="104.28404" y2="563.13334" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_75">
+        <text transform="translate(87.42829 540.47095)" fill="black">
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="black" x=".29956055" y="9">2</tspan>
+        </text>
+      </g>
+      <g id="Graphic_74">
+        <text transform="translate(134.12404 578.64425)" fill="black">
+          <tspan font-family="Monaco" font-size="9" font-weight="400" fill="black" x=".19824219" y="9">true</tspan>
+        </text>
+      </g>
+      <g id="Line_73">
+        <line x1="65.59111" y1="539.8" x2="58.39111" y2="549.8" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_72">
+        <text transform="translate(54.17256 545.10884)" fill="black">
+          <tspan font-family="Times New Roman" font-size="9" font-weight="700" fill="black" x=".125" y="8">...</tspan>
+        </text>
+      </g>
+      <g id="Line_71">
+        <line x1="108.12499" y1="577.52" x2="100.92499" y2="587.52" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_70">
+        <text transform="translate(96.70644 582.8288)" fill="black">
+          <tspan font-family="Times New Roman" font-size="9" font-weight="700" fill="black" x=".125" y="8">...</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

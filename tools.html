@@ -1,0 +1,2124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118361649-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118361649-2');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+<link rel="stylesheet" type="text/css" href="css/book.css"/>
+<title>Development Tools</title>
+<!-- META -->
+<!-- LinkedIn meta -->
+<meta property='og:title' content="The Mechanics of Machine Learning"/>
+<meta property='og:image' content="https://mlbook.explained.ai/images/intro/training.svg">
+<meta property='og:description' content="This book is a primer on machine learning for programmers trying to get up to speed quickly."/>
+<meta property='og:url' content="https://mlbook.explained.ai"/>
+
+<!-- Facebook meta -->
+<meta property="og:type" content="article" />
+
+<!-- Twitter meta -->
+<meta name="twitter:title" content="The Mechanics of Machine Learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@the_antlr_guy">
+<meta name="twitter:creator" content="@the_antlr_guy">
+<meta name="twitter:description" content="This book is a primer on machine learning for programmers trying to get up to speed quickly.">
+<meta name="twitter:image" content="https://mlbook.explained.ai/images/intro/training.svg">
+<!-- END META -->
+</head>
+<body>
+<div class="watermark">
+<i>Work in progress</i><br>
+Book version 0.2
+</div>
+
+<h1>4 Development Tools</h1>
+
+<p><a href="http://parrt.cs.usfca.edu">Terence Parr</a> and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
+
+<p></p>
+
+<p style="font-size: 80%">Copyright &copy; 2018 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
+<p>
+<p>
+You can make <b>comments or annotate</b> this page by going to the <a id="annotatelink" href="">annotated version of this page</a>. You'll see existing annotated bits highlighted in yellow. They are <i>PUBLICLY VISIBLE</i>. Or, you can send comments, suggestions, or fixes directly to <a href="mailto:parrt@cs.usfca.edu">Terence</a>.
+</p>
+<script>
+var me = window.location.href;
+document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
+</script>
+</p>
+</p>
+
+
+
+<div id="toc">
+<p class="toc_title">Contents</p>
+<ul>
+	<li><a href="#sec:4.1">Your machine learning development environment</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#dojo">Dataframe Dojo</a>
+	<ul>
+			<li><a href="#sec:4.2.1">Loading and examining data</a></li>
+			<li><a href="#sec:4.2.2">Extracting subsets</a></li>
+			<li><a href="#sec:4.2.3">Dataframe Indexes</a></li>
+			<li><a href="#sec:4.2.4">Dataframe queries</a></li>
+			<li><a href="#newcol">Injecting new dataframe columns</a></li>
+			<li><a href="#sec:4.2.6">String and date operations</a></li>
+			<li><a href="#sec:4.2.7">Merging dataframes</a></li>
+			<li><a href="#sec:4.2.8">Saving and loading data in the feather format</a></li>
+
+	</ul>
+	</li>
+	<li><a href="#sec:plt">Generating plots with matplotlib</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:4.4">Representing and processing data with NumPy</a>
+	<ul>
+	</ul>
+	</li>
+
+</ul>
+</div>
+
+
+<p>Before we dig more into machine learning, let's get familiar with our primary development tools.  The code samples in this book explicitly or implicitly use the following important libraries that form the backbone of machine learning with Python for structured data:</p>
+<ul>
+<li><a href="https://pandas.pydata.org/">Pandas</a> provides the key data structures we use to hold training and validation sets: data frames and series (columns of data).</li>
+<li><a href="http://www.NumPy.org/">NumPy</a> provides an efficient <span class=eqn>n</span>-dimensional array data structure used by the other libraries.</li>
+<li><a href="https://matplotlib.org/">matplotlib</a> provides sophisticated 2D and 3D graphing facilities; Pandas delegates graphing to matplotlib.</li>
+<li><a href="http://scikit-learn.org/">scikit-learn</a>, abbreviated sklearn, has the machine learning models, validation functions, error metrics, and a wide range of data processing facilities.</li>
+</ul>
+<p>In the last chapter, we got a taste of using sklearn to train models, and so this chapter we'll focus on the basics of pandas, NumPy, and matplotlib. The development environment we recommend is <a href="http://jupyterlab.readthedocs.io/en/latest/getting_started/overview.html">Jupyter Lab</a>, but you're free to use whatever you're comfortable with. You can skip this chapter if you're itching to get started building models, but it's a good idea to at least scan this chapter to learn what's possible with the libraries before moving on.</p>
+
+
+
+<h2 id="sec:4.1">4.1 Your machine learning development environment</h2>
+
+
+<p>Over the last 30 years, there's been remarkable progress in the development of IDEs that make programmers very efficient, such as Intellij, Eclipse, VisualStudio, etc... Their focus, however, is on creating and navigating large programs, the opposite of our small machine learning scripts. More importantly, those IDEs have little to no support for interactive programming, but that's exactly what we need to be effective in machine learning. While Terence and Jeremy are strong advocates of IDEs in general, IDEs are less useful in the special circumstances of machine learning.</p>
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>1</span>All of the code snippets you see in this book, even the ones to generate figures, can be found in the <a href="https://mlbook.explained.ai/notebooks/index.html">notebooks</a> generated from this book.</p>
+<p class=p_left>Instead, we recommend <a href="https://jupyter-notebook.readthedocs.io/en/stable/notebook.html">Jupyter Notebooks</a>, which are  web-based documents with embedded code, akin to <a href="https://en.wikipedia.org/wiki/Literate_programming">literate programming</a>, that intersperses the generated output with the code.<span class=sup>1</span> Notebooks are well-suited to both development and presentation.   To access notebooks, we're going to use the recently-introduced <a href="http://jupyterlab.readthedocs.io/en/latest/getting_started/overview.html">Jupyter Lab</a> because of its improved user interface. (It should be out of beta by the time you're reading this book.)  Let's fire up a notebook to appreciate the difference between it and a traditional IDE.</p>
+</div>
+
+<p>First, let's make sure that we have the latest version of Jupyter Lab by running this from the Mac/Unix command line or Windows &ldquo;anaconda prompt&rdquo; (search for &ldquo;anaconda prompt&rdquo; from the Start menu):</p>
+
+
+<div class="codeblk">conda install -c conda-forge jupyterlab</div>
+
+
+<p>The <span class=inlinecode>conda</span> program is a packaging system like the usual Python <span class=inlinecode>pip</span> tool, but has the advantage that it can also install non-Python files (like C/Fortran code often used by scientific packages for performance reasons.)</p>
+
+<p>Before launching jupyter, it's a good idea to create and jump into a directory where you can keep all of your work for this book. For example, you might do something like this sequence of commands (or the equivalent with your operating system GUI):</p>
+
+
+<div class="codeblk">cd /Users/YOURID 
+mkdir mlbook
+cd mlbook</div>
+
+
+<p>On Windows, your user directory is <span class=inlinecode>C:\Users\YOURID</span>.</p>
+
+<p>Let's also make a data directory underneath <span class=inlinecode>/Users/YOURID/mlbook</span> so that our notebooks can access data files easily:</p>
+
+
+<div class="codeblk">mkdir data</div>
+
+
+<p>So that we have some data to play with, download and unzip the <a href="https://mlbook.explained.ai/data/rent-ideal.csv.zip">data/rent-ideal.csv.zip</a> file into the <span class=inlinecode>/Users/YOURID/mlbook/data</span> directory.</p>
+
+<p>Launch the local Jupyter web server that provides the interface by running <span class=inlinecode>jupyter lab</span> from the command line:</p>
+
+
+<div class="codeblk">$ jupyter lab
+[I 11:27:00.606 LabApp] [jupyter_nbextensions_configurator] enabled 0.2.8
+[I 11:27:00.613 LabApp] JupyterLab beta preview extension loaded from /Users/parrt/anaconda3/lib/python3.6/site-packages/jupyterlab
+[I 11:27:00.613 LabApp] JupyterLab application directory is /Users/parrt/anaconda3/share/jupyter/lab
+[W 11:27:00.616 LabApp] JupyterLab server extension not enabled, manually loading...
+...</div>
+
+
+<div class="p_wrapper">
+<span class=sidenote>
+
+<center>
+<img src="images/tools/lab1.png" width="100%">
+</center>
+
+<br><b>Figure 4.1</b>. Initial Jupyter Lab screen</span><span class=sidenote>
+
+<center>
+<img src="images/tools/lab2.png" width="100%">
+</center>
+
+<br><b>Figure 4.2</b>. Jupyter Lab after creating Python 3 notebook</span>
+<p class=p_left>Running that command should also open a browser window that looks like <b>Figure 4.1</b>.  That notebook communicates with the Jupyter Lab server via good old http, the web protocol. Clicking on the &ldquo;Python 3&rdquo; icon under the &ldquo;Notebook&rdquo; category, will create and open a new notebook window that looks like <b>Figure 4.2</b>. Cut-and-paste the following code into the empty <i>notebook cell</i>, replacing the data file name as appropriate for your directory structure (our set up has file <span class=inlinecode>rent-ideal.csv</span> in the <span class=inlinecode>mlbook/data</span> subdirectory).</p>
+</div>
+
+
+<div class="codeblk">with open("data/rent-ideal.csv") as f:
+    for line in f.readlines()[0:5]:
+        print(line.strip())</div>
+
+
+<div class="p_wrapper">
+<span class=sidenote>
+
+<center>
+<img src="images/tools/lab3.png" width="100%">
+</center>
+
+<br><b>Figure 4.3</b>. Jupyter Lab with one code cell and output</span>
+<p class=p_left>After pasting, hit shift-enter in the cell (hold the shift key and then hit enter), which will execute and display results like <b>Figure 4.3</b>.  Of course, this would also work from the usual interactive Python shell:</p>
+</div>
+
+
+<div class="codeblk">$ python
+Python 3.6.6 |Anaconda custom (64-bit)| (default, Jun 28 2018, 11:07:29) 
+[GCC 4.2.1 Compatible Clang 4.0.1 (tags/RELEASE_401/final)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> with open("data/rent-ideal.csv") as f:
+...     for line in f.readlines()[0:5]:
+...         print(line.strip())
+... 
+bedrooms,bathrooms,latitude,longitude,price
+3,1.5,40.7145,-73.9425,3000
+2,1.0,40.7947,-73.9667,5465
+1,1.0,40.7388,-74.0018,2850
+1,1.0,40.7539,-73.9677,3275
+>>></div>
+
+
+<p>We could also save that code snippet into a file called <span class=inlinecode>dump.py</span> and run it, either from within a Python development environment like <a href="https://www.jetbrains.com/pycharm/">PyCharm</a> or from the command line:</p>
+
+
+<div class="codeblk">$ python dump.py
+bedrooms,bathrooms,latitude,longitude,price
+3,1.5,40.7145,-73.9425,3000
+2,1.0,40.7947,-73.9667,5465
+1,1.0,40.7388,-74.0018,2850
+1,1.0,40.7539,-73.9677,3275</div>
+
+
+<div class="p_wrapper">
+<span class=sidenote>
+
+<center>
+<img src="images/tools/lab3a.png" width="100%">
+</center>
+
+<br><b>Figure 4.4</b>. Jupyter Lab cell with pandas CSV load</span><span class=sidenote>
+
+<center>
+<img src="images/tools/lab4.png" width="100%">
+</center>
+
+<br><b>Figure 4.5</b>. Notebook with graph output</span>
+<p class=p_left>Notebooks have some big advantages over the interactive Python shell. Because the Python shell is using an old-school terminal, it has very limited display options whereas notebooks can nicely display tables and even embed graphs inline.  For example, <b>Figure 4.4</b> shows what pandas dataframes look like in Jupyter Lab. <b>Figure 4.5</b> illustrates how to generate a histogram of rent prices that appears inline right after the code. Click the &ldquo;+&rdquo; button on the tab of the notebook to get a new cell (if necessary), paste in the following code, then hit shift-enter.</p>
+</div>
+
+
+<div class="codeblk">import pandas as pd
+import matplotlib.pyplot as plt
+df = pd.read_csv("data/rent-ideal.csv")
+fig, ax = plt.subplots()
+ax.hist(df.price, bins=45)
+plt.show()</div>
+
+
+<p>(We'll learn more about loading dataframes and creating graphs below.)</p>
+
+<p>The Python shell also has the disadvantage that all of the code we type disappears when the shell exits. Notebooks also execute code through Python shells (running within Jupyter Lab's web server), but the notebooks themselves are stored as <span class=inlinecode>.ipynb</span> files on the disk. Killing the Python process associated with a notebook does not affect or delete the notebook file.  Not only that, when you restart the notebook, all of the output captured during the last run is cached in the notebook file and immediately shown upon Jupyter Lab start up.</p>
+ 
+<p>Programming with traditional Python <span class=inlinecode>.py</span> files means we don't lose our work when Python exits, but we lose interactive programming.  Because of its iterative nature, creating and testing machine learning models rely heavily on interactive programming in order to perform lots of little experiments.  If loading the data alone takes, say, 5 minutes, we can't restart the entire program for every experiment.  We need the ability to iterate quickly. Using a Python debugger from within an IDE does let us examine the results of each step of a program, but the programming part is not interactive; we have to restart the entire program after making changes.</p>
+
+<p>So notebooks combine the important interactive nature of the Python shell with the persistence of files.  Because notebooks keep graphics and other output within the document containing the code, it's very easy to see what a program is doing. That's particularly useful for presenting results or continuing someone else's work.  You're free to use whatever development environment you find comfortable, of course, but we strongly recommend Jupyter notebooks. If you follow this recommendation, it's a good idea to go through some of the Jupyter tutorials and videos out there to get familiar with your tools.</p>
+
+
+
+<h2 id="dojo">4.2 Dataframe Dojo</h2>
+
+
+<p>Before we can use the machine learning models in sklearn, we have to load and prepare data, for which we'll use pandas. We recommend that you get a copy of Wes McKinney's book, &ldquo;Python for Data Analysis,&rdquo; but this section covers a key subset of pandas functionality to get you started. (You can also check out the <a href="https://github.com/wesm/pydata-book">notebooks</a> from McKinney's book.)  The goal here is to get you started with the basics so that you can get the gist of the examples in this book and can learn more on your own via stackoverflow and other resources.</p>
+
+
+
+<h3 id="sec:4.2.1">4.2.1 Loading and examining data</h3>
+
+
+<p>The first step in the machine learning pipeline is to load data of interest. In many cases, the data is in a comma-separated value (CSV) file and pandas has a fast and flexible CSV reader:</p>
+
+
+<div class="codeblk">import pandas as pd   # import the library and give a short alias: pd
+df = pd.read_csv("data/rent-ideal.csv")
+df.head()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td>
+	</tr>
+	<tr>
+	<td>3</td><td>1</td><td>1.0000</td><td>40.7539</td><td>-73.9677</td><td>3275</td>
+	</tr>
+	<tr>
+	<td>4</td><td>4</td><td>1.0000</td><td>40.8241</td><td>-73.9493</td><td>3350</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>The <span class=inlinecode>head()</span> method shows the first five records in the data frame, but we can pass an argument to specify the number of records.  Data sets with many columns are usually too wide to view on screen without scrolling, which we can overcome by transposing (flipping) the data frame using the <span class=inlinecode>T</span> property:</p>
+
+
+<div class="codeblk">
+df.head(2).T</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>0</th><th>1</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>bedrooms</td><td>3.0000</td><td>2.0000</td>
+	</tr>
+	<tr>
+	<td>bathrooms</td><td>1.5000</td><td>1.0000</td>
+	</tr>
+	<tr>
+	<td>latitude</td><td>40.7145</td><td>40.7947</td>
+	</tr>
+	<tr>
+	<td>longitude</td><td>-73.9425</td><td>-73.9667</td>
+	</tr>
+	<tr>
+	<td>price</td><td>3000.0000</td><td>5465.0000</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>In this way, the columns become rows and wide data frames become tall instead. To get meta-information about the data frame, use method <span class=inlinecode>info()</span>:</p>
+
+
+<div class="codeblk">df.info()
+</div>
+
+<p class="stdout">&lt;class 'pandas.core.frame.DataFrame'>
+RangeIndex: 48266 entries, 0 to 48265
+Data columns (total 5 columns):
+bedrooms     48266 non-null int64
+bathrooms    48266 non-null float64
+latitude     48266 non-null float64
+longitude    48266 non-null float64
+price        48266 non-null int64
+dtypes: float64(3), int64(2)
+memory usage: 1.8 MB
+</p>
+
+<p>It's often useful to get a list of the column names, which we can do easily with a dataframe property:</p>
+
+
+<div class="codeblk">print(df.columns)</div>
+
+<p class="stdout">Index(['bedrooms', 'bathrooms', 'latitude', 'longitude', 'price'], dtype='object')</p>
+
+
+<p>And, to learn something about the data itself, use <span class=inlinecode>describe()</span>:</p>
+
+
+<div class="codeblk">
+df.describe()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>count</td><td>48266.0000</td><td>48266.0000</td><td>48266.0000</td><td>48266.0000</td><td>48266.0000</td>
+	</tr>
+	<tr>
+	<td>mean</td><td>1.5090</td><td>1.1784</td><td>40.7507</td><td>-73.9725</td><td>3439.4866</td>
+	</tr>
+	<tr>
+	<td>std</td><td>1.0924</td><td>0.4262</td><td>0.0394</td><td>0.0291</td><td>1401.1814</td>
+	</tr>
+	<tr>
+	<td>min</td><td>0.0000</td><td>0.0000</td><td>40.5712</td><td>-74.1215</td><td>1025.0000</td>
+	</tr>
+	<tr>
+	<td>25%</td><td>1.0000</td><td>1.0000</td><td>40.7281</td><td>-73.9917</td><td>2495.0000</td>
+	</tr>
+	<tr>
+	<td>50%</td><td>1.0000</td><td>1.0000</td><td>40.7516</td><td>-73.9779</td><td>3100.0000</td>
+	</tr>
+	<tr>
+	<td>75%</td><td>2.0000</td><td>1.0000</td><td>40.7739</td><td>-73.9547</td><td>4000.0000</td>
+	</tr>
+	<tr>
+	<td>max</td><td>8.0000</td><td>10.0000</td><td>40.8989</td><td>-73.7509</td><td>9999.0000</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>There are also methods to give you a subset of that information, such as the average of each column:</p>
+
+
+<div class="codeblk">print(df.mean())</div>
+
+<p class="stdout">bedrooms        1.508950
+bathrooms       1.178438
+latitude       40.750740
+longitude     -73.972496
+price        3439.486595
+dtype: float64</p>
+
+
+<p>To get the number of  apartments with a specific number of bedrooms, use the <span class=inlinecode>value_counts()</span> method:</p>
+
+
+<div class="codeblk">print(df.bedrooms.value_counts())</div>
+
+<p class="stdout">1    15709
+2    14435
+0     9428
+3     6776
+4     1710
+5      169
+6       36
+8        2
+7        1
+Name: bedrooms, dtype: int64</p>
+
+
+<p>We can also easily sort a dataframe by a specific column:</p>
+
+
+<div class="codeblk">
+df.sort_values('price', ascending=False).head()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>17947</td><td>6</td><td>3.0000</td><td>40.7287</td><td>-73.9856</td><td>9999</td>
+	</tr>
+	<tr>
+	<td>27912</td><td>3</td><td>3.0000</td><td>40.7934</td><td>-73.9743</td><td>9999</td>
+	</tr>
+	<tr>
+	<td>47506</td><td>6</td><td>3.0000</td><td>40.7287</td><td>-73.9856</td><td>9999</td>
+	</tr>
+	<tr>
+	<td>36475</td><td>3</td><td>2.0000</td><td>40.7320</td><td>-73.9885</td><td>9995</td>
+	</tr>
+	<tr>
+	<td>4604</td><td>2</td><td>2.5000</td><td>40.7285</td><td>-73.9902</td><td>9995</td>
+	</tr>
+</tbody>
+</table>
+</div>
+
+
+<h3 id="sec:4.2.2">4.2.2 Extracting subsets</h3>
+
+
+<p>Preparing data for use in a model often means extracting subsets, such as a subset of the columns or a subset of the rows.  Getting a single column of data is particularly convenient in pandas because each of the columns looks like a dataframe object property. For example, here's how to extract the <span class=inlinecode>price</span> column from data frame <span class=inlinecode>df</span> as a <span class=inlinecode>Series</span> object:</p>
+
+
+<div class="codeblk">print(type(df.price))
+print(df.price.head(5))</div>
+
+<p class="stdout">&lt;class 'pandas.core.series.Series'>
+
+0    3000
+1    5465
+2    2850
+3    3275
+4    3350
+Name: price, dtype: int64</p>
+
+<p><span class=inlinecode>df.price</span> is equivalent to the slightly more verbose <span class=inlinecode>df['price']</span>, except that <span class=inlinecode>df.price</span> does not work on the left-hand side of an assignment when trying to create a new column (see <b>Section 4.2.5</b> <i>Injecting new dataframe columns</i>).</p>
+
+<p>Once we have a series, there are lots of useful functions we can call, such as the following.</p>
+
+
+<div class="codeblk">prices = df.price
+print(prices.min(), prices.mean(), prices.max())
+</div>
+
+<p class="stdout">1025 3439.486595118717 9999
+</p>
+
+<p>If we need more than one column, we can get a dataframe with a subset of the columns (not a list of <span class=inlinecode>Series</span> objects):</p>
+
+
+<div class="codeblk">bedprice = df[['bathrooms','price']]
+print(type(bedprice))
+bedprice.head()</div>
+<p class="stdout">&lt;class 'pandas.core.frame.DataFrame'>
+</p>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bathrooms</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>1.5000</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>5465</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1.0000</td><td>2850</td>
+	</tr>
+	<tr>
+	<td>3</td><td>1.0000</td><td>3275</td>
+	</tr>
+	<tr>
+	<td>4</td><td>1.0000</td><td>3350</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Data sets typically consist of multiple columns of features and a single column representing the target variable. To separate these for use in training our model, we can explicitly select all future columns or use <span class=inlinecode>drop()</span>:</p>
+
+
+<div class="codeblk">X = df.drop('price', axis=1) # get all but price column
+y = df['price']
+X.head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>The <span class=inlinecode>axis=1</span> bit is a little inconvenient but it specifies we'd like to drop a column and not a row (<span class=inlinecode>axis=0</span>). The <span class=inlinecode>drop()</span> method does not alter the dataframe; instead it returns a view of the dataframe without the indicated column.</p>
+
+<p>Getting a specific row or a subset of the rows by row number involves using the <span class=inlinecode>iloc</span> dataframe property. For example, here's how to get the first row of the dataframe as a <span class=inlinecode>Series</span> object:</p>
+
+
+<div class="codeblk">print(type(df.iloc[0]))
+print(df.iloc[0])</div>
+
+<p class="stdout">&lt;class 'pandas.core.series.Series'>
+
+bedrooms        3.0000
+bathrooms       1.5000
+latitude       40.7145
+longitude     -73.9425
+price        3000.0000
+Name: 0, dtype: float64</p>
+
+<p>and here's how to get the first two rows as a dataframe:</p>
+
+
+<div class="codeblk">
+df.iloc[0:2]</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Those <span class=inlinecode>iloc</span> accessors implicitly get all columns, but we can be more explicit with the <span class=inlinecode>:</span> slice operator as the second dimension:</p>
+
+
+<div class="codeblk">print(df.iloc[0,:])</div>
+
+<p class="stdout">bedrooms        3.0000
+bathrooms       1.5000
+latitude       40.7145
+longitude     -73.9425
+price        3000.0000
+Name: 0, dtype: float64</p>
+
+
+<p>Or, we can use a list of integer indexes to get specific columns:</p>
+
+
+<div class="codeblk">print(df.iloc[0,[0,4]])</div>
+
+<p class="stdout">bedrooms       3.0
+price       3000.0
+Name: 0, dtype: float64</p>
+
+
+<p>Generally, though, it's easier to access columns by name by using <span class=inlinecode>iloc</span> to get the row of interest and then using dataframe column indexing by name:</p>
+
+
+<div class="codeblk">print(df.iloc[0][['bedrooms','price']])</div>
+
+<p class="stdout">bedrooms       3.0
+price       3000.0
+Name: 0, dtype: float64</p>
+
+
+
+
+<h3 id="sec:4.2.3">4.2.3 Dataframe Indexes</h3>
+
+
+<p>Data frames have indexes that make them behave like dictionaries, where a key maps to one or more rows of a dataframe. By default, the index is the row number, as shown here as the leftmost column:</p>
+
+
+<div class="codeblk">
+df.head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>The <span class=inlinecode>loc</span> property performs an index lookup so <span class=inlinecode>df.loc[0]</span> gets the row with key 0 (the first row):</p>
+
+
+<div class="codeblk">print(df.loc[0])
+</div>
+
+<p class="stdout">bedrooms        3.0000
+bathrooms       1.5000
+latitude       40.7145
+longitude     -73.9425
+price        3000.0000
+Name: 0, dtype: float64
+</p>
+
+<p>Because the index is the row number by default, <span class=inlinecode>iloc</span> and <span class=inlinecode>loc</span> give the same result. But we can set index to a column in our dataframe:</p>
+
+
+<div class="codeblk">dfi = df.set_index('bedrooms') # set_index() returns new view of df
+dfi.head()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td>bedrooms</td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>40.7539</td><td>-73.9677</td><td>3275</td>
+	</tr>
+	<tr>
+	<td>4</td><td>1.0000</td><td>40.8241</td><td>-73.9493</td><td>3350</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Using the index, we can get all 3-bedroom apartments:</p>
+
+
+<div class="codeblk">
+dfi.loc[3].head()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td>bedrooms</td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>3</td><td>1.0000</td><td>40.7454</td><td>-73.9845</td><td>4395</td>
+	</tr>
+	<tr>
+	<td>3</td><td>1.0000</td><td>40.7231</td><td>-74.0044</td><td>3733</td>
+	</tr>
+	<tr>
+	<td>3</td><td>1.0000</td><td>40.7660</td><td>-73.9914</td><td>4500</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2.0000</td><td>40.7196</td><td>-74.0109</td><td>6320</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Now that the index differs from the default row number index, <span class=inlinecode>dfi.loc[3]</span> and <span class=inlinecode>dfi.iloc[3]</span> no longer get the same data; <span class=inlinecode>dfi.iloc[3]</span> gets 4th row (indexed from 0).</p>
+
+<p>Setting the dataframe index to the <span class=inlinecode>bedrooms</span> column means that <span class=inlinecode>bedrooms</span> is no longer available as a column, which is inconvenient but a quirk to be aware of: <span class=inlinecode>dfi['bedrooms']</span> gets error <span class=inlinecode>KeyError: 'bedrooms'</span>.  By resetting the index, <span class=inlinecode>bedrooms</span> will reappear as a column and the default row number index will reappear:</p>
+
+
+<div class="codeblk">dfi = dfi.reset_index() # overcome quirk in Pandas
+dfi.head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Indexing pops up when trying to organize or reduce the data in a data frame. For example, grouping the rows by the values in a particular column makes that column the index. Here's how to group the data by the number of bathrooms and compute the average value of the other columns:</p>
+
+
+<div class="codeblk">bybaths = df.groupby(['bathrooms']).mean()
+bybaths</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td>bathrooms</td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0.0000</td><td>0.8300</td><td>40.7561</td><td>-73.9701</td><td>3144.8700</td>
+	</tr>
+	<tr>
+	<td>1.0000</td><td>1.2522</td><td>40.7508</td><td>-73.9721</td><td>3028.1110</td>
+	</tr>
+	<tr>
+	<td>1.5000</td><td>2.2773</td><td>40.7489</td><td>-73.9659</td><td>4226.3364</td>
+	</tr>
+	<tr>
+	<td>2.0000</td><td>2.6874</td><td>40.7495</td><td>-73.9756</td><td>5278.5957</td>
+	</tr>
+	<tr>
+	<td>2.5000</td><td>2.8632</td><td>40.7562</td><td>-73.9651</td><td>6869.0474</td>
+	</tr>
+	<tr>
+	<td>3.0000</td><td>3.2966</td><td>40.7597</td><td>-73.9676</td><td>6897.9746</td>
+	</tr>
+	<tr>
+	<td>3.5000</td><td>3.8571</td><td>40.7487</td><td>-73.9548</td><td>7635.3571</td>
+	</tr>
+	<tr>
+	<td>4.0000</td><td>4.6222</td><td>40.7563</td><td>-73.9563</td><td>7422.8889</td>
+	</tr>
+	<tr>
+	<td>4.5000</td><td>1.0000</td><td>40.8572</td><td>-73.9350</td><td>2050.0000</td>
+	</tr>
+	<tr>
+	<td>10.0000</td><td>2.0000</td><td>40.7633</td><td>-73.9849</td><td>3600.0000</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>If we want a dataframe that includes <span class=inlinecode>bathrooms</span> as a column, we have to reset the indexCan't access <span class=inlinecode>bybaths[['bathrooms','price']]</span>, must reset first:</p>
+
+
+<div class="codeblk">bybaths = bybaths.reset_index() # overcome quirk in Pandas
+bybaths</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bathrooms</th><th>bedrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>0.0000</td><td>0.8300</td><td>40.7561</td><td>-73.9701</td><td>3144.8700</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>1.2522</td><td>40.7508</td><td>-73.9721</td><td>3028.1110</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1.5000</td><td>2.2773</td><td>40.7489</td><td>-73.9659</td><td>4226.3364</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2.0000</td><td>2.6874</td><td>40.7495</td><td>-73.9756</td><td>5278.5957</td>
+	</tr>
+	<tr>
+	<td>4</td><td>2.5000</td><td>2.8632</td><td>40.7562</td><td>-73.9651</td><td>6869.0474</td>
+	</tr>
+	<tr>
+	<td>5</td><td>3.0000</td><td>3.2966</td><td>40.7597</td><td>-73.9676</td><td>6897.9746</td>
+	</tr>
+	<tr>
+	<td>6</td><td>3.5000</td><td>3.8571</td><td>40.7487</td><td>-73.9548</td><td>7635.3571</td>
+	</tr>
+	<tr>
+	<td>7</td><td>4.0000</td><td>4.6222</td><td>40.7563</td><td>-73.9563</td><td>7422.8889</td>
+	</tr>
+	<tr>
+	<td>8</td><td>4.5000</td><td>1.0000</td><td>40.8572</td><td>-73.9350</td><td>2050.0000</td>
+	</tr>
+	<tr>
+	<td>9</td><td>10.0000</td><td>2.0000</td><td>40.7633</td><td>-73.9849</td><td>3600.0000</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>and then we can access the columns of interest:</p>
+
+
+<div class="codeblk">
+bybaths[['bathrooms','price']]</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bathrooms</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>0.0000</td><td>3144.8700</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1.0000</td><td>3028.1110</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1.5000</td><td>4226.3364</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2.0000</td><td>5278.5957</td>
+	</tr>
+	<tr>
+	<td>4</td><td>2.5000</td><td>6869.0474</td>
+	</tr>
+	<tr>
+	<td>5</td><td>3.0000</td><td>6897.9746</td>
+	</tr>
+	<tr>
+	<td>6</td><td>3.5000</td><td>7635.3571</td>
+	</tr>
+	<tr>
+	<td>7</td><td>4.0000</td><td>7422.8889</td>
+	</tr>
+	<tr>
+	<td>8</td><td>4.5000</td><td>2050.0000</td>
+	</tr>
+	<tr>
+	<td>9</td><td>10.0000</td><td>3600.0000</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>(Notice that the average price for an apartment with no bathroom is $3145. Wow.  Evaluating <span class=inlinecode>len(df[df.bathrooms==0])</span> tells us there are 300 apartments with no bathrooms!)</p>
+
+<p>Accessing dataframe rows via the index is essentially performing a query for all rows whose index key matches a specific value, but we can perform much more sophisticated queries.</p>
+
+
+
+<h3 id="sec:4.2.4">4.2.4 Dataframe queries</h3>
+
+
+<p>Pandas dataframes are kind of like combined spreadsheets and database tables and this section illustrates some of the basic queries we'll use for cleaning up data sets.</p>
+
+<p>Machine learning models don't usually accept missing values and so we need to deal with any missing values in our data set. The <span class=inlinecode>isnull()</span> method is a built-in query that returns true for each missing element in a series:</p>
+
+
+<div class="codeblk">print(df.price.isnull().head(3))</div>
+
+<p class="stdout">0    False
+1    False
+2    False
+Name: price, dtype: bool</p>
+
+
+<p>or even an entire dataframe:</p>
+
+
+<div class="codeblk">
+df.isnull().head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>False</td><td>False</td><td>False</td><td>False</td><td>False</td>
+	</tr>
+	<tr>
+	<td>1</td><td>False</td><td>False</td><td>False</td><td>False</td><td>False</td>
+	</tr>
+	<tr>
+	<td>2</td><td>False</td><td>False</td><td>False</td><td>False</td><td>False</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Of course, what we really care about is whether any values are missing and <span class=inlinecode>any()</span> returns true if there is at least one true value in the series or dataframe:</p>
+
+
+<div class="codeblk">print(df.isnull().any())</div>
+
+<p class="stdout">bedrooms     False
+bathrooms    False
+latitude     False
+longitude    False
+price        False
+dtype: bool</p>
+
+
+<p>Like a database <span class=inlinecode>WHERE</span> clause, pandas supports rich conditional expressions to filter for data of interest. Queries return a series of true and false, according to the results of a conditional expression:</p>
+
+
+<div class="codeblk">print((df.price>3000).head())</div>
+
+<p class="stdout">0    False
+1     True
+2    False
+3     True
+4     True
+Name: price, dtype: bool</p>
+
+
+<p>That boolean series can then be used as an index into the dataframe and the dataframe will return the rows associated with true values. For example, here's how to get all rows whose price is over $3000:</p>
+
+
+<div class="codeblk">
+df[df.price>3000].head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td>
+	</tr>
+	<tr>
+	<td>3</td><td>1</td><td>1.0000</td><td>40.7539</td><td>-73.9677</td><td>3275</td>
+	</tr>
+	<tr>
+	<td>4</td><td>4</td><td>1.0000</td><td>40.8241</td><td>-73.9493</td><td>3350</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>To find a price within a range, we need two comparison operators:</p>
+
+
+<div class="codeblk">
+df[(df.price>1000) & (df.price<3000)].head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td>
+	</tr>
+	<tr>
+	<td>8</td><td>1</td><td>1.0000</td><td>40.8234</td><td>-73.9457</td><td>1725</td>
+	</tr>
+	<tr>
+	<td>10</td><td>0</td><td>1.0000</td><td>40.7769</td><td>-73.9467</td><td>1950</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Note that the parentheses are required around the comparison subexpressions to override the high precedence of the <span class=inlinecode>&</span> operator. (Without the parentheses, Python would try to evaluate <span class=inlinecode>1000 & df.price</span>.)</p>
+
+<p>Compound queries can reference multiple columns. For example here's how to get all apartments with at least two bedrooms that are less than $3000:</p>
+
+
+<div class="codeblk">
+df[(df.bedrooms>=2) & (df.price<3000)].head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>21</td><td>2</td><td>1.0000</td><td>40.7427</td><td>-73.9794</td><td>2999</td>
+	</tr>
+	<tr>
+	<td>34</td><td>2</td><td>1.0000</td><td>40.8440</td><td>-73.9404</td><td>2300</td>
+	</tr>
+	<tr>
+	<td>54</td><td>2</td><td>2.0000</td><td>40.7059</td><td>-73.8339</td><td>2100</td>
+	</tr>
+</tbody>
+</table>
+</div>
+
+
+<h3 id="newcol">4.2.5 Injecting new dataframe columns</h3>
+
+
+<p>After selecting features (columns) and cleaning up a data set using queries, data science practitioners often create new columns of data in an effort to improve model performance.  Creating a new column with pandas is easy, just assign a value to the new column name. Here's how to make a copy of the original <span class=inlinecode>df</span> and then create a column of all zeroes in the new dataframe:</p>
+
+
+<div class="codeblk">df_aug = df.copy()
+df_aug['junk'] = 0
+df_aug.head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th><th>junk</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td><td>0</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td><td>0</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td><td>0</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>That example just shows the basic mechanism; we'd rarely find it useful to set a column of zeros. On the other hand, we might want a column of random numbers to see how it affected model performance. Here's how to overwrite the <span class=inlinecode>junk</span> column using a NumPy array of random numbers:</p>
+
+
+<div class="codeblk">import numpy as np
+df_aug['junk'] = np.random.random(size=len(df_aug))
+df_aug.head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>bathrooms</th><th>latitude</th><th>longitude</th><th>price</th><th>junk</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td><td>0.6472</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td><td>0.3905</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td><td>0.4034</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>A word of warning when injecting new columns into a dataframe subset.  Injecting a new column into, say, <span class=inlinecode>df</span> is no problem as long as <span class=inlinecode>df</span> is the entire data frame, and not a subset (sometimes called a view). For example, in the following code, <span class=inlinecode>bedsprices</span> is a subset of the original <span class=inlinecode>df</span>; pandas returns of view of the data rather than inefficiently creating a copy.</p>
+
+
+<div class="codeblk">bedsprices = df[['bedrooms','price']] # a view or a copy of df?
+bedsprices['beds_to_price_ratio'] = bedsprices.bedrooms / bedsprices.price</div>
+
+
+<p>Trying to inject a new column yields a warning from pandas:</p>
+
+
+<div class="codeblk">A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead</div>
+
+
+<p>Essentially, pandas does not know whether we intend to alter the original <span class=inlinecode>df</span> or to make <span class=inlinecode>bedsprices</span>  into a copy and alter it but not <span class=inlinecode>df</span>.   The safest route is to explicitly make a copy:</p>
+
+
+<div class="codeblk">bedsprices = df[['bedrooms','price']].copy() # make a copy of 2 cols of df
+bedsprices['price_to_beds_ratio'] = bedsprices.price / bedsprices.bedrooms
+bedsprices.head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>bedrooms</th><th>price</th><th>price_to_beds_ratio</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>3</td><td>3000</td><td>1000.0000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2</td><td>5465</td><td>2732.5000</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1</td><td>2850</td><td>2850.0000</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>See <a href="https://pandas.pydata.org/pandas-docs/version/0.20/indexing.html#indexing-view-versus-copy">Returning a view versus a copy</a> from the pandas documentation for more details.</p>
+
+
+
+<h3 id="sec:4.2.6">4.2.6 String and date operations</h3>
+
+
+<p>Dataframes have string and date-related functions that are useful when deriving new columns or cleaning up existing columns. To demonstrate these, we'll need a data set with more columns, so download and unzip <a href="https://mlbook.explained.ai/data/rent.csv.zip">rent.csv.zip</a> into your <span class=inlinecode>mlbook/data</span> directory. Then use <span class=inlinecode>read_csv</span> to load the <span class=inlinecode>rent.csv</span> file and display five columns:</p>
+
+
+<div class="codeblk">df_raw = pd.read_csv("data/rent.csv", parse_dates=['created'])
+df_rent = df_raw[['created','features','bedrooms','bathrooms','price']]
+df_rent.head()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>created</th><th>features</th><th>bedrooms</th><th>bathrooms</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>2016-06-24 07:54:24</td><td>[]</td><td>3</td><td>1.5000</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2016-06-12 12:19:27</td><td>['Doorman', 'Elevator', '...</td><td>2</td><td>1.0000</td><td>5465</td>
+	</tr>
+	<tr>
+	<td>2</td><td>2016-04-17 03:26:41</td><td>['Laundry In Building', '...</td><td>1</td><td>1.0000</td><td>2850</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2016-04-18 02:22:02</td><td>['Hardwood Floors', 'No F...</td><td>1</td><td>1.0000</td><td>3275</td>
+	</tr>
+	<tr>
+	<td>4</td><td>2016-04-28 01:32:41</td><td>['Pre-War']</td><td>4</td><td>1.0000</td><td>3350</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>The <span class=inlinecode>parse_dates</span> parameter make sure that the <span class=inlinecode>created</span> column is parsed as a date not a string. Column <span class=inlinecode>features</span> is a string column (pandas labels them as type <span class=inlinecode>object</span>) whose values are comma-separated lists of features enclosed in square brackets, just as Python would display a list of strings. Here's the type information for all columns in <span class=inlinecode>rent.csv</span>:</p>
+
+
+<div class="codeblk">df_rent.info()
+</div>
+
+<p class="stdout">&lt;class 'pandas.core.frame.DataFrame'>
+RangeIndex: 49352 entries, 0 to 49351
+Data columns (total 5 columns):
+created      49352 non-null datetime64[ns]
+features     49352 non-null object
+bedrooms     49352 non-null int64
+bathrooms    49352 non-null float64
+price        49352 non-null int64
+dtypes: datetime64[ns](1), float64(1), int64(2), object(1)
+memory usage: 1.9+ MB
+</p>
+
+<p>The string-related methods are available via <i>series</i><span class=inlinecode>.str.</span><i>method</i><span class=inlinecode>()</span>; the <span class=inlinecode>str</span> object just groups the methods. For example, it's a good idea to normalize features of string type so that <span class=inlinecode>doorman</span> and <span class=inlinecode>Doorman</span> are treated as the same word:</p>
+
+
+<div class="codeblk">df_aug = df_rent.copy()  # alter a copy of dataframe
+df_aug['features'] = df_aug['features'].str.lower() # normalize to lower case
+df_aug.head()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>created</th><th>features</th><th>bedrooms</th><th>bathrooms</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>2016-06-24 07:54:24</td><td>[]</td><td>3</td><td>1.5000</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2016-06-12 12:19:27</td><td>['doorman', 'elevator', '...</td><td>2</td><td>1.0000</td><td>5465</td>
+	</tr>
+	<tr>
+	<td>2</td><td>2016-04-17 03:26:41</td><td>['laundry in building', '...</td><td>1</td><td>1.0000</td><td>2850</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2016-04-18 02:22:02</td><td>['hardwood floors', 'no f...</td><td>1</td><td>1.0000</td><td>3275</td>
+	</tr>
+	<tr>
+	<td>4</td><td>2016-04-28 01:32:41</td><td>['pre-war']</td><td>4</td><td>1.0000</td><td>3350</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>As part of the normalization process, it's a good idea to replace any missing values with a blank and any empty <span class=inlinecode>features</span> column values, <span class=inlinecode>[]</span>, with a blank:</p>
+
+
+<div class="codeblk">df_aug['features'] = df_aug['features'].fillna('') # fill missing w/blanks
+df_aug['features'] = df_aug['features'].replace('[]','') # fill empty w/blanks
+df_aug.head()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>created</th><th>features</th><th>bedrooms</th><th>bathrooms</th><th>price</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>2016-06-24 07:54:24</td><td></td><td>3</td><td>1.5000</td><td>3000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2016-06-12 12:19:27</td><td>['doorman', 'elevator', '...</td><td>2</td><td>1.0000</td><td>5465</td>
+	</tr>
+	<tr>
+	<td>2</td><td>2016-04-17 03:26:41</td><td>['laundry in building', '...</td><td>1</td><td>1.0000</td><td>2850</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2016-04-18 02:22:02</td><td>['hardwood floors', 'no f...</td><td>1</td><td>1.0000</td><td>3275</td>
+	</tr>
+	<tr>
+	<td>4</td><td>2016-04-28 01:32:41</td><td>['pre-war']</td><td>4</td><td>1.0000</td><td>3350</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Pandas uses &ldquo;not a number&rdquo;, NumPy's <span class=inlinecode>np.nan</span>, as a placeholder for unavailable values, even for nonnumeric string and date columns. Because <span class=inlinecode>np.nan</span> is a floating-point number, a missing integer flips the entire column to have type <span class=inlinecode>float</span>. See <a href="https://pandas.pydata.org/pandas-docs/stable/missing_data.html">Working with missing data</a> for more details.</p>
+
+<p>Looking at the string values in the <span class=inlinecode>features</span> column, there is a good deal of information that would potentially improve the model's performance. Models would not generally be able to automatically extract useful features and so we have to give them a hand. The following code creates two new columns that indicates whether or not the apartment has a doorman or laundry (<span class=inlinecode>"laundry|washer"</span> is a regular expression that matches if either laundry or washer is present).</p>
+
+
+<div class="codeblk">df_aug['doorman'] = df_aug['features'].str.contains("doorman")
+df_aug['laundry'] = df_aug['features'].str.contains("laundry|washer")
+df_aug.head()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>created</th><th>features</th><th>bedrooms</th><th>bathrooms</th><th>price</th><th>doorman</th><th>laundry</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>2016-06-24 07:54:24</td><td></td><td>3</td><td>1.5000</td><td>3000</td><td>False</td><td>False</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2016-06-12 12:19:27</td><td>['doorman', 'elevator', '...</td><td>2</td><td>1.0000</td><td>5465</td><td>True</td><td>False</td>
+	</tr>
+	<tr>
+	<td>2</td><td>2016-04-17 03:26:41</td><td>['laundry in building', '...</td><td>1</td><td>1.0000</td><td>2850</td><td>False</td><td>True</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2016-04-18 02:22:02</td><td>['hardwood floors', 'no f...</td><td>1</td><td>1.0000</td><td>3275</td><td>False</td><td>False</td>
+	</tr>
+	<tr>
+	<td>4</td><td>2016-04-28 01:32:41</td><td>['pre-war']</td><td>4</td><td>1.0000</td><td>3350</td><td>False</td><td>False</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Ultimately, models can only use numeric or boolean data columns, so these conversions are very common. Once we've extracted all useful information from the raw string column, we would typically delete that <span class=inlinecode>features</span> column. </p>
+
+<p>Instead of creating new columns, sometimes we convert string columns to numeric columns. For example, the <span class=inlinecode>interest_level</span> column in the <span class=inlinecode>rent.csv</span> data set is one of three strings (low, medium, and high):</p>
+
+
+<div class="codeblk">df_aug = df_raw[['created','interest_level']].copy()
+print(f"type of interest_level is {df_aug.interest_level.dtype}")
+df_aug.head()</div>
+<p class="stdout">type of interest_level is object
+</p>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>created</th><th>interest_level</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>2016-06-24 07:54:24</td><td>medium</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2016-06-12 12:19:27</td><td>low</td>
+	</tr>
+	<tr>
+	<td>2</td><td>2016-04-17 03:26:41</td><td>high</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2016-04-18 02:22:02</td><td>low</td>
+	</tr>
+	<tr>
+	<td>4</td><td>2016-04-28 01:32:41</td><td>low</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>An easy way to convert that to a numeric column is to map each string to a unique value:</p>
+
+
+<div class="codeblk">m = {'low':1,'medium':2,'high':3}
+df_aug['interest_level'] = df_aug['interest_level'].map(m)
+print(f"type of interest_level is {df_aug.interest_level.dtype}")
+df_aug.head()</div>
+<p class="stdout">type of interest_level is int64
+</p>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>created</th><th>interest_level</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>2016-06-24 07:54:24</td><td>2</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2016-06-12 12:19:27</td><td>1</td>
+	</tr>
+	<tr>
+	<td>2</td><td>2016-04-17 03:26:41</td><td>3</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2016-04-18 02:22:02</td><td>1</td>
+	</tr>
+	<tr>
+	<td>4</td><td>2016-04-28 01:32:41</td><td>1</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>For large data sets, sometimes it's useful to reduce numeric values to the smallest entity that will hold all values. In this case, the <span class=inlinecode>interest_level</span> values all fit easily within one byte (8 bits), which means we can save a bunch of space if we convert the column to <span class=inlinecode>int8</span> from <span class=inlinecode>int64</span>:</p>
+
+
+<div class="codeblk">df_aug['interest_level'] = df_aug['interest_level'].astype('int8')
+print(f"type of interest_level is {df_aug.interest_level.dtype}")
+</div>
+
+<p class="stdout">type of interest_level is int8
+</p>
+
+<p>Like string columns, models cannot directly use date columns, but we can break up the date into a number of components and derive new information about that date. For example, imagine training a model that predicts sales at a grocery market.  The day of the week, or even the day of the month, could be predictive of sales. People tend to shop more on Saturday and Sunday than during the week and perhaps more shopping occurs on monthly paydays. Maybe there are more sales during certain months like December (during Christmas time). Pandas provides convenience methods, grouped in property <span class=inlinecode>dt</span>, for extracting various date attributes and we can use these to derive new model features:</p>
+
+
+<div class="codeblk">df_aug['dayofweek'] = df_aug['created'].dt.dayofweek  # add dow column
+df_aug['day'] = df_aug['created'].dt.day
+df_aug['month'] = df_aug['created'].dt.month
+df_aug[['created','dayofweek','day','month']].head()</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>created</th><th>dayofweek</th><th>day</th><th>month</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>2016-06-24 07:54:24</td><td>4</td><td>24</td><td>6</td>
+	</tr>
+	<tr>
+	<td>1</td><td>2016-06-12 12:19:27</td><td>6</td><td>12</td><td>6</td>
+	</tr>
+	<tr>
+	<td>2</td><td>2016-04-17 03:26:41</td><td>6</td><td>17</td><td>4</td>
+	</tr>
+	<tr>
+	<td>3</td><td>2016-04-18 02:22:02</td><td>0</td><td>18</td><td>4</td>
+	</tr>
+	<tr>
+	<td>4</td><td>2016-04-28 01:32:41</td><td>3</td><td>28</td><td>4</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Once we've extracted all useful numeric data, we'd drop column <span class=inlinecode>created</span> before training our model on the data set.</p>
+
+
+
+<h3 id="sec:4.2.7">4.2.7 Merging dataframes</h3>
+
+
+<p>Imagine we have a <span class=inlinecode>df_sales</span> data frame with lots of features about sales transactions, but let's simplified to just two columns for discussion purposes.  The problem we have is that price information is in a different dataframe, possibly because we extracted the data from a different source. The two dataframes look like the following.</p>
+<center>
+<table style="">
+<thead>
+</thead>
+<tbody>
+<tr>
+<td align=center valign=top><span class=inlinecode>df_sales</span>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>SalesID</th><th>YearMade</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>1222837</td><td>1000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1222839</td><td>2006</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1222841</td><td>2000</td>
+	</tr>
+	<tr>
+	<td>3</td><td>1222843</td><td>1000</td>
+	</tr>
+	<tr>
+	<td>4</td><td>1222845</td><td>2002</td>
+	</tr>
+</tbody>
+</table>
+</div></td><td align=center valign=top><span class=inlinecode>df_prices</span>:
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>SalesID</th><th>SalePrice</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>1222836</td><td>31000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1222837</td><td>44300</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1222839</td><td>54000</td>
+	</tr>
+	<tr>
+	<td>3</td><td>1222843</td><td>10000</td>
+	</tr>
+	<tr>
+	<td>4</td><td>1222845</td><td>35000</td>
+	</tr>
+	<tr>
+	<td>5</td><td>1222847</td><td>8000</td>
+	</tr>
+	<tr>
+	<td>6</td><td>1222849</td><td>33000</td>
+	</tr>
+</tbody>
+</table>
+</div></td>
+</tr>
+</tbody>
+</table>
+</center>
+<p>Our goal is to create a new column in <span class=inlinecode>df_sales</span> that has the appropriate <span class=inlinecode>SalePrice</span> for each record. To do that, we need a key that is common to both tables, which is the <span class=inlinecode>SalesID</span> in this case. For example, the record in <span class=inlinecode>df_sales</span> with <span class=inlinecode>SalesID</span> of 1222843 should get a new <span class=inlinecode>SalesPrice</span> entry of 10000. In database terms, we need a <i>left join</i>, which keeps all records from the left dataframe and ignores records for unmatched <span class=inlinecode>SalesID</span>s from the right dataframe:</p>
+
+<p><img src="images/tools/left-join.png" width="60%"></p>
+
+<p>Any record in  the left dataframe without a counterpart in right dataframe gets <span class=inlinecode>np.NaN</span> (not a number) to represent a missing entry.</p>
+
+<p>In Python the merge operation looks like:</p>
+
+
+<div class="codeblk">df_merged = df_sales.merge(df_prices, on='SalesID', how='left') # merge in prices
+df_merged</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>SalesID</th><th>YearMade</th><th>SalePrice</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>1222837</td><td>1000</td><td>44300.0000</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1222839</td><td>2006</td><td>54000.0000</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1222841</td><td>2000</td><td></td>
+	</tr>
+	<tr>
+	<td>3</td><td>1222843</td><td>1000</td><td>10000.0000</td>
+	</tr>
+	<tr>
+	<td>4</td><td>1222845</td><td>2002</td><td>35000.0000</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>The left join makes a bit more sense sometimes when we see the <i>right join</i>. A right join keeps all records in the right dataframe, filling in record values for unmatched keys with <span class=inlinecode>np.NaN</span>:</p>
+
+
+<div class="codeblk">df_merged = df_sales.merge(df_prices, on='SalesID', how='right')
+df_merged.sort_values('SalesID')</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>SalesID</th><th>YearMade</th><th>SalePrice</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>4</td><td>1222836</td><td></td><td>31000</td>
+	</tr>
+	<tr>
+	<td>0</td><td>1222837</td><td>1000.0000</td><td>44300</td>
+	</tr>
+	<tr>
+	<td>1</td><td>1222839</td><td>2006.0000</td><td>54000</td>
+	</tr>
+	<tr>
+	<td>2</td><td>1222843</td><td>1000.0000</td><td>10000</td>
+	</tr>
+	<tr>
+	<td>3</td><td>1222845</td><td>2002.0000</td><td>35000</td>
+	</tr>
+	<tr>
+	<td>5</td><td>1222847</td><td></td><td>8000</td>
+	</tr>
+	<tr>
+	<td>6</td><td>1222849</td><td></td><td>33000</td>
+	</tr>
+</tbody>
+</table>
+</div>
+
+
+<h3 id="sec:4.2.8">4.2.8 Saving and loading data in the feather format</h3>
+
+
+<p>Data files are often in CSV, because it is a universal format and can be read by any programming language. But, loading CSV files into dataframes is not very efficient, which is a problem for large data sets during the highly iterative development process of machine learning models. The author of pandas, Wes McKinney, and Hadley Wickham (a well-known statistician and R programmer) recently developed a new format called <a href="https://github.com/wesm/feather">feather</a> that loads large data files much faster than CSV files. Given a dataframe, here's how to save it as a feather file and read it back in:</p>
+
+
+<div class="codeblk">df.to_feather("data/data.feather")        # save df as feather file
+df = pd.read_feather("data/data.feather") # read it back</div>
+
+
+<p>We performed a quick experiment, mirroring the one done by McKinney and Wickham in their <a href="https://blog.rstudio.com/2016/03/29/feather/">original blog post from 2016</a>. Given a data frame with 10 columns each with 10,000,000 floating-point numbers, pandas takes about two minutes to write it out as CSV to a fast SSD drive. In contrast, it only takes 1.5 seconds to write out the equivalent feather file. Also, the CSV file is 1.8G versus only 800M for the feather file.  Reading the CSV file takes 22s versus 6s for the feather file.  Here is the test rig, adapted from McKinney and Wickham:</p>
+
+
+<div class="codeblk">import pandas as pd
+import numpy as np
+arr = np.random.randn(10000000)
+arr[::10] = np.nan  # kill every 10th number
+df = pd.DataFrame({'column_{0}'.format(i): arr for i in range(10)})
+%time df.to_csv('/tmp/foo.csv')
+%time df.to_feather('/tmp/foo.feather')
+%time df = pd.read_csv('/tmp/foo.csv')
+%time df = pd.read_feather('/tmp/foo.feather')</div>
+
+
+<p>Now that we know how load, save, and manipulate dataframes, let's explore the basics of visualizing dataFrame data.</p>
+
+
+
+
+<h2 id="sec:plt">4.3 Generating plots with matplotlib</h2>
+
+
+<p><a href="https://matplotlib.org/">Matplotlib</a> is a free and widely-used Python plotting library. There are lots of other options, but matplotlib is so well supported, it's hard to consider using anything else. For example, there are currently 34,515 <a href="https://stackoverflow.com/questions/tagged/matplotlib">matplotlib questions on stackoverflow</a>. That said, we find it a bit quirky and the learning curve is pretty steep.  Getting basic plots working is no problem, but highly-customized plots require lots of digging in the documentation and with web searches.  The goal of this section is to show how create the three most common plots: scatter, line, and histogram.</p>
+
+<p>Each matplotlib plot is represented by a <span class=inlinecode>Figure</span> object, which is just the drawing surface. The graphs or charts we draw in a figure are called <span class=inlinecode>Axes</span> (a questionable name due to similarity with &ldquo;axis&rdquo;) but it's best to think of axes as subplots. Each figure has one or more subplots. Here is the basic template for creating a plot:</p>
+
+
+<div class="codeblk">import matplotlib.pyplot as plt
+fig, ax = plt.subplots()  # make one subplot (ax) on the figure
+plt.show()</div>
+
+
+<p>Let's use that template to create a scatterplot	using the average apartment price for each number of bedrooms. First, we group the rent data in <span class=inlinecode>df</span> by the number of bedrooms and ask for the average (mean). To plot bedrooms versus price, we use the <span class=inlinecode>scatter</span> method of the <span class=inlinecode>ax</span> subplot object:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/tools/tools_plt_2.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">bybeds = df.groupby(['bedrooms']).mean()
+bybeds = bybeds.reset_index() # make bedrooms column again
+
+fig, ax = plt.subplots()
+ax.scatter(bybeds.bedrooms, bybeds.price, color='#4575b4')
+ax.set_xlabel("Bedrooms")
+ax.set_ylabel("Price")
+plt.show()</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>With some self explanatory methods, such as <span class=inlinecode>set_xlabel()</span>, we can also set the X and Y axis labels. Drawing a line in between the points, instead of just a scatterplot, is done using method <span class=inlinecode>plot()</span>:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/tools/tools_plt_3.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">fig, ax = plt.subplots()
+ax.plot(bybeds.bedrooms, bybeds.price, color='#4575b4')
+ax.set_xlabel("Bedrooms")
+ax.set_ylabel("Price")
+plt.show()</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>If we have a function to plot over some range, instead of data, we can still use <span class=inlinecode>plot()</span>. The function provides the Y values, but we need to provide the X values. For example, let's say we'd like to plot the log (base 10) function over the range 0.01 to 100. To make it smooth, we should evaluate the log function at, say, 1000 points; NumPy's <span class=inlinecode>linspace()</span> works well to create the X values.  Here's the code to make the plot and label the axes:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/tools/tools_plt_4.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">x = np.linspace(0.01, 100, 1000)
+y = np.log10(x) # apply log10 to each x value
+fig, ax = plt.subplots()
+ax.plot(x, y, color='#4575b4')
+plt.ylabel('y = log_base_10(x)')
+plt.xlabel('x')
+plt.show()</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>Creating a histogram from a dataFrame column is straightforward using the <span class=inlinecode>hist()</span> method:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/tools/tools_plt_5.svg"
+  width="100%"
+>
+</span>
+
+
+<div class="codeblk">fig, ax = plt.subplots()
+ax.hist(df.price, color='#4575b4', bins=50)
+ax.set_xlabel("Price")
+ax.set_ylabel("Count of apts")
+plt.show()</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>Such plots approximate the distribution of a variable and histograms are a very useful way to visualize columns with lots of data points. Here, we see that the average price is roughly $3000 and that there is a long &ldquo;right tail&rdquo; (with a few very expensive apartments).</p>
+
+<p>The last trick we'll consider here is getting more than one plot into the same figure. Let's take two of the previous graphs and put them side-by-side into a single figure. The code to generate the individual graphs is the same, except for the <span class=inlinecode>Axes</span> object we use for plotting. Using the <span class=inlinecode>subplots()</span> method, we can specify how many rows and columns of subplots we want, as well as the width and height (in inches) of the figure:</p>
+
+
+<div class="codeblk">fig, axes = plt.subplots(1,2,figsize=(6,2)) # 1 row, 2 columns
+axes[0].plot(bybeds.bedrooms, bybeds.price, color='#4575b4')
+axes[0].set_ylabel("Price")
+axes[0].set_xlabel("Bedrooms")
+
+axes[1].hist(df.price, color='#4575b4', bins=50)
+axes[1].set_ylabel("Count of apts")
+axes[1].set_xlabel("Price")
+plt.tight_layout()
+plt.show()</div>
+<img src="images/tools/tools_plt_6.svg"
+  width="60%%"
+>
+
+<p>For some reason, matplotlib does not automatically adjust the space between subplots and so we generally have to call <span class=inlinecode>plt.tight_layout()</span>, which tries to adjust the padding. Without that call, the plots overlap.</p>
+
+<p>There's one more library that you will encounter frequently in data science code, and that is Numpy. We've already used it for such things as creating random numbers and representing &ldquo;not a number&rdquo; (<span class=inlinecode>np.nan</span>).</p>
+
+
+
+<h2 id="sec:4.4">4.4 Representing and processing data with NumPy</h2>
+
+
+<p>Pandas dataframes are meant to represent tabular data with heterogeneous types, such as strings, dates, and numbers. <a href="http://www.NumPy.org/">NumPy</a>, on the other hand, is meant for performing mathematics on <span class=eqn>n</span>-dimensional arrays of numbers.  (See <a href="https://docs.scipy.org/doc/NumPy-1.15.1/user/quickstart.html">NumPy quickstart</a>.)  The boundaries between pandas, matplotlib, NumPy, and sklearn are blurred because they have excellent interoperability. We can create dataframes from NumPy arrays and we can get arrays from pandas dataframes. Matplotlib and sklearn functions accept both pandas and NumPy objects, automatically doing any necessary conversions between datatypes.</p>
+
+<p>The fundamental data type in NumPy is the <span class=inlinecode>np.ndarray</span>, which is an <span class=eqn>n</span>-dimensional array data structure. A 1D <span class=inlinecode>ndarray</span> is just a vector that looks just like a list of numbers. A 2D <span class=inlinecode>ndarray</span> is a matrix that looks like a list of lists of numbers. Naturally, a 3D <span class=inlinecode>ndarray</span> is a rectangular volume of numbers (list of matrices), and so on. The underlying implementation is highly optimized C code and NumPy operations are much faster than doing the equivalent loops in Python code. The downside is that we have yet more library functions and objects to learn about and remember.</p>
+
+<p>Let's start by creating a one dimensional vector of numbers.  While the underlying data structure is of type <span class=inlinecode>ndarray</span>, the constructor is <span class=inlinecode>array()</span>:</p>
+
+
+<div class="codeblk">import numpy as np    # import with commonly-used alias np
+
+a = np.array([1,2,3,4,5]) # create 1D vector with 5 numbers
+print(f"type is {type(a)}")
+print(f"dtype is {a.dtype}")
+print(f"ndim is {a.ndim}")
+print(a)
+</div>
+
+<p class="stdout">type is &lt;class 'numpy.ndarray'>
+dtype is int64
+ndim is 1
+[1 2 3 4 5]
+</p>
+
+<p>By default, the array has 64-bit integers, but we can use smaller integers if we want:</p>
+
+
+<div class="codeblk">a = a.astype(np.int8)
+print(a.dtype)
+print(a)
+</div>
+
+<p class="stdout">int8
+[1 2 3 4 5]
+</p>
+
+<p>To initialize a vector of zeros, we call <span class=inlinecode>zeros</span> with a tuple or list representing the shape of the array we want. In this case, let's say we want five integer zeros:</p>
+
+
+<div class="codeblk">z = np.zeros(shape=[5], dtype=np.int8)
+print(z)</div>
+
+<p class="stdout">[0 0 0 0 0]</p>
+
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>2</span>We could also use Python tuple syntax, <span class=inlinecode>(5,)</span>, but that syntax for a tuple with a single element is a bit awkward. <span class=inlinecode>(5)</span> evaluates to just <span class=inlinecode>5</span> in Python, so the Python language designers defined <span class=inlinecode>(5,)</span> to mean a single-element tuple. If you ask for <span class=inlinecode>a.shape</span> on some 1D array <span class=inlinecode>a</span>, you'll get <span class=inlinecode>(5,)</span> not <span class=inlinecode>[5]</span>.</p>
+<p class=p_left>Shape information is always a list or a tuple of length <span class=eqn>n</span> for an <span class=eqn>n</span>-dimensional array. Each element in the shape specification is the number of elements in that dimension. In this case, we want a one-dimensional array with five elements so we use shape <span class=inlinecode>[5]</span>.<span class=sup>2</span></p>
+</div>
+
+<p>Similarly, here's how to initialize an array with ones:</p>
+
+
+<div class="codeblk">ones = np.ones([5])
+print(ones)</div>
+
+<p class="stdout">[1. 1. 1. 1. 1.]</p>
+
+
+<p>The equivalent to Python's <span class=inlinecode>range</span> function is <span class=inlinecode>arange()</span>:</p>
+
+
+<div class="codeblk">print(np.arange(1,11))</div>
+
+<p class="stdout">[ 1  2  3  4  5  6  7  8  9 10]</p>
+
+
+<p>When creating a sequence of evenly spaced floating-point numbers, use <span class=inlinecode>linspace</span> (as we did above to create values between 0.1 and 100 to plot the log function). Here's how to create 6 values from 1 to 2, inclusively:</p>
+
+
+<div class="codeblk">print(np.linspace(1,2,6))</div>
+
+<p class="stdout">[1.  1.2 1.4 1.6 1.8 2. ]</p>
+
+
+<p>Using raw Python, we can add two lists of numbers together to get a third very easily, but for long lists speed could be an issue.  Delegating vector addition, multiplication, and other arithmetic operators to NumPy gives a massive performance boost. Besides, data scientists need to get use to doing arithmetic with vectors (and matrices) instead of atomic numbers. Here are a few common vector operations performed on 1D arrays:</p>
+
+
+<div class="codeblk">print(f"{a} + {a} = {a+a}")
+print(f"{a} - {ones} = {a-ones}")
+print(f"{a} * {z} = {a*z}") # element-wise multiplication
+print(f"np.dot({a}, {a}) = {np.dot(a,a)}") # dot product
+</div>
+
+<p class="stdout">[1 2 3 4 5] + [1 2 3 4 5] = [ 2  4  6  8 10]
+[1 2 3 4 5] - [1. 1. 1. 1. 1.] = [0. 1. 2. 3. 4.]
+[1 2 3 4 5] * [0 0 0 0 0] = [0 0 0 0 0]
+np.dot([1 2 3 4 5], [1 2 3 4 5]) = 55
+</p>
+<div class=aside><b>How operator overloading works</b><br>
+
+<p>Python supports <i>operator overloading</i>, which allows libraries to define how the standard arithmetic operators (and others) behave when applied to custom objects.  The basic idea is that Python implements the plus operator, as in <span class=inlinecode>a+b</span>, by translating it to <span class=inlinecode>a.__add__(b)</span>. If <span class=inlinecode>a</span> is an instance of a class definition you control, you can override the <span class=inlinecode>__add__()</span> method to implement what addition means for your class. Here's a simple one dimensional vector class definition that illustrates how to overload <span class=inlinecode>+</span> to mean vector addition:</p>
+
+
+<div class="codeblk">class MyVec:
+    def __init__(self, values):
+        self.data = values
+    def __add__(self, other):
+        newdata = [x+y for x,y in zip(self.data,other.data)]
+        return MyVec(newdata)
+    def __str__(self):
+        return '['+', '.join([str(v) for v in self.data])+']'
+
+a = MyVec([1,2,3])
+b = MyVec([3,4,5])
+print(a + b)
+print(a.__add__(b)) # how a+b is implemented
+</div>
+
+<p class="stdout">[4, 6, 8]
+[4, 6, 8]
+</p>
+
+</div>	
+<p>Aside from the arithmetic operators, there are lots of <a href="https://docs.scipy.org/doc/numpy-1.15.0/reference/routines.math.html">common mathematical functions</a> we can apply directly to arrays without resorting to Python loops:</p>
+
+
+<div class="codeblk">prices = np.random.random_integers(low=1, high=10, size=5)
+print(np.log(prices))
+print(np.mean(prices))
+print(np.max(prices))
+print(np.sum(prices))
+</div>
+
+<p class="stdout">[2.30258509 1.60943791 0.         2.07944154 1.79175947]
+6.0
+10
+30
+</p>
+
+<p>The expression <span class=inlinecode>np.log(prices)</span> is equivalent to the following loop and array constructor, but the loop is much slower:</p>
+
+
+<div class="codeblk">np.array([np.log(p) for p in prices])</div>
+
+
+<p>We ran a simple test to compare the speed of <span class=inlinecode>np.log(prices)</span> on 50M random numbers versus <span class=inlinecode>np.log</span> on a single number via the Python loop. NumPy takes half a second but the Python loop takes over a minute. That's why it's important to learn how to use these libraries, because using straightforward loops is usually too slow for big data sets.</p>
+
+<p>Now, let's move on to matrices, two dimensional arrays. Using the same <span class=inlinecode>array()</span> constructor, we can pass in a list of lists of numbers. Here is the code to create two 4 row x 5 column matrices, <span class=inlinecode>t</span> and <span class=inlinecode>u</span>, and print out information about matrix <span class=inlinecode>t</span>:</p>
+
+
+<div class="codeblk">t = np.array([[1,1,1,1,1],
+              [0,0,1,0,0],
+              [0,0,1,0,0],
+              [0,0,1,0,0]])
+u = np.array([[1,0,0,0,1],
+              [1,0,0,0,1],
+              [1,0,0,0,1],
+              [1,1,1,1,1]])
+
+print(f"type is {type(t)}")
+print(f"dtype is {t.dtype}")
+print(f"ndim is {t.ndim}")
+print(f"shape is {t.shape}")
+print(t)
+</div>
+
+<p class="stdout">type is &lt;class 'numpy.ndarray'>
+dtype is int64
+ndim is 2
+shape is (4, 5)
+[[1 1 1 1 1]
+ [0 0 1 0 0]
+ [0 0 1 0 0]
+ [0 0 1 0 0]]
+</p>
+
+<p>As another example of matplotlib, let's treat those matrice as two-dimensional images and display them using method <span class=inlinecode>imshow()</span> (image show):</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<img src="images/tools/tools_np_11.svg"
+  width="75%%"
+>
+</span>
+
+
+<div class="codeblk">fig, axes = plt.subplots(1,2,figsize=(2,1)) # 1 row, 2 columns
+axes[0].axis('off')
+axes[1].axis('off')
+axes[0].imshow(t, cmap='binary')
+axes[1].imshow(u, cmap='binary')
+plt.show()</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>There are also built-in functions to create matrices of zeros:</p>
+
+
+<div class="codeblk">print(np.zeros((3,4)))</div>
+
+<p class="stdout">[[0. 0. 0. 0.]
+ [0. 0. 0. 0.]
+ [0. 0. 0. 0.]]</p>
+
+
+<p>and random numbers, among others:</p>
+
+
+<div class="codeblk">a = np.random.random((2,3)) # 2 rows, 3 columns
+print(a)
+</div>
+
+<p class="stdout">[[0.67746108 0.70357622 0.26555164]
+ [0.7010816  0.18301225 0.66328037]]
+</p>
+
+<p>Indexing 1D NumPy arrays works like Python array indexing with integer indexes and slicing, but NumPy arrays also support queries and list of indices, as we'll seen shortly. Here are some examples of 1D indexing:</p>
+
+
+<div class="codeblk">a = np.arange(1,6)
+print(a)
+print(a[0],a[4]) # 1st and 5th item
+print(a[1:3])    # 2nd and 3rd items
+print(a[[2,4]])  # 3rd and 5th item
+</div>
+
+<p class="stdout">[1 2 3 4 5]
+1 5
+[2 3]
+[3 5]
+</p>
+
+<p>For matrices, NumPy indexing is very similar to pandas <span class=inlinecode>iloc</span> indexing. Here are some examples:</p>
+
+
+<div class="codeblk">print(t[0,:])     # 1st row
+print(t[:,2])     # middle column
+print(t[2,3])     # element at 2,3
+print(t[0:2,:])   # 1st two rows
+print(t[:,[0,2]]) # 1st and 3rd columns
+</div>
+
+<p class="stdout">[1 1 1 1 1]
+[1 1 1 1]
+0
+[[1 1 1 1 1]
+ [0 0 1 0 0]]
+[[1 1]
+ [0 1]
+ [0 1]
+ [0 1]]
+</p>
+
+<p>As with pandas, we can perform queries to filter NumPy arrays. The comparison operators return a list of boolean values, one for each element of the array:</p>
+
+
+<div class="codeblk">a = np.random.random(5) # get 5 random numbers in 0..1
+print(a)
+print(a>0.3)
+</div>
+
+<p class="stdout">[0.91242242 0.15364257 0.21901684 0.96691852 0.87590327]
+[ True False False  True  True]
+</p>
+
+<p>We can then use that array of booleans to index into that array, or even another array of the same length:</p>
+
+
+<div class="codeblk">b = np.arange(1,6)
+print(b[a>0.3])
+</div>
+
+<p class="stdout">[1 4 5]
+</p>
+
+<p>As with one dimensional arrays, vectors, the NumPy defines the arithmetic operators for matrices. For example, here's how to add and print out two matrices:</p>
+
+
+<div class="codeblk">print(t+u)
+</div>
+
+<p class="stdout">[[2 1 1 1 2]
+ [1 0 1 0 1]
+ [1 0 1 0 1]
+ [1 1 2 1 1]]
+</p>
+
+<p>If we make an array of matrices, we get a 3D array:</p>
+
+
+<div class="codeblk">u = np.array([[1,0,0,0,1],
+              [1,0,0,0,1],
+              [1,0,0,0,1],
+              [1,1,1,1,1]])
+X = np.array([t,u])
+print(f"type is {type(X)}")
+print(f"dtype is {X.dtype}")
+print(f"ndim is {X.ndim}")
+print(X)
+</div>
+
+<p class="stdout">type is &lt;class 'numpy.ndarray'>
+dtype is int64
+ndim is 3
+[[[1 1 1 1 1]
+  [0 0 1 0 0]
+  [0 0 1 0 0]
+  [0 0 1 0 0]]
+
+ [[1 0 0 0 1]
+  [1 0 0 0 1]
+  [1 0 0 0 1]
+  [1 1 1 1 1]]]
+</p>
+
+<p>Sometimes, we'd like to go the opposite direction and unravel (ravel is a synonym) flatten a multidimensional array. Imagine we'd like to process every element of the matrix. We could use nested loops that iterated over the rows and columns, but it's easier to use a single loop over a flattened, 1D version of the matrix. For example, here is how to sum up the elements of matrix <span class=inlinecode>u</span>:</p>
+
+
+<div class="codeblk"># loop equivalent of np.sum(u.flat)
+n = 0
+for v in u.flat:
+    n += v
+print(n)
+</div>
+
+<p class="stdout">11
+</p>
+
+<p>The <span class=inlinecode>flat</span> property is an iterator that is more space efficient than iterating over <span class=inlinecode>u.ravel()</span>, which is an actual 1D array of the matrix elements.  If you don't need a physical list, just iterate using the <span class=inlinecode>flat</span> iterator.</p>
+
+
+<div class="codeblk">u_flat = u.ravel()       # flattens into new 1D array
+print(np.sum(u.flat))    # flat is an iterator
+print(u_flat)
+</div>
+
+<p class="stdout">11
+[1 0 0 0 1 1 0 0 0 1 1 0 0 0 1 1 1 1 1 1]
+</p>
+
+<p>To iterate through the rows of a matrix instead of the individual elements, use the matrix itself as an iterator:</p>
+
+
+<div class="codeblk">for i,row in enumerate(t):
+    print(f"{i}: {row}")
+</div>
+
+<p class="stdout">0: [1 1 1 1 1]
+1: [0 0 1 0 0]
+2: [0 0 1 0 0]
+3: [0 0 1 0 0]
+</p>
+
+<p>NumPy has a general method for reshaping <span class=eqn>n</span>-dimensional arrays. The arguments of the method indicate the number of dimensions and how many elements there are in each dimension.</p>
+
+
+<div class="codeblk">a = np.arange(1,13)
+print( "4x3\n", a.reshape(4,3) )
+print( "3x4\n", a.reshape(3,4) )
+print( "2x6\n", a.reshape(2,6) )
+</div>
+
+<p class="stdout">4x3
+ [[ 1  2  3]
+ [ 4  5  6]
+ [ 7  8  9]
+ [10 11 12]]
+3x4
+ [[ 1  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]
+2x6
+ [[ 1  2  3  4  5  6]
+ [ 7  8  9 10 11 12]]
+</p>
+
+<p>One of the dimension arguments can be -1, which is kind of a wildcard. Given the total number of values in the array and <span class=eqn>n</span>-1 dimensions, NumPy can't figure out the <img style="vertical-align: -0.5pt;" src="images/eqn-DEE7141541B0575F29B52D84BB7580F6-depth000.14.svg"> dimension.  It's very convenient when we know how many rows or how many columns we want because we don't have to compute the other dimension size. Here's how to create a matrix with 4 rows and a matrix with 2 columns using the same data:</p>
+
+
+<div class="codeblk">print( "4x?\n", a.reshape(4,3) )
+print( "?x2\n", a.reshape(-1,2) )
+</div>
+
+<p class="stdout">4x?
+ [[ 1  2  3]
+ [ 4  5  6]
+ [ 7  8  9]
+ [10 11 12]]
+?x2
+ [[ 1  2]
+ [ 3  4]
+ [ 5  6]
+ [ 7  8]
+ [ 9 10]
+ [11 12]]
+</p>
+
+<p>The <span class=inlinecode>reshape</span> method comes in handy when we'd like to run a single test vector through a machine learning model.  Let's train a random forest regressor model on the <span class=inlinecode>rent-idea.csv</span> data using <span class=inlinecode>price</span> as the target variable:</p>
+
+
+<div class="codeblk">import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+
+df = pd.read_csv("data/rent-ideal.csv")
+X, y = df.drop('price', axis=1), df['price']
+
+rf = RandomForestRegressor(n_estimators=100, n_jobs=-1)
+rf.fit(X, y)
+</div>
+
+
+<p>And, here's a test vector describing an apartment for which we'd like a predicted price. The sklearn <span class=inlinecode>predict()</span> method is expecting a matrix of test vectors, rather than a single test vector.</p>
+
+
+<div class="codeblk">test_vector = np.array([2,1,40.7947,-73.9957])
+</div>
+
+
+<p>If we try sending the test vector in, <span class=inlinecode>rf.predict(test_vector)</span>, we get error:</p>
+
+
+<div class="codeblk">ValueError: Expected 2D array, got 1D array instead:
+array=[  2.       1.      40.7947 -73.9957].
+Reshape your data either using array.reshape(-1, 1) if your data has a single feature or array.reshape(1, -1) if it contains a single sample.</div>
+
+
+<p>There's a big difference between a 1D vector and 2D matrix with one row (or column). Since sklearn is expecting a matrix, we need to send in a matrix with a single row and we can conveniently convert the test vector into a matrix with one row using <span class=inlinecode>reshape(1,-1)</span>:</p>
+
+
+<div class="codeblk">test_vector = test_vector.reshape(1,-1)
+pred = rf.predict(test_vector)
+print(f"{test_vector} -> {pred}")
+</div>
+
+<p class="stdout">[[  2.       1.      40.7947 -73.9957]] -> [4951.15242063]
+</p>
+
+<p>Notice that we also get a vector of predictions (with one element) back because <span class=inlinecode>predict()</span> is designed to map multiple test vectors to multiple predictions.</p>
+
+<p>Let's finish up our discussion of NumPy by looking at how to extract NumPy arrays from pandas dataframes. Given a dataframe or column, use the <span class=inlinecode>values</span> dataframe property to obtain the data in a NumPy array. Here are some examples using the rent data in <span class=inlinecode>df</span>:</p>
+
+
+<div class="codeblk">print(df.price.values)</div>
+
+<p class="stdout">[3000 5465 2850 ... 2595 3350 2200]</p>
+
+
+
+<div class="codeblk">print(df.iloc[0].values)</div>
+
+<p class="stdout">[ 3.00000e+00  1.50000e+00  4.07145e+01 -7.39425e+01  3.00000e+03]</p>
+
+
+
+<div class="codeblk">print(df[['bedrooms','bathrooms']].values)</div>
+
+<p class="stdout">[[3.  1.5]
+ [2.  1. ]
+ [1.  1. ]
+ ...
+ [1.  1. ]
+ [0.  1. ]
+ [2.  1. ]]</p>
+
+
+<p>That wraps up our whirlwind tour of the key libraries, pandas, matplotlib, and NumPy.  Let's apply them to some machine learning problems. In the next chapter, we're going to re-examine the apartment data set used in <b>Chapter 3</b> <i>A First Taste of Applied Machine Learning</i> to train a regressor model, but this time using the original data set. The original data has a number of issues that prevent us from immediately using it to train a model and get good results. We have to explore the data and do some preprocessing before training a model.</p>
+
+
+
+</body>
+</html>
