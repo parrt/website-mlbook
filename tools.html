@@ -36,7 +36,7 @@
 <body>
 <div class="watermark">
 <i>Work in progress</i><br>
-Book version 0.2
+Book version 0.3
 </div>
 
 <h1>4 Development Tools</h1>
@@ -45,7 +45,7 @@ Book version 0.2
 
 <p></p>
 
-<p style="font-size: 80%">Copyright &copy; 2018 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
+<p style="font-size: 80%">Copyright &copy; 2018-2019 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
 <p>
 <p>
 You can make <b>comments or annotate</b> this page by going to the <a id="annotatelink" href="">annotated version of this page</a>. You'll see existing annotated bits highlighted in yellow. They are <i>PUBLICLY VISIBLE</i>. Or, you can send comments, suggestions, or fixes directly to <a href="mailto:parrt@cs.usfca.edu">Terence</a>.
@@ -97,7 +97,7 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 <li><a href="https://pandas.pydata.org/">Pandas</a> provides the key data structures we use to hold training and validation sets: data frames and series (columns of data).</li>
 <li><a href="http://www.NumPy.org/">NumPy</a> provides an efficient <span class=eqn>n</span>-dimensional array data structure used by the other libraries.</li>
 <li><a href="https://matplotlib.org/">matplotlib</a> provides sophisticated 2D and 3D graphing facilities; Pandas delegates graphing to matplotlib.</li>
-<li><a href="http://scikit-learn.org/">scikit-learn</a>, abbreviated sklearn, has the machine learning models, validation functions, error metrics, and a wide range of data processing facilities.</li>
+<li><a href="http://scikit-learn.org/">scikit-learn</a>, abbreviated <span class=inlinecode>sklearn</span>, has the machine learning models, validation functions, error metrics, and a wide range of data processing facilities.</li>
 </ul>
 <p>In the last chapter, we got a taste of using sklearn to train models, and so this chapter we'll focus on the basics of pandas, NumPy, and matplotlib. The development environment we recommend is <a href="http://jupyterlab.readthedocs.io/en/latest/getting_started/overview.html">Jupyter Lab</a>, but you're free to use whatever you're comfortable with. You can skip this chapter if you're itching to get started building models, but it's a good idea to at least scan this chapter to learn what's possible with the libraries before moving on.</p>
 
@@ -326,13 +326,13 @@ df.head(2).T</div>
 </div>
 
 <p class="stdout">&lt;class 'pandas.core.frame.DataFrame'>
-RangeIndex: 48266 entries, 0 to 48265
+RangeIndex: 48300 entries, 0 to 48299
 Data columns (total 5 columns):
-bedrooms     48266 non-null int64
-bathrooms    48266 non-null float64
-latitude     48266 non-null float64
-longitude    48266 non-null float64
-price        48266 non-null int64
+bedrooms     48300 non-null int64
+bathrooms    48300 non-null float64
+latitude     48300 non-null float64
+longitude    48300 non-null float64
+price        48300 non-null int64
 dtypes: float64(3), int64(2)
 memory usage: 1.8 MB
 </p>
@@ -358,16 +358,16 @@ df.describe()</div>
 </thead>
 <tbody>
 	<tr>
-	<td>count</td><td>48266.0000</td><td>48266.0000</td><td>48266.0000</td><td>48266.0000</td><td>48266.0000</td>
+	<td>count</td><td>48300.0000</td><td>48300.0000</td><td>48300.0000</td><td>48300.0000</td><td>48300.0000</td>
 	</tr>
 	<tr>
-	<td>mean</td><td>1.5090</td><td>1.1784</td><td>40.7507</td><td>-73.9725</td><td>3439.4866</td>
+	<td>mean</td><td>1.5088</td><td>1.1783</td><td>40.7508</td><td>-73.9724</td><td>3438.2980</td>
 	</tr>
 	<tr>
-	<td>std</td><td>1.0924</td><td>0.4262</td><td>0.0394</td><td>0.0291</td><td>1401.1814</td>
+	<td>std</td><td>1.0922</td><td>0.4261</td><td>0.0396</td><td>0.0296</td><td>1401.4222</td>
 	</tr>
 	<tr>
-	<td>min</td><td>0.0000</td><td>0.0000</td><td>40.5712</td><td>-74.1215</td><td>1025.0000</td>
+	<td>min</td><td>0.0000</td><td>0.0000</td><td>40.5712</td><td>-74.0940</td><td>1025.0000</td>
 	</tr>
 	<tr>
 	<td>25%</td><td>1.0000</td><td>1.0000</td><td>40.7281</td><td>-73.9917</td><td>2495.0000</td>
@@ -376,10 +376,10 @@ df.describe()</div>
 	<td>50%</td><td>1.0000</td><td>1.0000</td><td>40.7516</td><td>-73.9779</td><td>3100.0000</td>
 	</tr>
 	<tr>
-	<td>75%</td><td>2.0000</td><td>1.0000</td><td>40.7739</td><td>-73.9547</td><td>4000.0000</td>
+	<td>75%</td><td>2.0000</td><td>1.0000</td><td>40.7740</td><td>-73.9547</td><td>4000.0000</td>
 	</tr>
 	<tr>
-	<td>max</td><td>8.0000</td><td>10.0000</td><td>40.8989</td><td>-73.7509</td><td>9999.0000</td>
+	<td>max</td><td>8.0000</td><td>10.0000</td><td>40.9154</td><td>-73.7001</td><td>9999.0000</td>
 	</tr>
 </tbody>
 </table>
@@ -389,11 +389,11 @@ df.describe()</div>
 
 <div class="codeblk">print(df.mean())</div>
 
-<p class="stdout">bedrooms        1.508950
-bathrooms       1.178438
-latitude       40.750740
-longitude     -73.972496
-price        3439.486595
+<p class="stdout">bedrooms        1.508799
+bathrooms       1.178313
+latitude       40.750782
+longitude     -73.972365
+price        3438.297950
 dtype: float64</p>
 
 
@@ -402,10 +402,10 @@ dtype: float64</p>
 
 <div class="codeblk">print(df.bedrooms.value_counts())</div>
 
-<p class="stdout">1    15709
-2    14435
-0     9428
-3     6776
+<p class="stdout">1    15718
+2    14451
+0     9436
+3     6777
 4     1710
 5      169
 6       36
@@ -427,19 +427,19 @@ df.sort_values('price', ascending=False).head()</div>
 </thead>
 <tbody>
 	<tr>
-	<td>17947</td><td>6</td><td>3.0000</td><td>40.7287</td><td>-73.9856</td><td>9999</td>
+	<td>47540</td><td>6</td><td>3.0000</td><td>40.7287</td><td>-73.9856</td><td>9999</td>
 	</tr>
 	<tr>
-	<td>27912</td><td>3</td><td>3.0000</td><td>40.7934</td><td>-73.9743</td><td>9999</td>
+	<td>27927</td><td>3</td><td>3.0000</td><td>40.7934</td><td>-73.9743</td><td>9999</td>
 	</tr>
 	<tr>
-	<td>47506</td><td>6</td><td>3.0000</td><td>40.7287</td><td>-73.9856</td><td>9999</td>
+	<td>17956</td><td>6</td><td>3.0000</td><td>40.7287</td><td>-73.9856</td><td>9999</td>
 	</tr>
 	<tr>
-	<td>36475</td><td>3</td><td>2.0000</td><td>40.7320</td><td>-73.9885</td><td>9995</td>
+	<td>2282</td><td>3</td><td>2.0000</td><td>40.7802</td><td>-73.9565</td><td>9995</td>
 	</tr>
 	<tr>
-	<td>4604</td><td>2</td><td>2.5000</td><td>40.7285</td><td>-73.9902</td><td>9995</td>
+	<td>16122</td><td>5</td><td>2.5000</td><td>40.7103</td><td>-74.0060</td><td>9995</td>
 	</tr>
 </tbody>
 </table>
@@ -473,7 +473,7 @@ Name: price, dtype: int64</p>
 print(prices.min(), prices.mean(), prices.max())
 </div>
 
-<p class="stdout">1025 3439.486595118717 9999
+<p class="stdout">1025 3438.297950310559 9999
 </p>
 
 <p>If we need more than one column, we can get a dataframe with a subset of the columns (not a list of <span class=inlinecode>Series</span> objects):</p>
@@ -750,7 +750,7 @@ bybaths</div>
 	<td>0.0000</td><td>0.8300</td><td>40.7561</td><td>-73.9701</td><td>3144.8700</td>
 	</tr>
 	<tr>
-	<td>1.0000</td><td>1.2522</td><td>40.7508</td><td>-73.9721</td><td>3028.1110</td>
+	<td>1.0000</td><td>1.2522</td><td>40.7509</td><td>-73.9720</td><td>3027.0071</td>
 	</tr>
 	<tr>
 	<td>1.5000</td><td>2.2773</td><td>40.7489</td><td>-73.9659</td><td>4226.3364</td>
@@ -795,7 +795,7 @@ bybaths</div>
 	<td>0</td><td>0.0000</td><td>0.8300</td><td>40.7561</td><td>-73.9701</td><td>3144.8700</td>
 	</tr>
 	<tr>
-	<td>1</td><td>1.0000</td><td>1.2522</td><td>40.7508</td><td>-73.9721</td><td>3028.1110</td>
+	<td>1</td><td>1.0000</td><td>1.2522</td><td>40.7509</td><td>-73.9720</td><td>3027.0071</td>
 	</tr>
 	<tr>
 	<td>2</td><td>1.5000</td><td>2.2773</td><td>40.7489</td><td>-73.9659</td><td>4226.3364</td>
@@ -840,7 +840,7 @@ bybaths[['bathrooms','price']]</div>
 	<td>0</td><td>0.0000</td><td>3144.8700</td>
 	</tr>
 	<tr>
-	<td>1</td><td>1.0000</td><td>3028.1110</td>
+	<td>1</td><td>1.0000</td><td>3027.0071</td>
 	</tr>
 	<tr>
 	<td>2</td><td>1.5000</td><td>4226.3364</td>
@@ -1059,13 +1059,13 @@ df_aug.head(3)</div>
 </thead>
 <tbody>
 	<tr>
-	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td><td>0.6472</td>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td><td>0.1733</td>
 	</tr>
 	<tr>
-	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td><td>0.3905</td>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td><td>0.6459</td>
 	</tr>
 	<tr>
-	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td><td>0.4034</td>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td><td>0.1637</td>
 	</tr>
 </tbody>
 </table>
@@ -1566,9 +1566,9 @@ plt.show()</div>
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<img src="images/tools/tools_plt_2.svg"
+<a href="images/tools/tools_plt_2.svg"><img src="images/tools/tools_plt_2.svg"
   width="100%"
->
+></a>
 </span>
 
 
@@ -1586,9 +1586,9 @@ plt.show()</div>
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<img src="images/tools/tools_plt_3.svg"
+<a href="images/tools/tools_plt_3.svg"><img src="images/tools/tools_plt_3.svg"
   width="100%"
->
+></a>
 </span>
 
 
@@ -1603,9 +1603,9 @@ plt.show()</div>
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<img src="images/tools/tools_plt_4.svg"
+<a href="images/tools/tools_plt_4.svg"><img src="images/tools/tools_plt_4.svg"
   width="100%"
->
+></a>
 </span>
 
 
@@ -1622,9 +1622,9 @@ plt.show()</div>
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<img src="images/tools/tools_plt_5.svg"
+<a href="images/tools/tools_plt_5.svg"><img src="images/tools/tools_plt_5.svg"
   width="100%"
->
+></a>
 </span>
 
 
@@ -1650,9 +1650,9 @@ axes[1].set_ylabel("Count of apts")
 axes[1].set_xlabel("Price")
 plt.tight_layout()
 plt.show()</div>
-<img src="images/tools/tools_plt_6.svg"
+<a href="images/tools/tools_plt_6.svg"><img src="images/tools/tools_plt_6.svg"
   width="60%%"
->
+></a>
 
 <p>For some reason, matplotlib does not automatically adjust the space between subplots and so we generally have to call <span class=inlinecode>plt.tight_layout()</span>, which tries to adjust the padding. Without that call, the plots overlap.</p>
 
@@ -1778,17 +1778,17 @@ print(a.__add__(b)) # how a+b is implemented
 <p>Aside from the arithmetic operators, there are lots of <a href="https://docs.scipy.org/doc/numpy-1.15.0/reference/routines.math.html">common mathematical functions</a> we can apply directly to arrays without resorting to Python loops:</p>
 
 
-<div class="codeblk">prices = np.random.random_integers(low=1, high=10, size=5)
+<div class="codeblk">prices = np.random.randint(low=1, high=10, size=5)
 print(np.log(prices))
 print(np.mean(prices))
 print(np.max(prices))
 print(np.sum(prices))
 </div>
 
-<p class="stdout">[2.30258509 1.60943791 0.         2.07944154 1.79175947]
-6.0
-10
-30
+<p class="stdout">[1.79175947 1.09861229 1.79175947 1.94591015 1.94591015]
+5.8
+7
+29
 </p>
 
 <p>The expression <span class=inlinecode>np.log(prices)</span> is equivalent to the following loop and array constructor, but the loop is much slower:</p>
@@ -1832,9 +1832,9 @@ shape is (4, 5)
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<img src="images/tools/tools_np_11.svg"
+<a href="images/tools/tools_np_11.svg"><img src="images/tools/tools_np_11.svg"
   width="75%%"
->
+></a>
 </span>
 
 
@@ -1863,8 +1863,8 @@ plt.show()</div>
 print(a)
 </div>
 
-<p class="stdout">[[0.67746108 0.70357622 0.26555164]
- [0.7010816  0.18301225 0.66328037]]
+<p class="stdout">[[0.47450784 0.17280136 0.61480764]
+ [0.77553502 0.65981901 0.65725875]]
 </p>
 
 <p>Indexing 1D NumPy arrays works like Python array indexing with integer indexes and slicing, but NumPy arrays also support queries and list of indices, as we'll seen shortly. Here are some examples of 1D indexing:</p>
@@ -1912,8 +1912,8 @@ print(a)
 print(a>0.3)
 </div>
 
-<p class="stdout">[0.91242242 0.15364257 0.21901684 0.96691852 0.87590327]
-[ True False False  True  True]
+<p class="stdout">[0.54896498 0.05864502 0.23044063 0.1443767  0.00495945]
+[ True False False False False]
 </p>
 
 <p>We can then use that array of booleans to index into that array, or even another array of the same length:</p>
@@ -1923,7 +1923,7 @@ print(a>0.3)
 print(b[a>0.3])
 </div>
 
-<p class="stdout">[1 4 5]
+<p class="stdout">[1]
 </p>
 
 <p>As with one dimensional arrays, vectors, the NumPy defines the arithmetic operators for matrices. For example, here's how to add and print out two matrices:</p>
@@ -2085,7 +2085,7 @@ pred = rf.predict(test_vector)
 print(f"{test_vector} -> {pred}")
 </div>
 
-<p class="stdout">[[  2.       1.      40.7947 -73.9957]] -> [4951.15242063]
+<p class="stdout">[[  2.       1.      40.7947 -73.9957]] -> [5070.42835317]
 </p>
 
 <p>Notice that we also get a vector of predictions (with one element) back because <span class=inlinecode>predict()</span> is designed to map multiple test vectors to multiple predictions.</p>

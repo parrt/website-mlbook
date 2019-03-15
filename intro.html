@@ -36,7 +36,7 @@
 <body>
 <div class="watermark">
 <i>Work in progress</i><br>
-Book version 0.2
+Book version 0.3
 </div>
 
 <h1>2 How Machine Learning Works</h1>
@@ -45,7 +45,7 @@ Book version 0.2
 
 <p></p>
 
-<p style="font-size: 80%">Copyright &copy; 2018 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
+<p style="font-size: 80%">Copyright &copy; 2018-2019 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
 <p>
 <p>
 You can make <b>comments or annotate</b> this page by going to the <a id="annotatelink" href="">annotated version of this page</a>. You'll see existing annotated bits highlighted in yellow. They are <i>PUBLICLY VISIBLE</i>. Or, you can send comments, suggestions, or fixes directly to <a href="mailto:parrt@cs.usfca.edu">Terence</a>.
@@ -138,16 +138,16 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 </thead>
 <tbody>
 	<tr>
-	<td>1469</td><td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2650</td>
+	<td>1470</td><td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2650</td>
 	</tr>
 	<tr>
-	<td>36482</td><td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2850</td>
+	<td>36509</td><td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2850</td>
 	</tr>
 	<tr>
-	<td>39213</td><td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2950</td>
+	<td>39241</td><td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2950</td>
 	</tr>
 	<tr>
-	<td>46373</td><td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2850</td>
+	<td>46405</td><td>0</td><td>1.0000</td><td>40.7073</td><td>-73.9664</td><td>2850</td>
 	</tr>
 </tbody>
 </table>
@@ -181,7 +181,7 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 	<td>0</td><td>0</td><td>0.0000</td><td>2872.9272</td>
 	</tr>
 	<tr>
-	<td>1</td><td>0</td><td>1.0000</td><td>2443.4782</td>
+	<td>1</td><td>0</td><td>1.0000</td><td>2442.5502</td>
 	</tr>
 	<tr>
 	<td>2</td><td>0</td><td>1.5000</td><td>3391.1111</td>
@@ -196,7 +196,7 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 	<td>5</td><td>1</td><td>0.0000</td><td>2944.1918</td>
 	</tr>
 	<tr>
-	<td>6</td><td>1</td><td>1.0000</td><td>3016.4069</td>
+	<td>6</td><td>1</td><td>1.0000</td><td>3015.5427</td>
 	</tr>
 </tbody>
 </table>
@@ -212,17 +212,17 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 
 <p>We could try a &ldquo;mathy&rdquo; approach where we weight each feature by how important it is then use a weighted sum to estimate rent prices:</p>
 
-<p><img style="vertical-align: -2.7825pt;" src="images/eqn-576FAA65E2A17721D10E7261E68917A0-depth002.65.svg"></p>
+<p><img style="vertical-align: -2.7844844pt;" src="images/eqn-576FAA65E2A17721D10E7261E68917A0-depth002.65.svg"></p>
 
 <p>This equation boils all of our rent training data down to just five numbers that comprise our model (four weights, <span class=eqn>w<sub>i</sub></span>, and a scalar for minimum rent). That's an amazing compression!  Better yet, making a prediction is superfast because it's just four multiplies and four additions.</p>
 
-<p>This approach often works well and is called a <a href="https://en.wikipedia.org/wiki/Linear_regression">linear model</a> or <i>linear regression</i> because it tries to draw a line (or plane when given more than two dimensions) through the training data. (Recall the formula for a line from high school algebra, <img style="vertical-align: -2.7825pt;" src="images/eqn-6D74D8F1C6D1196D2E75893F266AE552-depth002.65.svg">.)   The technique has been around for over 200 years and mathematicians have an elegant formula to conjure up suitable <span class=eqn>w<sub>i</sub></span> weights. <i>Regression</i> is the general term for predicting numerical values based upon training data and the associated model is called a <i>regressor</i>.</p>
+<p>This approach often works well and is called a <a href="https://en.wikipedia.org/wiki/Linear_regression">linear model</a> or <i>linear regression</i> because it tries to draw a line (or plane when given more than two dimensions) through the training data. (Recall the formula for a line from high school algebra, <img style="vertical-align: -2.7844844pt;" src="images/eqn-6D74D8F1C6D1196D2E75893F266AE552-depth002.65.svg">.)   The technique has been around for over 200 years and mathematicians have an elegant formula to conjure up suitable <span class=eqn>w<sub>i</sub></span> weights. <i>Regression</i> is the general term for predicting numerical values based upon training data and the associated model is called a <i>regressor</i>.</p>
 
 <div class="p_wrapper">
 <span class=sidenote>
-<img src="images/intro/intro_stats_4.svg"
+<a href="images/intro/intro_stats_4.svg"><img src="images/intro/intro_stats_4.svg"
   width="100%"
->
+></a>
 <br><b>Figure 2.1</b>. Price per number of bathrooms and linear regression fit line</span>
 <p class=p_left>For this data set, unfortunately, a linear model is not a good choice because such models treat every feature as a single trend with lower rent on one side and higher rent on the other, or vice versa.  For example, it's reasonable to assume that rent prices would go up as the number of bathrooms goes up, but the data doesn't support that conclusion. <b>Figure 2.1</b> shows the average rent for all apartments with the same number of bathrooms with dots where we actually have data.</p>
 </div>
@@ -245,37 +245,37 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 </thead>
 <tbody>
 	<tr>
-	<td>700</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2200</td>
+	<td>701</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2200</td>
 	</tr>
 	<tr>
-	<td>41368</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2100</td>
+	<td>41397</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2100</td>
 	</tr>
 	<tr>
-	<td>41447</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2100</td>
+	<td>41476</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2100</td>
 	</tr>
 	<tr>
-	<td>42224</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2200</td>
+	<td>42254</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2200</td>
 	</tr>
 	<tr>
-	<td>45478</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2100</td>
+	<td>45510</td><td>1</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2100</td>
 	</tr>
 	<tr>
-	<td>407</td><td>2</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2500</td>
+	<td>408</td><td>2</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2500</td>
 	</tr>
 	<tr>
-	<td>16867</td><td>2</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2500</td>
+	<td>16876</td><td>2</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2500</td>
 	</tr>
 	<tr>
-	<td>40823</td><td>2</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2500</td>
+	<td>40852</td><td>2</td><td>1.0000</td><td>40.6661</td><td>-73.9882</td><td>2500</td>
 	</tr>
 	<tr>
-	<td>164</td><td>1</td><td>1.0000</td><td>40.6663</td><td>-73.9402</td><td>1800</td>
+	<td>165</td><td>1</td><td>1.0000</td><td>40.6663</td><td>-73.9402</td><td>1800</td>
 	</tr>
 	<tr>
-	<td>9111</td><td>1</td><td>1.0000</td><td>40.6663</td><td>-73.9402</td><td>1800</td>
+	<td>9113</td><td>1</td><td>1.0000</td><td>40.6663</td><td>-73.9402</td><td>1800</td>
 	</tr>
 	<tr>
-	<td>27070</td><td>2</td><td>1.0000</td><td>40.6663</td><td>-73.9402</td><td>2350</td>
+	<td>27085</td><td>2</td><td>1.0000</td><td>40.6663</td><td>-73.9402</td><td>2350</td>
 	</tr>
 </tbody>
 </table>
@@ -336,7 +336,7 @@ if bedrooms==2 and bathrooms==1.0 and \
 
 <p>To predict the price of an apartment with a particular set of features, each agent would find comparable (similar or identical) apartments from their training set and report the average of those apartments. The overall prediction would then be the average of all agents' averages.</p>
 
-<p>We'll learn the details of random forests in <b>Chapter 16</b> <i>Forests of Randomized Decision Trees</i> and how to implement them in <b>Chapter 17</b> <i>Implementing Random Forests</i>. RFs are the Swiss Army Knife&trade; of the machine learning world and we recommend them as your model of choice for the majority of machine learning problems encountered in practice. </p>
+<p>We'll learn the details of random forests in <b>Chapter 15</b> <i>Forests of Randomized Decision Trees</i> and how to implement them in <b>Chapter 16</b> <i>Implementing Random Forests</i>. RFs are the Swiss Army Knife&trade; of the machine learning world and we recommend them as your model of choice for the majority of machine learning problems encountered in practice. </p>
 
 <p>With a small tweak, we can use random forests for a related and equally-useful task: predicting discrete categories like cancer/not-cancer instead of continuous values such as prices.</p>
 

@@ -36,7 +36,7 @@
 <body>
 <div class="watermark">
 <i>Work in progress</i><br>
-Book version 0.2
+Book version 0.3
 </div>
 
 <h1>5 Exploring and Denoising Your Data Set</h1>
@@ -45,7 +45,7 @@ Book version 0.2
 
 <p></p>
 
-<p style="font-size: 80%">Copyright &copy; 2018 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
+<p style="font-size: 80%">Copyright &copy; 2018-2019 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
 <p>
 <p>
 You can make <b>comments or annotate</b> this page by going to the <a id="annotatelink" href="">annotated version of this page</a>. You'll see existing annotated bits highlighted in yellow. They are <i>PUBLICLY VISIBLE</i>. Or, you can send comments, suggestions, or fixes directly to <a href="mailto:parrt@cs.usfca.edu">Terence</a>.
@@ -92,7 +92,7 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 <p>&ldquo;<i>It is a capital mistake to theorize before one has data. Insensibly one begins to twist facts to suit theories, instead of theories to suit facts.</i>&rdquo; &mdash; Arthur Conan Doyle (1891) in <i>A Scandal in Bohemia</i></p>
 <p>	In <b>Chapter 3</b> <i>A First Taste of Applied Machine Learning</i>, we successfully trained a random forest (RF) model to predict New York City rent prices but under ideal conditions: the data was already in a form acceptable to a model and was mostly free of errors, outliers, and other noise.  The unfortunate reality is that real data sets are messy and so, in this chapter, we're going to learn how to process the original data from Kaggle bit-by-bit until it looks like that ideal data set.  The dirty little secret of the machine learning world is that practitioners spend roughly 75% of their time acquiring, cleaning, and otherwise preparing data for training. (We won't learn about the acquisition piece in this book, but you can check out Terence's free <a href="https://github.com/parrt/msan692">Data Acquisition course notes</a>.)</p>
 
-<p>To train a model, the data set must follow two fundamental rules: all data must be numeric and there can't be any missing values. We must derive numeric features from the nonnumeric features such as strings, dates, and categorical variables like <span class=inlinecode>SalesID</span>. Or, we can simply delete the nonnumeric features. That preparation work is a big topic unto itself, which we'll address in <b>Chapter 11</b> <i>Feature Engineering</i>.  In this chapter, we'll stick with the numeric fields (bathrooms, bedrooms, longitude, latitude) we used before.</p>
+<p>To train a model, the data set must follow two fundamental rules: all data must be numeric and there can't be any missing values. We must derive numeric features from the nonnumeric features such as strings, dates, and categorical variables like <span class=inlinecode>SalesID</span>. Or, we can simply delete the nonnumeric features. That preparation work is a big topic unto itself, which we'll address in <b>Chapter 6</b> <i>Categorically Speaking</i> and <b>Chapter 7</b> <i>Dealing with Missing Data</i>.  In this chapter, we'll stick with the numeric fields (bathrooms, bedrooms, longitude, latitude) we used before.</p>
 
 <p>Even with purely numeric data, there is potential cleanup work to do. The data could have outliers, errors, or contradictory information.  For example, in our apartment data, one place claims to have 2 bedrooms but 10 bathrooms, while other apartments claim to be on the equator!  Armed with graphs or statistics from the data set, we turn to someone with domain expertise to interpret what we observe. (Terence's sister lives in New York City and confirms that New York is not on the equator, though typically feels that way in August.)</p>
 
@@ -109,7 +109,7 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 
 <p>	</p>
 
-<p>To get started, download and unzip <a href="https://mlbook.explained.ai/data/rent.csv.zip">rent.csv.zip</a> into the <span class=inlinecode>data</span> directory underneath where you are running Jupyter. Then, create a new Jupyter notebook by clicking on the &ldquo;+&rdquo; button and selecting &ldquo;Python 3&rdquo; under the &ldquo;Notebook&rdquo; tab. This will create a file in the same directory where you started <span class=inlinecode>jupyter lab</span> (unless you have jumped around using the &ldquo;Files&rdquo; tab on the left side of the lab browser window). It's probably a good idea to give the file a decent name like <span class=inlinecode>clean.ipynb</span> by right clicking on the notebook tab that currently says <span class=inlinecode>Untitled.ipynb</span>. Now, let's enter some code into the notebook to read in the CSV data using pandas to get our first look at the original data:</p>
+<p>To get started, make sure that you have file <span class=inlinecode>rent.csv</span> in your <span class=inlinecode>data</span> directory underneath where you are running Jupyter. (See <b>Section 3.2.1</b> <i>Loading and sniffing the training data</i> for instructions on downloading JSON rent data from Kaggle and creating the CSV files.) Then, create a new Jupyter notebook by clicking on the &ldquo;+&rdquo; button and selecting &ldquo;Python 3&rdquo; under the &ldquo;Notebook&rdquo; tab. This will create a file in the same directory where you started <span class=inlinecode>jupyter lab</span> (unless you have jumped around using the &ldquo;Files&rdquo; tab on the left side of the lab browser window). It's probably a good idea to give the file a decent name like <span class=inlinecode>clean.ipynb</span> by right clicking on the notebook tab that currently says <span class=inlinecode>Untitled.ipynb</span>. Now, let's enter some code into the notebook to read in the CSV data using pandas to get our first look at the original data:</p>
 
 
 <div class="codeblk">import pandas as pd
@@ -121,15 +121,15 @@ df.head(2)       # dump first 2 rows</div>
 <div class="scrollbar_wrapper">
 <table class="dataframe dataframe-indexed">
 <thead>
-	<tr><th>&nbsp;</th><th>bathrooms</th><th>bedrooms</th><th>building_id</th><th>created</th><th>description</th><th>display_address</th><th>features</th><th>interest_level</th><th>latitude</th><th>listing_id</th><th>longitude</th><th>manager_id</th><th>photos</th><th>price</th><th>street_address</th></tr>
+	<tr><th>&nbsp;</th><th>bathrooms</th><th>bedrooms</th><th>building_id</th><th>created</th><th>description</th><th>display_address</th><th>features</th><th>latitude</th><th>listing_id</th><th>longitude</th><th>manager_id</th><th>photos</th><th>price</th><th>street_address</th><th>interest_level</th></tr>
     <tr><td></td></tr>
 </thead>
 <tbody>
 	<tr>
-	<td>0</td><td>1.5000</td><td>3</td><td>53a5b119ba8f7b61d4e010512...</td><td>2016-06-24 07:54:24</td><td>A Brand New 3 Bedroom 1.5...</td><td>Metropolitan Avenue</td><td>[]</td><td>medium</td><td>40.7145</td><td>7211212</td><td>-73.9425</td><td>5ba989232d0489da1b5f2c45f...</td><td>['https://photos.renthop....</td><td>3000</td><td>792 Metropolitan Avenue</td>
+	<td>0</td><td>1.5000</td><td>3</td><td>53a5b119ba8f7b61d4e010512...</td><td>2016-06-24 07:54:24</td><td>A Brand New 3 Bedroom 1.5...</td><td>Metropolitan Avenue</td><td>[]</td><td>40.7145</td><td>7211212</td><td>-73.9425</td><td>5ba989232d0489da1b5f2c45f...</td><td>['https://photos.renthop....</td><td>3000</td><td>792 Metropolitan Avenue</td><td>medium</td>
 	</tr>
 	<tr>
-	<td>1</td><td>1.0000</td><td>2</td><td>c5c8a357cba207596b04d1afd...</td><td>2016-06-12 12:19:27</td><td>        </td><td>Columbus Avenue</td><td>['Doorman', 'Elevator', '...</td><td>low</td><td>40.7947</td><td>7150865</td><td>-73.9667</td><td>7533621a882f71e25173b27e3...</td><td>['https://photos.renthop....</td><td>5465</td><td>808 Columbus Avenue</td>
+	<td>1</td><td>1.0000</td><td>2</td><td>c5c8a357cba207596b04d1afd...</td><td>2016-06-12 12:19:27</td><td>        </td><td>Columbus Avenue</td><td>['Doorman', 'Elevator', '...</td><td>40.7947</td><td>7150865</td><td>-73.9667</td><td>7533621a882f71e25173b27e3...</td><td>['https://photos.renthop....</td><td>5465</td><td>808 Columbus Avenue</td><td>low</td>
 	</tr>
 </tbody>
 </table>
@@ -168,9 +168,6 @@ df.head(2).T</div>
 	<td>features</td><td>[]</td><td>['Doorman', 'Elevator', '...</td>
 	</tr>
 	<tr>
-	<td>interest_level</td><td>medium</td><td>low</td>
-	</tr>
-	<tr>
 	<td>latitude</td><td>40.7145</td><td>40.7947</td>
 	</tr>
 	<tr>
@@ -191,6 +188,9 @@ df.head(2).T</div>
 	<tr>
 	<td>street_address</td><td>792 Metropolitan Avenue</td><td>808 Columbus Avenue</td>
 	</tr>
+	<tr>
+	<td>interest_level</td><td>medium</td><td>low</td>
+	</tr>
 </tbody>
 </table>
 </div>
@@ -210,7 +210,6 @@ created            49352 non-null object
 description        47906 non-null object
 display_address    49217 non-null object
 features           49352 non-null object
-interest_level     49352 non-null object
 latitude           49352 non-null float64
 listing_id         49352 non-null int64
 longitude          49352 non-null float64
@@ -218,6 +217,7 @@ manager_id         49352 non-null object
 photos             49352 non-null object
 price              49352 non-null int64
 street_address     49342 non-null object
+interest_level     49352 non-null object
 dtypes: float64(3), int64(3), object(9)
 memory usage: 5.6+ MB
 </p>
@@ -260,7 +260,7 @@ price        False
 dtype: bool</p>
 
 
-<p>There are no missing values to deal with in this data set, but we won't be so lucky in <b>Chapter 11</b> <i>Feature Engineering</i>.</p>
+<p>There are no missing values to deal with in this data set, but we won't be so lucky in <span style="color: red">[chp:feateng]</span>.</p>
 
 <div class="p_wrapper">
 <div class=callout>The more you look at the data the more you risk overfitting.</div>
@@ -315,16 +315,16 @@ rf = RandomForestRegressor(n_estimators=100,
 print( f"{r2:.4f}" )
 </div>
 
-<p class="stdout">0.8313
+<p class="stdout">0.8727
 </p>
 
 <p>A perfect training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is 1.0, meaning that the model perfectly recalls the training data. An <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score of 0 means the model performs no better than always just returning the average price.  Unfortunately, a high training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score (low error) doesn't tell us much. A high score just means that it's <i>possible</i> there is a relationship between features and target and captured by the model. If, however, we can't get a high <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score, it's an indication that there is no relationship or the model is simply unable to capture it. RFs are very powerful and can capture relationships even between random variables, so expect RF training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores to be high.</p>
 <div class=aside><b>Interpreting R^2 Scores</b><br>
-Think about the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score as measuring how well our model performs compared to a trivial model that always returns the average of the target (apartment price) for any requested prediction.  Any value less than that, all away down to negative infinity, indicates the model performs imperfectly to some degree. Because a model can be arbitrarily bad, the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score can be arbitrarily negative.  A nice feature of the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is that it is normalized: scores are always in the range of 1.0 down to negative infinity, rather than in units of apartment rent price or average rainfall in Nairobi. Just remember that 1.0 means perfect and 0.0 means no better than returning the average value. More on this in <b>Chapter 7</b> <i>Evaluating Regressor Performance</i>.
+Think about the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score as measuring how well our model performs compared to a trivial model that always returns the average of the target (apartment price) for any requested prediction.  Any value less than that, all away down to negative infinity, indicates the model performs imperfectly to some degree. Because a model can be arbitrarily bad, the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score can be arbitrarily negative.  A nice feature of the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is that it is normalized: scores are always in the range of 1.0 down to negative infinity, rather than in units of apartment rent price or average rainfall in Nairobi. Just remember that 1.0 means perfect and 0.0 means no better than returning the average value. More on this in <b>Chapter 10</b> <i>Evaluating Regressor Performance</i>.
 </div>
 <p>As we discussed in <b>Section 3.2.4</b> <i>Checking model generality</i>, we care about the prediction error on validation or test vectors, not the training error.  We used the hold out method to assess model performance on validation data that was not used for training purposes. Writing code to split out the validation set is a hassle and reduces the training set size, however.</p>
 
-<p>Another reason to favor RFs, is that they can efficiently estimate the prediction error while training the model, completely avoiding the need for separate validation sets. The error score is called the <i>out-of-bag score</i> and <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> is the typical metric computed. (<i>Bag</i> is an abbreviation of <i>bootstrap aggregation</i>, which we'll look at in detail in <b>Chapter 16</b> <i>Forests of Randomized Decision Trees</i>.) Recall that RFs are a collection of decision trees, each of which is trained on a subset of the training data. The out-of-bag (<i>OOB</i>) score looks at the prediction accuracy for a particular record using only those trees that did not train on that record. Statisticians have shown that the out-of-bag score gives an excellent estimate of a model's generality, its true prediction error.</p>
+<p>Another reason to favor RFs, is that they can efficiently estimate the prediction error while training the model, completely avoiding the need for separate validation sets. The error score is called the <i>out-of-bag score</i> and <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> is the typical metric computed. (<i>Bag</i> is an abbreviation of <i>bootstrap aggregation</i>, which we'll look at in detail in <b>Chapter 15</b> <i>Forests of Randomized Decision Trees</i>.) Recall that RFs are a collection of decision trees, each of which is trained on a subset of the training data. The out-of-bag (<i>OOB</i>) score looks at the prediction accuracy for a particular record using only those trees that did not train on that record. Statisticians have shown that the out-of-bag score gives an excellent estimate of a model's generality, its true prediction error.</p>
 
 <p>The out-of-bag score is still not free computationally and we have to ask for the computation with an argument, <span class=inlinecode>oob_score=True</span>, to the constructor of the RF. Here's how to train a model that computes and prints the OOB score:</p>
 
@@ -337,7 +337,7 @@ noisy_oob_r2 = rf.oob_score_
 print(f"OOB score {noisy_oob_r2:.4f}")
 </div>
 
-<p class="stdout">OOB score -0.0239
+<p class="stdout">OOB score 0.0600
 </p>
 
 <p>That score is terrible, approximately as bad as just predicting the average apartment rent price.  Because this is our first exposure to <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg">, let's get more comfortable with it by verifying that the average absolute error (MAE) in dollars is also terrible. To get a validation set, we have to hold out a random 20% subset. In noisy data sets, the range of values in the 20% we select could vary significantly from run to run, so let's get a few MAE numbers for comparison.  Here's a simple test rig with the model-related code emphasized:</p>
@@ -365,8 +365,8 @@ print()
 print(f"Average validation MAE ${noisy_avg_mae:.0f}")
 </div>
 
-<p class="stdout">Validation MAE trials: $858 $398 $382 $430 $435 $398 $546
-Average validation MAE $492
+<p class="stdout">Validation MAE trials: $839 $589 $826 $996 $429 $384 $589
+Average validation MAE $665
 </p>
 
 <p>Those validation errors are definitely worse than the roughly $300 average error we saw on the clean data set from <b>Chapter 3</b> <i>A First Taste of Applied Machine Learning</i>. Also, the error values bounce around significantly, which means that different subsamples of the data set have different characteristics. This behavior is consistent with the low OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score coming from the RF, indicating a model trained on the raw data set gets poor results.</p>
@@ -504,9 +504,9 @@ Name: bedrooms, dtype: int64</p>
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<img src="images/prep/prep_sniff_17.svg"
+<a href="images/prep/prep_sniff_17.svg"><img src="images/prep/prep_sniff_17.svg"
   width="100%"
->
+></a>
 </span>
 
 
@@ -587,7 +587,7 @@ df_local[['bedrooms','bathrooms','street_address','price']].sort_values('price')
 </tbody>
 </table>
 </div>
-<p>Those ridiculously-priced apartments could be errors or simply outliers, but no matter how powerful a machine learning model is, such inconsistent data leads to inaccurate predictions. RFs predict the average price for all apartments whose features cluster them together (<span class=inlinecode>np.mean(local.price)</span>=$358575.00 in this case), meaning that predictions for all apartments will be hundreds of thousands of dollars off.</p>
+<p>Those ridiculously-priced apartments could be errors or simply outliers, but no matter how powerful a machine learning model is, such inconsistent data leads to inaccurate predictions. RFs predict the average price for all apartments whose features cluster them together (<span class=inlinecode>np.mean(local.price)</span>=$358575.000 in this case), meaning that predictions for all apartments will be hundreds of thousands of dollars off.</p>
 
 <p>Now that we have some idea about the outliers and noise in the data set, let's do some cleanup work.</p>
 
@@ -619,9 +619,9 @@ df_clean = df_num[(df_num.price>1_000) & (df_num.price&lt;10_000)]
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<img src="images/prep/prep_sniff_23.svg"
+<a href="images/prep/prep_sniff_23.svg"><img src="images/prep/prep_sniff_23.svg"
   width="100%"
->
+></a>
 </span>
 
 
@@ -636,9 +636,9 @@ plt.show()</div>
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<img src="images/prep/prep_sniff_24.svg"
+<a href="images/prep/prep_sniff_24.svg"><img src="images/prep/prep_sniff_24.svg"
   width="100%"
->
+></a>
 </span>
 
 
@@ -651,7 +651,7 @@ ax.hist(clipped, bins=45, color=bookcolors['blue'])
 plt.show()</div>
 </div> <!-- end div for p_wrapper -->
 
-<p>	 It looks like we have the prices under control now, so let's turn to deleting records outside of New York City proper.  We saw previously that there are records with longitude and latitude values of zero. These likely represent missing values and missing values should normally be handled using techniques from <b>Chapter 11</b> <i>Feature Engineering</i>. In this case, however, we find that there are only a few of such records:</p>
+<p>	 It looks like we have the prices under control now, so let's turn to deleting records outside of New York City proper.  We saw previously that there are records with longitude and latitude values of zero. These likely represent missing values and missing values should normally be handled using techniques from <span style="color: red">[chp:feateng]</span>. In this case, however, we find that there are only a few of such records:</p>
 
 
 <div class="codeblk">df_missing = df_clean[(df_clean.longitude==0) | (df_clean.latitude==0)]
@@ -699,11 +699,11 @@ clean_oob_r2 = rf.oob_score_
 print(f"Validation OOB score {clean_oob_r2:.4f}")
 </div>
 
-<p class="stdout">Validation OOB score 0.8676
+<p class="stdout">Validation OOB score 0.8682
 </p>
 
 <p>Let's also verify that the MAE is the same as we saw for the ideal data set (only the output is shown for brevity):</p>
-<p class="stdout">Validation MAE trials: $292 $285 $295 $294 $294 $302 $295
+<p class="stdout">Validation MAE trials: $290 $295 $301 $297 $295 $287 $296
 Average clean validation MAE $294
 </p>
 
@@ -724,8 +724,8 @@ print(f"LM Training score {lm.score(X_train, y_train):.4f}")
 print(f"LM Validation score {lm.score(X_test, y_test):.4f}")
 </div>
 
-<p class="stdout">LM Training score 0.5786
-LM Validation score 0.5652
+<p class="stdout">LM Training score 0.5739
+LM Validation score 0.5840
 </p>
 
 <p>Even the linear model's <i>training</i> <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> is significantly worse than the RF's validation score.  The linear model is unable to capture the relationship between features and apartment price even for training data.</p>
@@ -744,8 +744,8 @@ print(f"GB Training score {gbr.score(X_train, y_train):.4f}")
 print(f"GB Validation score {gbr.score(X_test, y_test):.4f}")
 </div>
 
-<p class="stdout">GB Training score 0.8419
-GB Validation score 0.8035
+<p class="stdout">GB Training score 0.8406
+GB Validation score 0.8153
 </p>
 
 <p>Given the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> and MAE scores from our RF model and that model's favorable comparison to other models, it's reasonable to declare victory over this problem.  Our solution comes from cleaning the data to make life easier on the model, rather than choosing the right model on the raw data set.</p>
@@ -768,20 +768,20 @@ GB Validation score 0.8035
 
 <div class="p_wrapper">
 <span class=sidenote>
-<img src="images/prep/prep_logs_2.svg"
+<a href="images/prep/prep_logs_2.svg"><img src="images/prep/prep_logs_2.svg"
   width="100%"
->
+></a>
 <br><b>Figure 5.1</b>. Histogram of prices clipped to less than $20,000 and zoomed in to make the long right tail more apparent; the triangle marks the average price.</span><p class=sidenote><span class=sup>7</span>Averages are highly sensitive to outliers; consider the average salary of 10 of your friends and then add Bill Gates' salary, which would drive the average up tremendously.</p>
 <p class=p_left>To arrive at the log trick, let's look at the distribution of prices again. <b>Figure 5.1</b> shows the distribution of prices clipped to less than $20,000 and zoomed in to show part of the long right tail. Long tails are not necessarily a problem themselves; it's the inconsistencies caused by the outliers that lead to inaccurate models. During training, RFs combine the prices of identical or nearly-identical apartments by averaging them together, thus, forming the prediction for those apartments. But, outlier prices wildly skew average prices, so the model's predictions could be very far off.<span class=sup>7</span></p>
 </div>
 
 <div class="p_wrapper">
 <span class=sidenote>
-<img src="images/prep/prep_logs_3.svg"
+<a href="images/prep/prep_logs_3.svg"><img src="images/prep/prep_logs_3.svg"
   width="90%%"
->
+></a>
  <br><b>Figure 5.2</b>. Histogram of natural log(prices) without clipping outliers; the triangle marks the average log price.</span>
-<p class=p_left>Optimally, the distribution of prices would be a narrow &ldquo;bell curve&rdquo; distribution without a tail. This would make predictions based upon average prices more accurate. We need a mathematical operation that transforms the widely-distributed target prices into a new space. The &ldquo;price in dollars space&rdquo; has a long right tail because of outliers and we want to squeeze that space into a new space that is normally distributed (&ldquo;bell curved&rdquo;).  More specifically, we need to shrink large values a lot and smaller values a little. That magic operation is called the <i>logarithm</i> or log for short. <b>Figure 5.2</b> shows the histogram resulting from taking the log of <i>all</i> prices in the data set. We get a nice normally-shaped distribution of prices without having to clip outliers. (See <b>Section 18.3</b> <i>Log, orders of magnitude, and Euler's number</i> for more on log.) The max price has dropped from millions to about 10.</p>
+<p class=p_left>Optimally, the distribution of prices would be a narrow &ldquo;bell curve&rdquo; distribution without a tail. This would make predictions based upon average prices more accurate. We need a mathematical operation that transforms the widely-distributed target prices into a new space. The &ldquo;price in dollars space&rdquo; has a long right tail because of outliers and we want to squeeze that space into a new space that is normally distributed (&ldquo;bell curved&rdquo;).  More specifically, we need to shrink large values a lot and smaller values a little. That magic operation is called the <i>logarithm</i> or log for short. <b>Figure 5.2</b> shows the histogram resulting from taking the log of <i>all</i> prices in the data set. We get a nice normally-shaped distribution of prices without having to clip outliers. (See <b>Section 17.3</b> <i>Log, orders of magnitude, and Euler's number</i> for more on log.) The max price has dropped from millions to about 10.</p>
 </div>
 
 <p>That's a cool trick to reshape the price distribution, but let's look at the actual effect on some prices. Previously, we looked at the records from a tiny patch of New York City that had some extreme outlier prices. Here are those records again (in variable <span class=inlinecode>df_local</span>), but with a new column that shows the log of the price to see how it shrinks the values:</p>
@@ -813,7 +813,7 @@ GB Validation score 0.8035
 </tbody>
 </table>
 </div>
-<p>An RF trained on the raw prices, would predict a terrible average price of <span class=inlinecode>np.mean(df_local.price)</span>=$358575.00 whereas an RF trained on the log of the prices predicts an average of <span class=inlinecode>np.mean(np.log(df_local.price))</span>=9.92.  At least in the log-of-price space, predicting the average seems like a good bet because that average log price is closer to the log price of the reasonably-price apartments. To transform prices back to the dollars space, we use the inverse of the log, which is the <i>exp</i> (exponential) function and get a prediction of $20395.69.  By taking the average in the log price space rather than raw prices, the average is less sensitive to outliers because we have scrunched the space (outliers are brought close in).</p>
+<p>An RF trained on the raw prices, would predict a terrible average price of <span class=inlinecode>np.mean(df_local.price)</span>=$358575.000 whereas an RF trained on the log of the prices predicts an average of <span class=inlinecode>np.mean(np.log(df_local.price))</span>=9.923.  At least in the log-of-price space, predicting the average seems like a good bet because that average log price is closer to the log price of the reasonably-price apartments. To transform prices back to the dollars space, we use the inverse of the log, which is the <i>exp</i> (exponential) function and get a prediction of $20395.690.  By taking the average in the log price space rather than raw prices, the average is less sensitive to outliers because we have scrunched the space (outliers are brought close in).</p>
 
 <p>Ok, so it makes sense to take the log because it transforms a skewed distribution to a normal distribution and it seems useful on one piece of the data.  Let's see if taking the log of the target variable affects the overall accuracy of a model trained on the original, noisy data set.</p>
 
@@ -827,10 +827,10 @@ log_oob_r2 = rf.oob_score_
 print(f"OOB R^2 score for log(price) {log_oob_r2:.4f}")
 </div>
 
-<p class="stdout">OOB R^2 score for log(price) 0.8767
+<p class="stdout">OOB R^2 score for log(price) 0.8761
 </p>
 
-<p>Recall the poor <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of -0.02 for the model trained on the raw prices.  By taking the log of the prices, our model's OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> matches the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.87 from the model trained on just the apartments less than $10,000.  Without having to clean the data or know anything about the domain, we achieved the same score as the model trainined on the clean data set! </p>
+<p>Recall the poor <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.060 for the model trained on the raw prices.  By taking the log of the prices, our model's OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> matches the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.868 from the model trained on just the apartments less than $10,000.  Without having to clean the data or know anything about the domain, we achieved the same score as the model trainined on the clean data set! </p>
 
 <p>To make actual predictions for some <span class=inlinecode>X_test</span>, though, we have to take the exp of model predictions to get prices in dollars instead of log dollars (<img style="vertical-align: -3.4125pt;" src="images/eqn-DDA3CE43CD62B33E39753A16C3C4F160-depth003.25.svg"> = <span class=eqn>x</span>):</p>
 

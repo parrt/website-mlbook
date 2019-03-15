@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Created with matplotlib (http://matplotlib.org/) -->
-<svg height="64.631193pt" version="1.1" viewBox="0 0 144.364375 64.631193" width="144.364375pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Created with matplotlib (https://matplotlib.org/) -->
+<svg height="61.377372pt" version="1.1" viewBox="0 0 140.864375 61.377372" width="140.864375pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
   <style type="text/css">
 *{stroke-linecap:butt;stroke-linejoin:round;}
@@ -10,32 +10,32 @@
  </defs>
  <g id="figure_1">
   <g id="patch_1">
-   <path d="M 0 64.631193 
-L 144.364375 64.631193 
-L 144.364375 0 
+   <path d="M 0 61.377372 
+L 140.864375 61.377372 
+L 140.864375 0 
 L 0 0 
 z
 " style="fill:#ffffff;"/>
   </g>
   <g id="axes_1">
-   <g clip-path="url(#p4e3c800888)">
-    <image height="41.04" id="image9cc9b59358" transform="scale(1 -1)translate(0 -41.04)" width="51.12" x="29.264375" xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAAEcAAAA5CAYAAABkmDauAAAABHNCSVQICAgIfAhkiAAAAJxJREFUaIHt2rEJwDAMAEEp++/sbHBFCkPgrxcWj0rvOefMRbv7efbyqvNcfe1nigPFgeJAcaA4UBwoDhQHigPFgeJAcaA4UBwoDhQHigPFgeJAcaA4UBwoDhQHigPFgeJAcaA4UBwoDhQHigPFgeJAcaA4UBwoDhQHigM7M3f/zP9IlwPFgeJAcaA4UBwoDhQHigPFgeJAcaA48AIQ3Qhsfg/ycgAAAABJRU5ErkJggg==" y="-3.041818"/>
+   <g clip-path="url(#p5d43206345)">
+    <image height="41.04" id="imagecb9b81cbf3" transform="scale(1 -1)translate(0 -41.04)" width="51.12" x="29.264375" xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAEcAAAA5CAYAAABkmDauAAAABHNCSVQICAgIfAhkiAAAAJxJREFUaIHt2rEJwDAMAEEp++/sbHBFCkPgrxcWj0rvOefMRbv7efbyqvNcfe1nigPFgeJAcaA4UBwoDhQHigPFgeJAcaA4UBwoDhQHigPFgeJAcaA4UBwoDhQHigPFgeJAcaA4UBwoDhQHigPFgeJAcaA4UBwoDhQHigM7M3f/zP9IlwPFgeJAcaA4UBwoDhQHigPFgeJAcaA48AIQ3Qhsfg/ycgAAAABJRU5ErkJggg==" y="0.212003"/>
    </g>
   </g>
   <g id="axes_2">
-   <g clip-path="url(#p039f774135)">
-    <image height="41.04" id="image8f6155cf3f" transform="scale(1 -1)translate(0 -41.04)" width="51.12" x="90.137102" xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAAEcAAAA5CAYAAABkmDauAAAABHNCSVQICAgIfAhkiAAAAJpJREFUaIHt1zEKgEAMAMGL+P8vnx+QLWxUmOkDYUmTWWvtxa3j7QW+TJwgThAniBPECeIEcYI4QZwgThAniBPOp4N7/+eZn5lHcy4niBPECeIEcYI4QZwgThAniBPECeIEcYI4QZwgThAniBPECeIEcYI4QZwgThAniBPECeIEcYI4QZwgThAniBPECeIEcYI4QZwgThAniBMu668Ec+jUBk0AAAAASUVORK5CYII=" y="-3.041818"/>
+   <g clip-path="url(#p9c2630f7f5)">
+    <image height="41.04" id="imagebf354846b9" transform="scale(1 -1)translate(0 -41.04)" width="51.12" x="90.137102" xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAEcAAAA5CAYAAABkmDauAAAABHNCSVQICAgIfAhkiAAAAJpJREFUaIHt1zEKgEAMAMGL+P8vnx+QLWxUmOkDYUmTWWvtxa3j7QW+TJwgThAniBPECeIEcYI4QZwgThAniBPOp4N7/+eZn5lHcy4niBPECeIEcYI4QZwgThAniBPECeIEcYI4QZwgThAniBPECeIEcYI4QZwgThAniBPECeIEcYI4QZwgThAniBPECeIEcYI4QZwgThAniBMu668Ec+jUBk0AAAAASUVORK5CYII=" y="0.212003"/>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="p4e3c800888">
-   <rect height="40.581818" width="50.727273" x="29.264375" y="3.5"/>
+  <clipPath id="p5d43206345">
+   <rect height="40.581818" width="50.727273" x="29.264375" y="0.246179"/>
   </clipPath>
-  <clipPath id="p039f774135">
-   <rect height="40.581818" width="50.727273" x="90.137102" y="3.5"/>
+  <clipPath id="p9c2630f7f5">
+   <rect height="40.581818" width="50.727273" x="90.137102" y="0.246179"/>
   </clipPath>
  </defs>
 </svg>

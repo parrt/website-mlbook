@@ -1,0 +1,702 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118361649-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118361649-2');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+<link rel="stylesheet" type="text/css" href="css/book.css"/>
+<title>Categorically Speaking</title>
+<!-- META -->
+<!-- LinkedIn meta -->
+<meta property='og:title' content="The Mechanics of Machine Learning"/>
+<meta property='og:image' content="https://mlbook.explained.ai/images/intro/training.svg">
+<meta property='og:description' content="This book is a primer on machine learning for programmers trying to get up to speed quickly."/>
+<meta property='og:url' content="https://mlbook.explained.ai"/>
+
+<!-- Facebook meta -->
+<meta property="og:type" content="article" />
+
+<!-- Twitter meta -->
+<meta name="twitter:title" content="The Mechanics of Machine Learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@the_antlr_guy">
+<meta name="twitter:creator" content="@the_antlr_guy">
+<meta name="twitter:description" content="This book is a primer on machine learning for programmers trying to get up to speed quickly.">
+<meta name="twitter:image" content="https://mlbook.explained.ai/images/intro/training.svg">
+<!-- END META -->
+</head>
+<body>
+<div class="watermark">
+<i>Work in progress</i><br>
+Book version 0.3
+</div>
+
+<h1>6 Categorically Speaking</h1>
+
+<p><a href="http://parrt.cs.usfca.edu">Terence Parr</a> and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
+
+<p></p>
+
+<p style="font-size: 80%">Copyright &copy; 2018-2019 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
+<p>
+<p>
+You can make <b>comments or annotate</b> this page by going to the <a id="annotatelink" href="">annotated version of this page</a>. You'll see existing annotated bits highlighted in yellow. They are <i>PUBLICLY VISIBLE</i>. Or, you can send comments, suggestions, or fixes directly to <a href="mailto:parrt@cs.usfca.edu">Terence</a>.
+</p>
+<script>
+var me = window.location.href;
+document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
+</script>
+</p>
+</p>
+
+
+
+<div id="toc">
+<p class="toc_title">Contents</p>
+<ul>
+	<li><a href="#sec:6.1">Getting a baseline</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:6.2">Encoding categorical variables</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:6.3">Extracting features from strings</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:6.4">Synthesizing numeric features</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#target-encoding">Target encoding categorical variables</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:6.6">Injecting external neighborhood info</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:6.7">Our final model</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:6.8">Summary of categorical feature engineering</a>
+	<ul>
+	</ul>
+	</li>
+
+</ul>
+</div>
+
+<p>&ldquo;<i>Coming up with features is difficult, timeconsuming, requires expert domain knowledge. When working applications of learning, we spend a lot of time tuning the features.</i>&rdquo; &mdash; Andrew Ng in a Stanford plenary talk on AI, 2011</p>
+<p>Creating a good model is more about <i>feature engineering</i> than it is about choosing the right model; well, assuming your go-to model is a good one like Random Forest.  Feature engineering means improving, acquiring, and even <i>synthesizing</i> features that are strong predictors of your model's target variable.  Synthesizing features means deriving new features from existing features or injecting features from other data sources. For example, we could synthesize the name of an apartment's New York City neighborhood from it's latitude and longitude.  It doesn't matter how sophisticated our model is if we don't give it something useful to chew on. If there is no relationship to discover, because the features are not predictive, no machine learning model is going to give accurate predictions.</p>
+
+<p>So far we've dropped nonnumeric features, such as apartment description strings and manager ID categorical values, because machine learning models can only learn from numeric values. But, there is potentially predictive power that we could exploit in these string values. In this chapter, we're going to learn the basics of feature engineering in order to squeeze a bit more juice out of the nonnumeric features found in the New York City apartment rent data set.</p>
+
+<p>Most of the predictive power for rent price comes from apartment location, number of bedrooms, and number of bathrooms, so we shouldn't expect a massive boost in model performance. The primary goal of this chapter is to learn the techniques for use on real problems in your daily work. Or, if you've entered a Kaggle competition, the difference between the top spot and position 1000 is often razor thin, so even a small advantage from feature engineering could be useful in that context.</p>
+
+
+
+<h2 id="sec:6.1">6.1 Getting a baseline</h2>
+
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>1</span>See <b>Section 3.2.1</b> <i>Loading and sniffing the training data</i> for instructions on downloading JSON rent data from Kaggle and creating the CSV files.</p>
+<p class=p_left>In order to measure any improvements in model accuracy, let's get a baseline using just the cleaned up numeric features from <span class=inlinecode>rent.csv</span> in the <span class=inlinecode>data</span> directory underneath where we started Jupyter.<span class=sup>1</span> As we did in <b>Chapter 5</b> <i>Exploring and Denoising Your Data Set</i>, let's load the rent data, strip extreme prices, and remove apartments not in New York City:</p>
+</div>
+
+
+<div class="codeblk">df = pd.read_csv("data/rent.csv", parse_dates=['created'])
+df_clean = df[(df.price>1_000) & (df.price&lt;10_000)]
+df_clean = df_clean[(df_clean.longitude!=0) | (df_clean.latitude!=0)]
+df_clean = df_clean[(df_clean['latitude']>40.55) &
+                    (df_clean['latitude']&lt;40.94) &
+                    (df_clean['longitude']>-74.1) &
+                    (df_clean['longitude']&lt;-73.67)]
+df = df_clean
+</div>
+
+
+<p>Now train an RF using just the numeric features and print the out-of-bag (OOB) <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score:</p>
+
+
+<div class="codeblk">numfeatures = ['bathrooms', 'bedrooms', 'longitude', 'latitude']
+X, y = df[numfeatures], df['price']
+rf = RandomForestRegressor(n_estimators=100, n_jobs=-1, oob_score=True)
+rf.fit(X, y)
+oob_baseline = rf.oob_score_
+print(oob_baseline)</div>
+
+<p class="stdout">0.8673518946724373</p>
+
+
+<p>The 0.867 OOB score is pretty good as it's close to 1.0. (Recall that a score of 0 indicates our model does know better than simply guessing the average rent price for all apartments and 1.0 means a perfect predictor of rent price.) Let's also get an idea of how much work the RF has to do in order to capture the relationship between those features and rent price. The <span class=inlinecode>rfpimp</span> package provides a few simple measures we can use: the total number of nodes in all decision trees of the forest and the height (in nodes) of the typical tree.</p>
+
+
+<div class="codeblk">print(f"{rfnnodes(rf):,d} tree nodes and {np.median(rfmaxdepths(rf))} median tree height")
+</div>
+
+<p class="stdout">2,434,250 tree nodes and 35.0 median tree height
+</p>
+
+<p>The tree height matters because that is the path taken by the RF prediction mechanism and so tree height effects prediction speed.</p>
+
+<p>Let's also get a baseline for feature importances so that, as we introduce new features, we can get a sense of their predictive power. Longitude and latitude are really one meta-feature called &ldquo;location,&rdquo; so we can combine those two using the <span class=inlinecode>features</span> parameter to the <span class=inlinecode>importances()</span> function. We're going to ask for feature importances a lot in this chapter so let's make a handy function:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<a href="images/catvars/catvars_cats_6.svg"><img src="images/catvars/catvars_cats_6.svg"
+  width="100%"
+></a>
+</span>
+
+
+<div class="codeblk">def showimp(rf, X, y):
+    features = list(X.columns)
+    features.remove('latitude')
+    features.remove('longitude')
+    features += [['latitude','longitude']]
+
+    I = importances(rf, X, y, features=features)
+    plot_importances(I, color='#4575b4')
+    
+showimp(rf, X, y)</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>Now that we have a good benchmark for model and feature performance, let's try to improve our model by converting some existing nonnumeric features into numeric features.</p>
+
+
+
+<h2 id="sec:6.2">6.2 Encoding categorical variables</h2>
+
+
+<p>The <span class=inlinecode>interest_level</span> feature is a categorical variable that seems to encode interest in an apartment, no doubt taken from webpage activity logs.  It's a categorical variable because it takes on values from a finite set of choices: low, medium, and high. More specifically, <span class=inlinecode>interest_level</span> is an <i>ordinal</i> categorical variable, which means that the values can be ordered even if they are not actual numbers.  Looking at the count of each ordinal value is a good way to get an overview of an ordinal feature:</p>
+
+
+<div class="codeblk">print(df['interest_level'].value_counts())</div>
+
+<p class="stdout">low       33270
+medium    11203
+high       3827
+Name: interest_level, dtype: int64</p>
+
+
+<p>Ordinal variables are the easiest to convert from strings to numbers because we can simply assign a different integer for each possible ordinal value.  One way to do the conversion is to use the Pandas <span class=inlinecode>map()</span> function and a dictionary argument:</p>
+
+
+<div class="codeblk">df['interest_level'] = df['interest_level'].map({'low':1,'medium':2,'high':3})
+print(df['interest_level'].value_counts())</div>
+
+<p class="stdout">1    33270
+2    11203
+3     3827
+Name: interest_level, dtype: int64</p>
+
+
+<p>The key here is to ensure that the numbers we use for each category maintains the same ordering so, for example, medium's value of 2 is bigger than low's value of 1. We could also have chosen <span class=inlinecode>{'low':10,'medium':20,'high':30}</span> as the encoding because RFs care about the order and not the scale of the features.</p>
+
+<p>Let's see how an RF model performs using the numeric features and this newly converted <span class=inlinecode>interest_level</span> feature:</p>
+
+
+<div class="codeblk">def test(X, y):
+    rf = RandomForestRegressor(n_estimators=100, n_jobs=-1, oob_score=True)
+    rf.fit(X, y)
+    oob = rf.oob_score_
+    n = rfnnodes(rf)
+    h = np.median(rfmaxdepths(rf))
+    print(f"OOB R^2 {oob:.5f} using {n:,d} tree nodes with {h} median tree height")
+    return rf, oob
+
+X, y = df[['interest_level']+numfeatures], df['price']
+rf, oob = test(X, y)
+</div>
+
+<p class="stdout">OOB R^2 0.87089 using 3,025,250 tree nodes with 35.0 median tree height
+</p>
+
+<p>That 0.871 score is only a little bit better than our baseline of 0.867, but it's still useful. As you approach an <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 1.0, it gets harder and harder to nudge model performance.  The difference in scores actually represents a few percentage points of the remaining accuracy, so we can be happy with this bump.  Also, remember that using a single OOB score is a fairly blunt metric that aggregates the performance of the model on 50,000 records.  It's possible that a certain type of apartment got a really big accuracy boost. The only cost to this accuracy boost is an increase in the number of tree nodes, but the typical decision tree height in the forest remains the same as our baseline.  Prediction using this model should be just as fast as the baseline.</p>
+
+<div class="p_wrapper">
+<div class=callout>The easy way to remember the difference between ordinal and nominal variables is that ordinal variables have order and nominal comes from the word for &ldquo;name&rdquo; in Latin (<i>nomen</i>) or French (<i>nom</i>).</div>
+<p class=p_left>Ordinal categorical variables are simple to encode numerically. Unfortunately, there's another kind of categorical variable called a <i>nominal</i> variable for which there is no meaningful order between the category values. For example, in this data set, columns <span class=inlinecode>manager_id</span>, <span class=inlinecode>building_id</span>, and <span class=inlinecode>display address</span> are nominal features.  Without an order between categories, it's hard to encode nominal variables as numbers in a meaningful way, particularly when there are very many category values:</p>
+</div>
+
+
+<div class="codeblk">print(len(df['manager_id'].unique()), len(df['building_id'].unique()), len(df['display_address'].unique()))</div>
+
+<p class="stdout">(3409, 7417, 8692)</p>
+
+
+<p>So-called high-cardinality (many-valued) categorical variables such as <span class=inlinecode>manager_id</span>, <span class=inlinecode>building_id</span>, and <span class=inlinecode>display address</span> are best handled using more advanced techniques such as  <a href="https://developers.google.com/machine-learning/crash-course/embeddings/video-lecture">embeddings</a> or <i>mean encoding</i> as we'll see in <b>Section 6.5</b> <i>Target encoding categorical variables</i>, but we'll introduce two simple encoding approaches here that are often useful.</p>
+
+<p>The first technique is called <i>label encoding</i> and simply converts each category to a numeric value, as we did before, while ignoring the fact that the categories are not really ordered. Sometimes an RF can get some predictive power from features encoded in this way but typically requires larger trees in the forest.</p>
+
+<p>To label encode any categorical variable, convert the column to an ordered categorical variable and then convert the strings to the associated categorical code (which is computed automatically by Pandas):</p>
+
+
+<div class="codeblk">df['display_address_cat'] = df['display_address'].astype('category').cat.as_ordered()
+df['display_address_cat'] = df['display_address_cat'].cat.codes + 1
+</div>
+
+
+<p>The category codes start with 0 and the code for &ldquo;not a number&rdquo; (<span class=inlinecode>nan</span>) is -1. To bring everything into the range 0 or above, we add one to the category code.  (Sklearn has equivalent functionality in its <span class=inlinecode>OrdinalEncoder</span> transformer but it can't handle object columns with both integers and strings, plus it's get an error for missing values represented as <span class=inlinecode>np.nan</span>.)</p>
+
+<p>Let's see if this new feature improves performance over the baseline model:</p>
+
+
+<div class="codeblk">X, y = df[['display_address_cat']+numfeatures], df['price']
+rf, oob = test(X, y)
+</div>
+
+<p class="stdout">OOB R^2 0.86551 using 3,122,640 tree nodes with 38.0 median tree height
+</p>
+
+<p>Unfortunately, the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is roughly the same as the baseline's score and it increases the tree height. Not a good trade.</p>
+
+<p>Let's try another encoding approach called <i>frequency encoding</i> and apply it to the <span class=inlinecode>manager_id</span> feature. Frequency encoding converts categories to the frequencies with which they appear in the training. For example, here are the category value counts for the top 5 <span class=inlinecode>manager_id</span>s:</p>
+
+
+<div class="codeblk">print(df['manager_id'].value_counts().head(5))</div>
+
+<p class="stdout">e6472c7237327dd3903b3d6f6a94515a    2509
+6e5c10246156ae5bdcd9b487ca99d96a     695
+8f5a9c893f6d602f4953fcc0b8e6e9b4     404
+62b685cc0d876c3a1a51d63a0d6a8082     396
+cb87dadbca78fad02b388dc9e8f25a5b     370
+Name: manager_id, dtype: int64</p>
+
+
+<p>The idea behind this transformation is that there might be predictive power in the number of apartments managed by a particular manager.</p>
+
+<p>Function <span class=inlinecode>value_counts()</span> gives us the encoding and from there we can use <span class=inlinecode>map()</span> to transform the <span class=inlinecode>manager_id</span> into a new column called <span class=inlinecode>mgr_apt_count</span>:</p>
+
+
+<div class="codeblk">managers_count = df['manager_id'].value_counts()
+df['mgr_apt_count'] = df['manager_id'].map(managers_count)
+</div>
+
+
+<p>Again, we could actually divide the accounts by <span class=inlinecode>len(df)</span>, but that just scales the column and won't affect predictive power.</p>
+
+<p>Let's see how a model does with both of these categorical variables encoded:</p>
+
+
+<div class="codeblk">X, y = df[['display_address_cat','mgr_apt_count']+numfeatures], df['price']
+rf, oob = test(X, y)
+</div>
+
+<p class="stdout">OOB R^2 0.86431 using 4,570,830 tree nodes with 40.0 median tree height
+</p>
+<div class="p_wrapper">
+<span class=sidenote>
+<a href="images/catvars/catvars_cats_18.svg"><img src="images/catvars/catvars_cats_18.svg"
+  width="100%"
+></a>
+</span>
+</div> <!-- end div for p_wrapper -->
+
+<p>The model accuracy does not improve and the complexity of the trees goes up, so we should avoid introducing these features.  The feature importance plot confirms that these features are unimportant.</p>
+
+<p>We can conclude that, for this data set, label encoding and frequency encoding of high-cardinality categorical variables is not helpful. These encoding techniques could, however, be useful on other data set so it's worth learning them. We'll learn about another  categorical variable encoding technique called &ldquo;one-hot encoding&rdquo; in <b>Chapter 7</b> <i>Dealing with Missing Data</i>, but we avoid one-hot encoding here because it would add thousands of new columns to our data set.</p>
+
+
+
+<h2 id="sec:6.3">6.3 Extracting features from strings</h2>
+
+
+<p>The apartment data set also has some variables that are both nonnumeric and noncategorical, <span class=inlinecode>description</span> and <span class=inlinecode>features</span>. Such  arbitrary strings have no obvious numerical encoding, but we can extract bits of information from them to create new features. For example, an apartment with parking, doorman, dishwasher, and so on might fetch a higher price so let's synthesize some Boolean features derived from string features.</p>
+
+<p>First let's normalize the string columns to be lowercase and convert any missing values (represented as &ldquo;not a number&rdquo; <span class=inlinecode>np.nan</span> values) to be empty strings; otherwise, applying <span class=inlinecode>split()</span> to the columns will fail because <span class=inlinecode>split()</span> does not apply to floating-point numbers (<span class=inlinecode>np.nan</span>).</p>
+
+
+<div class="codeblk">df['description'] = df['description'].fillna('')
+df['description'] = df['description'].str.lower() # normalize to lower case
+df['features'] = df['features'].fillna('') # fill missing w/blanks
+df['features'] = df['features'].str.lower() # normalize to lower case
+</div>
+
+
+<p>Now we can create new columns by applying <span class=inlinecode>contains()</span> to the string columns, once for each new column:</p>
+
+
+<div class="codeblk"># has apartment been renovated?
+df['renov'] = df['description'].str.contains("renov")
+
+for w in ['doorman', 'parking', 'garage', 'laundry', 
+          'Elevator', 'fitness center', 'dishwasher']:
+    df[w] = df['features'].str.contains(w)
+df[['doorman', 'parking', 'garage', 'laundry']].head(5)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>doorman</th><th>parking</th><th>garage</th><th>laundry</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>False</td><td>False</td><td>False</td><td>False</td>
+	</tr>
+	<tr>
+	<td>1</td><td>True</td><td>False</td><td>False</td><td>False</td>
+	</tr>
+	<tr>
+	<td>2</td><td>False</td><td>False</td><td>False</td><td>True</td>
+	</tr>
+	<tr>
+	<td>3</td><td>False</td><td>False</td><td>False</td><td>False</td>
+	</tr>
+	<tr>
+	<td>4</td><td>False</td><td>False</td><td>False</td><td>False</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Another trick is to count the number of words in a string</p>
+
+
+<div class="codeblk">df["num_desc_words"] = df["description"].apply(lambda x: len(x.split()))
+df["num_features"] = df["features"].apply(lambda x: len(x.split(",")))
+</div>
+
+
+<p>There's not much we can do with the list of photo URLs in the other <span class=inlinecode>photos</span> string column, but the number of photos might be slightly predictive of price, so let's create a feature for that as well:</p>
+
+
+<div class="codeblk">df["num_photos"] = df["photos"].apply(lambda x: len(x.split(",")))
+</div>
+
+
+<p>Let's see how our new features affect performance above the baseline numerical features:</p>
+
+
+<div class="codeblk">textfeatures = [
+    'num_photos', 'num_desc_words', 'num_features',
+    'doorman', 'parking', 'garage', 'laundry', 
+    'Elevator', 'fitness center', 'dishwasher',
+    'renov'
+]
+X, y = df[textfeatures+numfeatures], df['price']
+rf, oob = test(X, y)
+</div>
+
+<p class="stdout">OOB R^2 0.86279 using 4,770,892 tree nodes with 44.0 median tree height
+</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<a href="images/catvars/catvars_cats_24.svg"><img src="images/catvars/catvars_cats_24.svg"
+  width="100%"
+></a>
+</span>
+
+
+<div class="codeblk">showimp(rf, X, y)</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>It's disappointing that the accuracy does not improve with these features and that the complexity of the model is higher, but this does provide useful marketing information.  Apartment features such as parking, laundry, and dishwashers are attractive but there's little evidence that people are willing to pay more for them (except maybe for having a doorman).</p>
+
+
+
+<h2 id="sec:6.4">6.4 Synthesizing numeric features</h2>
+
+
+<p>If you grew up with lots of siblings, you're likely familiar with the notion of waiting to use the bathroom in the morning. Perhaps there is some predictive power in the ratio of bedrooms two bathrooms, so let's try synthesizing a new column that is the ratio of two numeric columns:</p>
+
+
+<div class="codeblk">df["beds_to_baths"] = df["bedrooms"]/(df["bathrooms"]+1) # avoid div by 0
+X, y = df[['beds_to_baths']+numfeatures], df['price']
+rf, oob = test(X, y)
+</div>
+
+<p class="stdout">OOB R^2 0.86789 using 2,432,888 tree nodes with 35.0 median tree height
+</p>
+
+<p>Combining numerical columns is a useful technique to keep in mind, but unfortunately this combination doesn't affect our model significantly here.  Perhaps we have better luck combining a numeric column with the target, such as the ratio of bedrooms to price:</p>
+
+
+<div class="codeblk">df["beds_per_price"] = df["bedrooms"] / df["price"]
+X, y = df[['beds_per_price']+numfeatures], df['price']
+rf, oob = test(X, y)
+</div>
+
+<p class="stdout">OOB R^2 0.98610 using 1,315,392 tree nodes with 31.0 median tree height
+</p>
+
+<p>Wow! That's almost a perfect score, which should trigger an alarm that it's too good to be true. In fact, we do have an error, but it's not a code bug. We have effectively copied the price  column into the feature set, kind of like studying for a quiz by looking at the answers. This is a form of <i>data leakage</i>, which is a general term for the use of  features that directly or indirectly hint at the target variable.</p>
+
+<p>To illustrate how this leakage causes overfitting, let's split out 20% of the data as a validation set and compute the <span class=inlinecode>beds_per_price</span> feature for the training set:</p>
+
+
+<div class="codeblk">from sklearn.model_selection import train_test_split
+df_train, df_test = train_test_split(df, test_size=0.20)
+df_train = df_train.copy()
+df_train["beds_per_price"] = df_train["bedrooms"] / df_train["price"]
+df_train[["beds_per_price",'bedrooms']].head(5)
+</div>
+
+
+<div class="p_wrapper">
+<div class=callout>As a general principle, you can't compute features for the validation set using information from the validation set. Only information computed directly from the training set can be used during feature engineering.</div>
+<p class=p_left>While we do have price information for the validation set in <span class=inlinecode>df_test</span>, we can't use it to compute <span class=inlinecode>beds_per_price</span> for the validation set.  In production, the model will not have the validation set prices and so <span class=inlinecode>df['beds_per_price']</span> must be created only from the training set. (If the model had apartment prices in practice, we wouldn't be the model.)  To avoid this common pitfall,  it's helpful to imagine computing features for and sending validation records to the model one by one, rather than all at once.</p>
+</div>
+
+<p>Once we have the <span class=inlinecode>beds_per_price</span> feature for the training set, we can compute a dictionary mapping bedrooms to the <span class=inlinecode>beds_per_price</span> feature. Then, we can synthesize the <span class=inlinecode>beds_per_price</span> in the validation set using <span class=inlinecode>map()</span> on the bedrooms column:</p>
+
+
+<div class="codeblk">bpmap = dict(zip(df_train["bedrooms"],df_train["beds_per_price"]))
+df_test = df_test.copy()
+df_test["beds_per_price"] = df_test["bedrooms"].map(bpmap)
+avg = np.mean(df_test['beds_per_price'])
+df_test['beds_per_price'].fillna(avg, inplace=True)
+df_test["beds_per_price"].head(5)
+</div>
+
+
+<p>The <span class=inlinecode>fillna()</span> code deals with the situation where the validation set has a number of bedrooms that is not in the training set; for example, sometimes the validation set has an apartment with 7 bedrooms, but there is no bedroom key equal to 7 in the <span class=inlinecode>bpmap</span>.</p>
+
+<p>Now that we have <span class=inlinecode>beds_per_price</span> for both training and validation sets, we can train an RF model using just the training set and evaluate its performance using just the validation set:</p>
+
+
+<div class="codeblk">X_train, y_train = df_train[['beds_per_price']+numfeatures], df_train['price']
+X_test, y_test = df_test[['beds_per_price']+numfeatures], df_test['price']
+
+rf = RandomForestRegressor(n_estimators=100, n_jobs=-1)
+rf.fit(X_train, y_train)
+oob_overfit = rf.score(X_test, y_test) # don't test training set
+print(f"OOB R^2 {oob_overfit:.5f}")
+print(f"{rfnnodes(rf):,d} nodes, {np.median(rfmaxdepths(rf))} median height")
+</div>
+
+<p class="stdout">OOB R^2 0.09733
+1,163,332 nodes, 30.0 median height
+</p>
+
+<p>An <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.097 on the validation set is terrible and indicates that the model lacks generality.  In this situation, overfitting means that the model has put too much emphasis on the <span class=inlinecode>beds_per_price</span> feature, which is strongly predictive of price in the training but not the validation set. (The feature was computed using just data from the training set.)  We get a whiff of overfitting even in the complexity of the model, which has half the number of nodes as a model trained just on the numeric features.  It's not always an error to derive features from the target; we just have to be more careful.</p>
+
+
+
+<h2 id="target-encoding">6.5 Target encoding categorical variables</h2>
+
+
+<p>Creating features that incorporate information about the target variable is called <i>target encoding</i> and is often used to derive features from categorical variables to great effect.  One of the most common target encodings is called <i>mean encoding</i>, which replaces each category value with the average target value associated with that category. For example, building managers in our apartment data set might rent apartments in certain price ranges. The manager IDs by themselves carry little predictive power but converting IDs to the average rent price for apartments they manage could be predictive. Similarly, certain buildings might have more expensive apartments than others. The average rent price per building is easy enough to get with Pandas by grouping the data by <span class=inlinecode>manager_id</span> and asking for the mean:</p>
+
+
+<div class="codeblk">
+df.groupby('building_id').mean()[['price']].head(5)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>price</th></tr>
+    <tr><td>building_id</td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>3195.9321</td>
+	</tr>
+	<tr>
+	<td>00005cb939f9986300d987652...</td><td>3399.0000</td>
+	</tr>
+	<tr>
+	<td>00024d77a43f0606f926e2312...</td><td>2000.0000</td>
+	</tr>
+	<tr>
+	<td>000ae4b7db298401cdae2b0ba...</td><td>2400.0000</td>
+	</tr>
+	<tr>
+	<td>0012f1955391bca600ec30103...</td><td>3700.0000</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Unfortunately, as we saw in the last section, it's easy to overfit models when incorporating target information.  Preventing overfitting is nontrivial and it's best to rely on a vetted library, such as the <a href="http://contrib.scikit-learn.org/categorical-encoding/">category_encoders</a> package contributed to sklearn. (To prevent overfitting, the idea is to compute the mean from a subset of the training data targets for each category.) You can install <span class=inlinecode>category_encoders</span> with pip on the commandline:</p>
+
+
+<div class="codeblk">pip install category_encoders</div>
+
+
+<p><span style="color: red">{TODO: Maybe show my mean encoder. much faster. worth explaining somewhere. rent/mean-encoder.ipynb  sees like we need an alpha parameter that gets rare cats towards avg; supposed to work better.}</span></p>
+
+<p>Here's how to use the <span class=inlinecode>TargetEncoder</span> object to encode three categorical variables from the data set and get an OOB score:</p>
+
+
+<div class="codeblk">from category_encoders.target_encoder import TargetEncoder
+df = df.reset_index() # not sure why TargetEncoder needs this but it does
+targetfeatures = ['building_id']
+encoder = TargetEncoder(cols=targetfeatures)
+encoder.fit(df, df['price'])
+df_encoded = encoder.transform(df, df['price'])
+
+X, y = df_encoded[targetfeatures+numfeatures], df['price']
+rf, oob = test(X, y)
+</div>
+
+<p class="stdout">OOB R^2 0.87267 using 2,745,540 tree nodes with 38.0 median tree height
+</p>
+
+<p>That <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is a bit better than the baseline of 0.867 for numeric-only features. Given the tendency to overfit the model with target encoding, however, it's a good idea to test the model with a validation set. Let's split out 20% as a validation set and get a baseline for numeric features:</p>
+
+
+<div class="codeblk">df_train, df_test = train_test_split(df, test_size=0.20)
+
+# TargetEncoder needs the resets, not sure why
+df_train = df_train.reset_index(drop=True)
+df_test = df_test.reset_index(drop=True)
+
+X_train = df_train[numfeatures]
+y_train = df_train['price']
+X_test = df_test[numfeatures]
+y_test = df_test['price']
+
+rf = RandomForestRegressor(n_estimators=100, n_jobs=-1)
+rf.fit(X_train, y_train)
+s_validation = rf.score(X_test, y_test)
+print(f"{s_validation:4f} score {rfnnodes(rf):,d} tree nodes and {np.median(rfmaxdepths(rf))} median tree height")
+</div>
+
+<p class="stdout">0.852926 score 2,122,806 tree nodes and 35.5 median tree height
+</p>
+
+<p>The validation score and the OOB score are very similar, confirming that OOB scores are an excellent approximation to validation scores. With that baseline, let's see what happens when we properly target encode the validation set, that is, using only data from the training set (warning: this takes several minutes to execute):</p>
+
+
+<div class="codeblk">enc = TargetEncoder(cols=targetfeatures)
+enc.fit(df_train, df_train['price'])
+df_train_encoded = enc.transform(df_train, df_train['price'])
+df_test_encoded = enc.transform(df_test)
+
+X_train = df_train_encoded[targetfeatures+numfeatures]
+y_train = df_train_encoded['price']
+X_test = df_test_encoded[targetfeatures+numfeatures]
+y_test = df_test_encoded['price']
+
+rf = RandomForestRegressor(n_estimators=100, n_jobs=-1)
+rf.fit(X_train, y_train)
+s_tenc_validation = rf.score(X_test, y_test)
+print(f"{s_tenc_validation:.4f} score {rfnnodes(rf):,d} tree nodes and {np.median(rfmaxdepths(rf))} median tree height")
+</div>
+
+<p class="stdout">0.8511 score 2,374,860 tree nodes and 38.0 median tree height
+</p>
+<div class="p_wrapper">
+<span class=sidenote>
+<a href="images/catvars/catvars_targencode_6.svg"><img src="images/catvars/catvars_targencode_6.svg"
+  width="100%"
+></a>
+</span>
+</div> <!-- end div for p_wrapper -->
+
+<p>The validation score for numeric plus target-encoded feature (0.851) is less than the validation score for numeric-only features (0.853). The model finds the target-encoded feature strongly predictive of the training set prices, causing it to overfit by overemphasizing this feature. This loss of generality explains the drop in validation scores. The feature importance graph provides evidence of this overemphasis because it shows the target-encoded <span class=inlinecode>building_id</span> feature as the most important.</p>
+
+<p>While not beneficial for this data set, target encoding is reported to be useful by many practitioners and Kaggle competition winners. It's worth knowing about this technique and learning to apply it properly (computing validation set features using data only from the training set). </p>
+
+<p>When we've exhausted our bag of tricks deriving features from a given data set, sometimes it's fruitful to inject features derived from external data sources.</p>
+
+
+
+<h2 id="sec:6.6">6.6 Injecting external neighborhood info</h2>
+
+
+<p>Our data set has longitude and latitude coordinates, but a more obvious price predictor would be a categorical variable identifying the neighborhood because some neighborhoods are more desirable than others.  Given the trouble we've seen with categorical variables above, though, a numeric feature would be more useful. Instead of identifying the neighborhood, let's use proximity to highly desirable neighborhoods as a numeric feature. Forbes magazine has an article, <a href="https://www.forbes.com/sites/trulia/2016/10/04/the-top-10-new-york-city-neighborhoods-to-live-in-according-to-the-locals/#17bf6ff41494">The Top 10 New York City Neighborhoods to Live In, According to the Locals</a>, from which we can get neighborhood names. Then, using a mapping website, we can estimate the longitude and latitude of those neighborhoods and record them like this:</p>
+
+
+<div class="codeblk">hoods = {
+    "hells" : [40.7622, -73.9924],
+    "astoria" : [40.7796684, -73.9215888],
+    "Evillage" : [40.723163774, -73.984829394],
+    "Wvillage" : [40.73578, -74.00357],
+    "LowerEast" : [40.715033, -73.9842724],
+    "UpperEast" : [40.768163594, -73.959329496],
+    "ParkSlope" : [40.672404, -73.977063],
+    "Prospect Park" : [40.93704, -74.17431],
+    "Crown Heights" : [40.657830702, -73.940162906],
+    "financial" : [40.703830518, -74.005666644],
+    "brooklynheights" : [40.7022621909, -73.9871760513],
+    "gowanus" : [40.673, -73.997]
+}
+</div>
+
+
+<p>To synthesize new features, we compute the so-called <i>Manhattan distance</i> (also called <i>L1 distance</i>) from each apartment to each neighborhood center, which measures the number of blocks one must walk to reach the neighborhood. In contrast, the <i>Euclidean distance</i> would measure distance as the crow flies, cutting through the middle of buildings.</p>
+
+
+<div class="codeblk">for hood in hoods.keys():
+    # compute manhattan distance
+    for hood,loc in hoods.items():
+        df[hood] = np.abs(df.latitude - loc[0]) + np.abs(df.longitude - loc[1])
+</div>
+
+
+<p>Training a model on the numeric features and these new neighborhood features, gives us a decent bump in performance:</p>
+
+
+<div class="codeblk">hoodfeatures = list(hoods.keys())
+X, y = df[numfeatures+hoodfeatures], df['price']
+rf, oob_hood = test(X, y)
+</div>
+
+<p class="stdout">OOB R^2 0.87283 using 2,414,086 tree nodes with 43.0 median tree height
+</p>
+
+<p>An OOB score of 0.873  is noticeably better than the baseline 0.867 for numeric features. The number of trees increased significantly, but the number of nodes is about the same. The model works a little bit harder to associate  similar apartments with similar rent prices, but it's worth the extra complexity for the performance boost.</p>
+
+<p>The new proximity features effectively triangulate an apartment relative to desirable neighborhoods, which means we probably don't need  apartment longitude and latitude anymore. Dropping longitude and latitude and retraining a model shows a similar OOB score and shallower trees:</p>
+
+
+<div class="codeblk">X = X.drop(['longitude','latitude'],axis=1)
+rf = RandomForestRegressor(n_estimators=100, n_jobs=-1, oob_score=True)
+rf.fit(X, y)
+print(f"{rf.oob_score_:.4f} score {rfnnodes(rf):,d} tree nodes and {np.median(rfmaxdepths(rf))} median tree height")
+</div>
+
+<p class="stdout">0.8701 score 2,422,980 tree nodes and 40.5 median tree height
+</p>
+
+<p>Injecting outside data is definitely worth trying as a general rule.  As another example, consider predicting sales at a store or website. We found that injecting columns  indicating paydays or national holidays often helps predict fluctuations in sales volume that are not explained well with existing features.</p>
+
+
+
+<h2 id="sec:6.7">6.7 Our final model</h2>
+
+
+<p>We've explored a lot of common feature engineering techniques for categorical variables in this chapter, so let's put them all together to see how a combined model performs:</p>
+
+
+<div class="codeblk">X = df[['interest_level']+textfeatures+hoodfeatures+numfeatures]
+rf, oob_combined = test(X, y)
+</div>
+
+<p class="stdout">OOB R^2 0.87924 using 4,841,800 tree nodes with 44.0 median tree height
+</p>
+
+<p>While OOB score 0.879 is not too much larger than our numeric-only model baseline of 0.867 in absolute terms, it means we've squeezed  an extra 8.959% relative accuracy out of our data (computed using <span class=inlinecode>((oob_combined-oob_baseline) / (1-oob_baseline))*100</span>).</p>
+<div class="p_wrapper">
+<span class=sidenote>
+<a href="images/catvars/catvars_cats_42.svg"><img src="images/catvars/catvars_cats_42.svg"
+  width="100%"
+></a>
+</span>
+</div> <!-- end div for p_wrapper -->
+
+<p>Something to notice is that the RF model does not get confused with a combination of all of these features, which is one of the reasons we recommend RFs. RFs simply ignore features without much predictive power. The feature importance graph to the right indicates what the model finds predictive.  For model accuracy reasons, it's a good idea to keep all features, but we might want to remove unimportant features to simplify the model for interpretation purposes (when explaining model behavior).</p>
+
+
+
+<h2 id="sec:6.8">6.8 Summary of categorical feature engineering</h2>
+
+
+<p><span style="color: red">{TODO: Summarize techniques from this chapter}</span></p>
+
+
+
+</body>
+</html>
