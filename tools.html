@@ -35,8 +35,8 @@
 </head>
 <body>
 <div class="watermark">
-<i>Work in progress</i><br>
-Book version 0.3
+<i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
+Book version 0.3.1
 </div>
 
 <h1>4 Development Tools</h1>
@@ -1059,13 +1059,13 @@ df_aug.head(3)</div>
 </thead>
 <tbody>
 	<tr>
-	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td><td>0.1733</td>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td><td>0.8097</td>
 	</tr>
 	<tr>
-	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td><td>0.6459</td>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td><td>0.5299</td>
 	</tr>
 	<tr>
-	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td><td>0.1637</td>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td><td>0.6160</td>
 	</tr>
 </tbody>
 </table>
@@ -1785,10 +1785,10 @@ print(np.max(prices))
 print(np.sum(prices))
 </div>
 
-<p class="stdout">[1.79175947 1.09861229 1.79175947 1.94591015 1.94591015]
-5.8
-7
-29
+<p class="stdout">[1.09861229 1.09861229 1.38629436 1.38629436 2.07944154]
+4.4
+8
+22
 </p>
 
 <p>The expression <span class=inlinecode>np.log(prices)</span> is equivalent to the following loop and array constructor, but the loop is much slower:</p>
@@ -1863,8 +1863,8 @@ plt.show()</div>
 print(a)
 </div>
 
-<p class="stdout">[[0.47450784 0.17280136 0.61480764]
- [0.77553502 0.65981901 0.65725875]]
+<p class="stdout">[[0.25629003 0.30353098 0.54447865]
+ [0.40477094 0.8467397  0.09616695]]
 </p>
 
 <p>Indexing 1D NumPy arrays works like Python array indexing with integer indexes and slicing, but NumPy arrays also support queries and list of indices, as we'll seen shortly. Here are some examples of 1D indexing:</p>
@@ -1912,8 +1912,8 @@ print(a)
 print(a>0.3)
 </div>
 
-<p class="stdout">[0.54896498 0.05864502 0.23044063 0.1443767  0.00495945]
-[ True False False False False]
+<p class="stdout">[0.86517816 0.71356603 0.15615269 0.2700004  0.72219358]
+[ True  True False False  True]
 </p>
 
 <p>We can then use that array of booleans to index into that array, or even another array of the same length:</p>
@@ -1923,7 +1923,7 @@ print(a>0.3)
 print(b[a>0.3])
 </div>
 
-<p class="stdout">[1]
+<p class="stdout">[1 2 5]
 </p>
 
 <p>As with one dimensional arrays, vectors, the NumPy defines the arithmetic operators for matrices. For example, here's how to add and print out two matrices:</p>
@@ -2085,7 +2085,7 @@ pred = rf.predict(test_vector)
 print(f"{test_vector} -> {pred}")
 </div>
 
-<p class="stdout">[[  2.       1.      40.7947 -73.9957]] -> [5070.42835317]
+<p class="stdout">[[  2.       1.      40.7947 -73.9957]] -> [4785.20791667]
 </p>
 
 <p>Notice that we also get a vector of predictions (with one element) back because <span class=inlinecode>predict()</span> is designed to map multiple test vectors to multiple predictions.</p>

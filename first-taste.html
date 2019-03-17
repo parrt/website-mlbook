@@ -35,8 +35,8 @@
 </head>
 <body>
 <div class="watermark">
-<i>Work in progress</i><br>
-Book version 0.3
+<i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
+Book version 0.3.1
 </div>
 
 <h1>3 A First Taste of Applied Machine Learning</h1>
@@ -285,10 +285,10 @@ rf.fit(X, y)
 print(predicted_y)
 </div>
 
-<p class="stdout">[4092.7495917]
+<p class="stdout">[4328.39539125]
 </p>
 
-<p>The <span class=inlinecode>predict()</span> function returns a list of predicted rent prices, one per apartment passed in the list of apartments as the <span class=inlinecode>X</span> parameter.  The model predicts rent of about $4092 given the apartment characteristics in <span class=inlinecode>unknown_x</span>.</p>
+<p>The <span class=inlinecode>predict()</span> function returns a list of predicted rent prices, one per apartment passed in the list of apartments as the <span class=inlinecode>X</span> parameter.  The model predicts rent of about $4328 given the apartment characteristics in <span class=inlinecode>unknown_x</span>.</p>
 
 
 
@@ -331,7 +331,7 @@ print(f"${location_e:.0f} average error; {location_ep:.2f}% error")
 
 <p>Using just the location, and no information about the number of bedrooms or bathrooms, the average prediction error on the training set is $519. That's more than the error with all features ($189) but is still not bad.</p>
 
-<p>You might compare the difference between the 5.503% error for the model fit on all features and this 15.087% error and think &ldquo;it's only 9%.&rdquo; It's better to think of this as the ratio 5.50/15.09 is 36% rather than the difference 5.50-15.09. The ratio indicates that dropping the number of bedrooms and bathrooms from the model reduces prediction accuracy by 36%.  This information is extremely useful because it tells us something about the predictive power of those features. </p>
+<p>You might compare the difference between the 5.505% error for the model fit on all features and this 15.095% error and think &ldquo;it's only 9%.&rdquo; It's better to think of this as the ratio 5.50/15.09 is 36% rather than the difference 5.50-15.09. The ratio indicates that dropping the number of bedrooms and bathrooms from the model reduces prediction accuracy by 36%.  This information is extremely useful because it tells us something about the predictive power of those features. </p>
 
 <p>Alas, we shouldn't get too excited by the $189 training error because that just shows our model captures the relationships in the training data. We know nothing about the model's generality.</p>
 
@@ -360,12 +360,12 @@ validation_e = mean_absolute_error(y_test, rf.predict(X_test))
 print(f"${validation_e:.0f} average error; {validation_e*100.0/y.mean():.2f}% error")
 </div>
 
-<p class="stdout">$302 average error; 8.80% error
+<p class="stdout">$301 average error; 8.74% error
 </p>
 
-<p>Comparing the average error $302 from the validation set and the $189 training error, we see that the model performs much better on the training data. This is as we'd expect because the training error is our &ldquo;do not exceed speed.&rdquo; (The training error is analogous to the score we'd get on a quiz for which we'd seen the answers beforehand.) We want the validation error to be as close to the training error as possible.</p>
+<p>Comparing the average error $300 from the validation set and the $189 training error, we see that the model performs much better on the training data. This is as we'd expect because the training error is our &ldquo;do not exceed speed.&rdquo; (The training error is analogous to the score we'd get on a quiz for which we'd seen the answers beforehand.) We want the validation error to be as close to the training error as possible.</p>
 
-<p>If you run that code multiple times, you'll notice that different runs get different validation errors because of the variability in selecting the validation subset. That's not a good characteristic, but we'll tackle this problem in <b>Chapter 10</b> <i>Evaluating Regressor Performance</i> using a more stable validation strategy called <span class=eqn>k</span>-fold cross validation.</p>
+<p>If you run that code multiple times, you'll notice that different runs get different validation errors because of the variability in selecting the validation subset. That's not a good characteristic, but we'll tackle this problem in <b>Chapter 12</b> <i>Evaluating Regressor Performance</i> using a more stable validation strategy called <span class=eqn>k</span>-fold cross validation.</p>
 
 
 
@@ -382,7 +382,7 @@ e = mean_absolute_error(y_test, rf.predict(X_test))
 print(f"${e:.0f} average error; {e*100.0/y.mean():.2f}% error")
 </div>
 
-<p class="stdout">$296 average error; 8.61% error
+<p class="stdout">$296 average error; 8.62% error
 </p>
 
 <p>The number of trees, and any other aspect of the model that affects its architecture, statisticians call a <i>hyper-parameter</i>. (I think we programmers would call this a meta-parameter.) The elements inside the model like the trees themselves are called the model parameters. As another example, the four <span class=eqn>w<sub>i</sub></span> weights and minimum rent value from a linear model (that we considererd briefly in <b>Section 2.1.3</b> <i>Drawing the line</i>) are the model parameters.</p>
@@ -415,16 +415,16 @@ I</div>
 </thead>
 <tbody>
 	<tr>
-	<td>longitude</td><td>0.5768</td>
+	<td>bedrooms</td><td>0.4849</td>
 	</tr>
 	<tr>
-	<td>bedrooms</td><td>0.5016</td>
+	<td>longitude</td><td>0.4829</td>
 	</tr>
 	<tr>
-	<td>latitude</td><td>0.4838</td>
+	<td>latitude</td><td>0.4584</td>
 	</tr>
 	<tr>
-	<td>bathrooms</td><td>0.4524</td>
+	<td>bathrooms</td><td>0.4146</td>
 	</tr>
 </tbody>
 </table>
@@ -487,7 +487,7 @@ df = pd.DataFrame(X, columns=cancer.feature_names)
 </div>
 
 
-<p>Many of the cell nuclei features are redundant in the sense that they measure the same or almost the same thing. For example, if we know the radius of the circle, we also know the perimeter, so features such as <span class=inlinecode>mean radius</span> and <span class=inlinecode>mean perimeter</span> are likely to be very similar variables. Features that are not independent are said to be <i>collinear</i> and, in practice, features are rarely completely independent. <b>Chapter 13</b> <i>Understanding the Relationship Between Variables</i> considers the collinearity of this breast-cancer data set and shows how to pick the most important features.  Using the analysis in that chapter, let's restrict ourselves to 7 key features (out of 30) for simplicity reasons and display some of the data to get a sense of what it looks like:</p>
+<p>Many of the cell nuclei features are redundant in the sense that they measure the same or almost the same thing. For example, if we know the radius of the circle, we also know the perimeter, so features such as <span class=inlinecode>mean radius</span> and <span class=inlinecode>mean perimeter</span> are likely to be very similar variables. Features that are not independent are said to be <i>collinear</i> and, in practice, features are rarely completely independent. <b>Chapter 15</b> <i>Understanding the Relationship Between Variables</i> considers the collinearity of this breast-cancer data set and shows how to pick the most important features.  Using the analysis in that chapter, let's restrict ourselves to 7 key features (out of 30) for simplicity reasons and display some of the data to get a sense of what it looks like:</p>
 
 
 <div class="codeblk">features = ['radius error', 'texture error', 'concave points error',
@@ -542,10 +542,10 @@ validation_e = cl.score(X_test, y_test)
 print(f"{validation_e*100:.2f}% correct")
 </div>
 
-<p class="stdout">90.70% correct
+<p class="stdout">95.35% correct
 </p>
 
-<p>For classifiers, the <span class=inlinecode>score()</span> function returns the simplest metric for correctness (accuracy), which measures how many the model predicted correctly out of 569 observations divided by 569.  Testing classifiers is usually a lot more involved than testing regressors, as we'll see in <b>Chapter 11</b> <i>Evaluating classifier performance</i>, but accuracy is fine for now.  Given that we are only using 7 features, the 90.698% accuracy is very good. Using all 30 features, we see an average validation accuracy of about 96%, but the validation accuracy fluctuates a lot because of the randomness inherent in splitting the data set into training and validation sets, not to mention the randomness used during RF construction. </p>
+<p>For classifiers, the <span class=inlinecode>score()</span> function returns the simplest metric for correctness (accuracy), which measures how many the model predicted correctly out of 569 observations divided by 569.  Testing classifiers is usually a lot more involved than testing regressors, as we'll see in <b>Chapter 13</b> <i>Evaluating classifier performance</i>, but accuracy is fine for now.  Given that we are only using 7 features, the 95.349% accuracy is very good. Using all 30 features, we see an average validation accuracy of about 96%, but the validation accuracy fluctuates a lot because of the randomness inherent in splitting the data set into training and validation sets, not to mention the randomness used during RF construction. </p>
 
 <p>We can compute feature importances for classifiers just as we did for regressors. (In fact we can compute feature importances for any model.) In this case, we see that <span class=inlinecode>radius error</span> is the most important feature for distinguishing between malignant versus benign masses based upon these 7 features.</p>
 <div class="p_wrapper">
@@ -752,7 +752,7 @@ prob_for_2nd_digit = prob[1]
 print(prob_for_2nd_digit)
 </div>
 
-<p class="stdout">[0.011 0.133 0.073 0.139 0.093 0.083 0.083 0.223 0.036 0.124]
+<p class="stdout">[0.016 0.114 0.076 0.129 0.097 0.099 0.061 0.226 0.036 0.148]
 </p>
 
 <p>Function <span class=inlinecode>predict_proba()</span> returns a probability for each possible target class, digits 0-9 in this case. The probability in position 7 (indexed from 0) is the highest, which is why the model predicts 7:</p>
@@ -845,10 +845,10 @@ cl.fit(X_train, y_train)
 rfaccur = cl.score(X_test, y_test)
 print(rfaccur)</div>
 
-<p class="stdout">0.9625</p>
+<p class="stdout">0.953</p>
 
 
-<p>An accuracy of 96.250% sounds pretty good, and it could be entirely satisfactory from a business point of view for many applications.  But, it's still a good idea to compare the RF's performance to that of another model as a gauge of quality. Practitioners commonly use a linear model as a lower bound benchmark and sklearn provides a linear classifier model called  <span class=inlinecode>LogisticRegression</span>:</p>
+<p>An accuracy of 95.300% sounds pretty good, and it could be entirely satisfactory from a business point of view for many applications.  But, it's still a good idea to compare the RF's performance to that of another model as a gauge of quality. Practitioners commonly use a linear model as a lower bound benchmark and sklearn provides a linear classifier model called  <span class=inlinecode>LogisticRegression</span>:</p>
 
 
 <div class="codeblk">from sklearn.linear_model import LogisticRegression
@@ -860,10 +860,10 @@ lm.fit(X_train, y_train)
 lmaccur = lm.score(X_test, y_test)
 print(lmaccur)</div>
 
-<p class="stdout">0.9135</p>
+<p class="stdout">0.916</p>
 
 
-<p>While the linear model's accuracy of 91.350% is less than the RF's 96.250%, it is not too bad considering the difficulty of this image classification problem. Because RFs are generally more powerful than linear models, we'd expect the RF to perform better on average. If, on the other hand, a linear model trained on the same data performs better, that could indicate a bug or other problem with our RF.</p>
+<p>While the linear model's accuracy of 91.600% is less than the RF's 95.300%, it is not too bad considering the difficulty of this image classification problem. Because RFs are generally more powerful than linear models, we'd expect the RF to perform better on average. If, on the other hand, a linear model trained on the same data performs better, that could indicate a bug or other problem with our RF.</p>
 
 <p>While we won't study them in this book, linear models are useful to know about for three other reasons. First, linear models compress the entire image training set down to a small collection of floating-point coefficients (on the order of 784 for 784 features).  Model size might be important if the model must run on, say, a microcontroller in an autonomous vehicle. In contrast to the small footprint of the linear model, our RF has 900 large trees. Here's how to sum up the number of nodes across all trees (estimators):</p>
 
@@ -873,7 +873,7 @@ nnodes = sum([cl.estimators_[i].tree_.node_count for i in range(ntrees)])
 print(f"{nnodes:,}") # print with commas
 </div>
 
-<p class="stdout">1,706,378
+<p class="stdout">1,691,022
 </p>
 
 <p>That's a lot of tree nodes, so the RF requires a lot more memory than the linear model. </p>
@@ -921,7 +921,7 @@ rf.fit(X_train,y_train)
 print("y =", rf.predict(X_test) )
 </div>
 
-<p class="stdout">y = [4.63]
+<p class="stdout">y = [4.49]
 </p>
 
 <p>RF models are doing a kind of &ldquo;average of the nearest neighbor&rdquo; prediction. Here, the nearest neighbors are 4 and 5, which the RF averages to get its prediction.  In this case, the linear model makes more sense but remember the poor linear fit we saw in <b>Figure 2.1</b> on some real data.</p>
@@ -952,7 +952,7 @@ print("y =", rf.predict(X_test) )
 <div class="codeblk">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)</div>
 
 
-<p>Determining a good validation set is sometimes not as simple as taking a 20% random sample, as we'll see in <b>Chapter 10</b> <i>Evaluating Regressor Performance</i> and <span style="color: red">[chp:bulldozer-testing]</span>, but that method is okay for now.  </p>
+<p>Determining a good validation set is sometimes not as simple as taking a 20% random sample, as we'll see in <b>Chapter 12</b> <i>Evaluating Regressor Performance</i> and <span style="color: red">[chp:bulldozer-testing]</span>, but that method is okay for now.  </p>
 
 <p>Computing a validation score for any sklearn model is as simple as:</p>
 
@@ -964,7 +964,7 @@ print("y =", rf.predict(X_test) )
 
 <p>As you can see from this simple recipe, the actual task of training and testing a model is straightforward, once you have appropriate training and testing data.  Most of the work building a model involves data collection, data cleaning, filling in missing values, feature engineering, and proper test set identification.  Furthermore, all features fed to a model must be numeric, rather than strings like names or categorical variables like low/medium/high, so we have some data conversions to do.  Much of this book is devoted to preparing data so that this code recipe applies.</p>
 
-<p>Even with perfect training data, remember that a model can only make predictions based on the training data we provide.  Models don't necessarily have the same experience we do, and certainly don't have a human's modeling power.  Some models will perform better than others on the same data set, but we recommend sticking with a random forest (regressor or classifier) then comparing it to a linear model to get a sense of the RF's performance. In the end, as long as you pick a decent model like random forest, building an accurate machine learning model is more about making sure you have strongly predictive features. Also keep in mind that models are not black boxes. We can interrogate them to extract useful information, such as feature importances. More on this in <b>Chapter 12</b> <i>Interpreting Model Prediction Results</i> and <b>Chapter 13</b> <i>Understanding the Relationship Between Variables</i>.</p>
+<p>Even with perfect training data, remember that a model can only make predictions based on the training data we provide.  Models don't necessarily have the same experience we do, and certainly don't have a human's modeling power.  Some models will perform better than others on the same data set, but we recommend sticking with a random forest (regressor or classifier) then comparing it to a linear model to get a sense of the RF's performance. In the end, as long as you pick a decent model like random forest, building an accurate machine learning model is more about making sure you have strongly predictive features. Also keep in mind that models are not black boxes. We can interrogate them to extract useful information, such as feature importances. More on this in <b>Chapter 14</b> <i>Interpreting Model Prediction Results</i> and <b>Chapter 15</b> <i>Understanding the Relationship Between Variables</i>.</p>
 
 
 

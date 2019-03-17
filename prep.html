@@ -35,8 +35,8 @@
 </head>
 <body>
 <div class="watermark">
-<i>Work in progress</i><br>
-Book version 0.3
+<i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
+Book version 0.3.1
 </div>
 
 <h1>5 Exploring and Denoising Your Data Set</h1>
@@ -92,7 +92,7 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 <p>&ldquo;<i>It is a capital mistake to theorize before one has data. Insensibly one begins to twist facts to suit theories, instead of theories to suit facts.</i>&rdquo; &mdash; Arthur Conan Doyle (1891) in <i>A Scandal in Bohemia</i></p>
 <p>	In <b>Chapter 3</b> <i>A First Taste of Applied Machine Learning</i>, we successfully trained a random forest (RF) model to predict New York City rent prices but under ideal conditions: the data was already in a form acceptable to a model and was mostly free of errors, outliers, and other noise.  The unfortunate reality is that real data sets are messy and so, in this chapter, we're going to learn how to process the original data from Kaggle bit-by-bit until it looks like that ideal data set.  The dirty little secret of the machine learning world is that practitioners spend roughly 75% of their time acquiring, cleaning, and otherwise preparing data for training. (We won't learn about the acquisition piece in this book, but you can check out Terence's free <a href="https://github.com/parrt/msan692">Data Acquisition course notes</a>.)</p>
 
-<p>To train a model, the data set must follow two fundamental rules: all data must be numeric and there can't be any missing values. We must derive numeric features from the nonnumeric features such as strings, dates, and categorical variables like <span class=inlinecode>SalesID</span>. Or, we can simply delete the nonnumeric features. That preparation work is a big topic unto itself, which we'll address in <b>Chapter 6</b> <i>Categorically Speaking</i> and <b>Chapter 7</b> <i>Dealing with Missing Data</i>.  In this chapter, we'll stick with the numeric fields (bathrooms, bedrooms, longitude, latitude) we used before.</p>
+<p>To train a model, the data set must follow two fundamental rules: all data must be numeric and there can't be any missing values. We must derive numeric features from the nonnumeric features such as strings, dates, and categorical variables like <span class=inlinecode>SalesID</span>. Or, we can simply delete the nonnumeric features. That preparation work is a big topic unto itself, which we'll address in <b>Chapter 6</b> <i>Categorically Speaking</i> and <b>Chapter 8</b> <i>Dealing with Missing Data</i>.  In this chapter, we'll stick with the numeric fields (bathrooms, bedrooms, longitude, latitude) we used before.</p>
 
 <p>Even with purely numeric data, there is potential cleanup work to do. The data could have outliers, errors, or contradictory information.  For example, in our apartment data, one place claims to have 2 bedrooms but 10 bathrooms, while other apartments claim to be on the equator!  Armed with graphs or statistics from the data set, we turn to someone with domain expertise to interpret what we observe. (Terence's sister lives in New York City and confirms that New York is not on the equator, though typically feels that way in August.)</p>
 
@@ -315,16 +315,16 @@ rf = RandomForestRegressor(n_estimators=100,
 print( f"{r2:.4f}" )
 </div>
 
-<p class="stdout">0.8727
+<p class="stdout">0.8507
 </p>
 
 <p>A perfect training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is 1.0, meaning that the model perfectly recalls the training data. An <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score of 0 means the model performs no better than always just returning the average price.  Unfortunately, a high training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score (low error) doesn't tell us much. A high score just means that it's <i>possible</i> there is a relationship between features and target and captured by the model. If, however, we can't get a high <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score, it's an indication that there is no relationship or the model is simply unable to capture it. RFs are very powerful and can capture relationships even between random variables, so expect RF training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores to be high.</p>
 <div class=aside><b>Interpreting R^2 Scores</b><br>
-Think about the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score as measuring how well our model performs compared to a trivial model that always returns the average of the target (apartment price) for any requested prediction.  Any value less than that, all away down to negative infinity, indicates the model performs imperfectly to some degree. Because a model can be arbitrarily bad, the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score can be arbitrarily negative.  A nice feature of the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is that it is normalized: scores are always in the range of 1.0 down to negative infinity, rather than in units of apartment rent price or average rainfall in Nairobi. Just remember that 1.0 means perfect and 0.0 means no better than returning the average value. More on this in <b>Chapter 10</b> <i>Evaluating Regressor Performance</i>.
+Think about the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score as measuring how well our model performs compared to a trivial model that always returns the average of the target (apartment price) for any requested prediction.  Any value less than that, all away down to negative infinity, indicates the model performs imperfectly to some degree. Because a model can be arbitrarily bad, the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score can be arbitrarily negative.  A nice feature of the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is that it is normalized: scores are always in the range of 1.0 down to negative infinity, rather than in units of apartment rent price or average rainfall in Nairobi. Just remember that 1.0 means perfect and 0.0 means no better than returning the average value. More on this in <b>Chapter 12</b> <i>Evaluating Regressor Performance</i>.
 </div>
 <p>As we discussed in <b>Section 3.2.4</b> <i>Checking model generality</i>, we care about the prediction error on validation or test vectors, not the training error.  We used the hold out method to assess model performance on validation data that was not used for training purposes. Writing code to split out the validation set is a hassle and reduces the training set size, however.</p>
 
-<p>Another reason to favor RFs, is that they can efficiently estimate the prediction error while training the model, completely avoiding the need for separate validation sets. The error score is called the <i>out-of-bag score</i> and <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> is the typical metric computed. (<i>Bag</i> is an abbreviation of <i>bootstrap aggregation</i>, which we'll look at in detail in <b>Chapter 15</b> <i>Forests of Randomized Decision Trees</i>.) Recall that RFs are a collection of decision trees, each of which is trained on a subset of the training data. The out-of-bag (<i>OOB</i>) score looks at the prediction accuracy for a particular record using only those trees that did not train on that record. Statisticians have shown that the out-of-bag score gives an excellent estimate of a model's generality, its true prediction error.</p>
+<p>Another reason to favor RFs, is that they can efficiently estimate the prediction error while training the model, completely avoiding the need for separate validation sets. The error score is called the <i>out-of-bag score</i> and <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> is the typical metric computed. (<i>Bag</i> is an abbreviation of <i>bootstrap aggregation</i>, which we'll look at in detail in <b>Chapter 17</b> <i>Forests of Randomized Decision Trees</i>.) Recall that RFs are a collection of decision trees, each of which is trained on a subset of the training data. The out-of-bag (<i>OOB</i>) score looks at the prediction accuracy for a particular record using only those trees that did not train on that record. Statisticians have shown that the out-of-bag score gives an excellent estimate of a model's generality, its true prediction error.</p>
 
 <p>The out-of-bag score is still not free computationally and we have to ask for the computation with an argument, <span class=inlinecode>oob_score=True</span>, to the constructor of the RF. Here's how to train a model that computes and prints the OOB score:</p>
 
@@ -337,7 +337,7 @@ noisy_oob_r2 = rf.oob_score_
 print(f"OOB score {noisy_oob_r2:.4f}")
 </div>
 
-<p class="stdout">OOB score 0.0600
+<p class="stdout">OOB score -0.0501
 </p>
 
 <p>That score is terrible, approximately as bad as just predicting the average apartment rent price.  Because this is our first exposure to <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg">, let's get more comfortable with it by verifying that the average absolute error (MAE) in dollars is also terrible. To get a validation set, we have to hold out a random 20% subset. In noisy data sets, the range of values in the 20% we select could vary significantly from run to run, so let's get a few MAE numbers for comparison.  Here's a simple test rig with the model-related code emphasized:</p>
@@ -365,8 +365,8 @@ print()
 print(f"Average validation MAE ${noisy_avg_mae:.0f}")
 </div>
 
-<p class="stdout">Validation MAE trials: $839 $589 $826 $996 $429 $384 $589
-Average validation MAE $665
+<p class="stdout">Validation MAE trials: $374 $875 $522 $560 $1042 $527 $992
+Average validation MAE $699
 </p>
 
 <p>Those validation errors are definitely worse than the roughly $300 average error we saw on the clean data set from <b>Chapter 3</b> <i>A First Taste of Applied Machine Learning</i>. Also, the error values bounce around significantly, which means that different subsamples of the data set have different characteristics. This behavior is consistent with the low OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score coming from the RF, indicating a model trained on the raw data set gets poor results.</p>
@@ -699,12 +699,12 @@ clean_oob_r2 = rf.oob_score_
 print(f"Validation OOB score {clean_oob_r2:.4f}")
 </div>
 
-<p class="stdout">Validation OOB score 0.8682
+<p class="stdout">Validation OOB score 0.8679
 </p>
 
 <p>Let's also verify that the MAE is the same as we saw for the ideal data set (only the output is shown for brevity):</p>
-<p class="stdout">Validation MAE trials: $290 $295 $301 $297 $295 $287 $296
-Average clean validation MAE $294
+<p class="stdout">Validation MAE trials: $295 $287 $290 $304 $287 $294 $292
+Average clean validation MAE $292
 </p>
 
 <p>Great! We've now got a prediction model that gets a decent <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> estimated prediction error.  Are we done yet? That depends on the definition of &ldquo;good enough&rdquo; and whether we think we can do better. Imagine a website that used our model to predictor rent prices using apartment features entered by a user. There is likely a threshold below which users don't find the predictions useful. If we have a suitable way to test &ldquo;good enough,&rdquo; this should guide whether we keep looking for improvements. </p>
@@ -724,8 +724,8 @@ print(f"LM Training score {lm.score(X_train, y_train):.4f}")
 print(f"LM Validation score {lm.score(X_test, y_test):.4f}")
 </div>
 
-<p class="stdout">LM Training score 0.5739
-LM Validation score 0.5840
+<p class="stdout">LM Training score 0.5721
+LM Validation score 0.5903
 </p>
 
 <p>Even the linear model's <i>training</i> <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> is significantly worse than the RF's validation score.  The linear model is unable to capture the relationship between features and apartment price even for training data.</p>
@@ -744,8 +744,8 @@ print(f"GB Training score {gbr.score(X_train, y_train):.4f}")
 print(f"GB Validation score {gbr.score(X_test, y_test):.4f}")
 </div>
 
-<p class="stdout">GB Training score 0.8406
-GB Validation score 0.8153
+<p class="stdout">GB Training score 0.8387
+GB Validation score 0.8236
 </p>
 
 <p>Given the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> and MAE scores from our RF model and that model's favorable comparison to other models, it's reasonable to declare victory over this problem.  Our solution comes from cleaning the data to make life easier on the model, rather than choosing the right model on the raw data set.</p>
@@ -781,7 +781,7 @@ GB Validation score 0.8153
   width="90%%"
 ></a>
  <br><b>Figure 5.2</b>. Histogram of natural log(prices) without clipping outliers; the triangle marks the average log price.</span>
-<p class=p_left>Optimally, the distribution of prices would be a narrow &ldquo;bell curve&rdquo; distribution without a tail. This would make predictions based upon average prices more accurate. We need a mathematical operation that transforms the widely-distributed target prices into a new space. The &ldquo;price in dollars space&rdquo; has a long right tail because of outliers and we want to squeeze that space into a new space that is normally distributed (&ldquo;bell curved&rdquo;).  More specifically, we need to shrink large values a lot and smaller values a little. That magic operation is called the <i>logarithm</i> or log for short. <b>Figure 5.2</b> shows the histogram resulting from taking the log of <i>all</i> prices in the data set. We get a nice normally-shaped distribution of prices without having to clip outliers. (See <b>Section 17.3</b> <i>Log, orders of magnitude, and Euler's number</i> for more on log.) The max price has dropped from millions to about 10.</p>
+<p class=p_left>Optimally, the distribution of prices would be a narrow &ldquo;bell curve&rdquo; distribution without a tail. This would make predictions based upon average prices more accurate. We need a mathematical operation that transforms the widely-distributed target prices into a new space. The &ldquo;price in dollars space&rdquo; has a long right tail because of outliers and we want to squeeze that space into a new space that is normally distributed (&ldquo;bell curved&rdquo;).  More specifically, we need to shrink large values a lot and smaller values a little. That magic operation is called the <i>logarithm</i> or log for short. <b>Figure 5.2</b> shows the histogram resulting from taking the log of <i>all</i> prices in the data set. We get a nice normally-shaped distribution of prices without having to clip outliers. (See <b>Section 19.3</b> <i>Log, orders of magnitude, and Euler's number</i> for more on log.) The max price has dropped from millions to about 10.</p>
 </div>
 
 <p>That's a cool trick to reshape the price distribution, but let's look at the actual effect on some prices. Previously, we looked at the records from a tiny patch of New York City that had some extreme outlier prices. Here are those records again (in variable <span class=inlinecode>df_local</span>), but with a new column that shows the log of the price to see how it shrinks the values:</p>
@@ -827,10 +827,10 @@ log_oob_r2 = rf.oob_score_
 print(f"OOB R^2 score for log(price) {log_oob_r2:.4f}")
 </div>
 
-<p class="stdout">OOB R^2 score for log(price) 0.8761
+<p class="stdout">OOB R^2 score for log(price) 0.8762
 </p>
 
-<p>Recall the poor <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.060 for the model trained on the raw prices.  By taking the log of the prices, our model's OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> matches the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.868 from the model trained on just the apartments less than $10,000.  Without having to clean the data or know anything about the domain, we achieved the same score as the model trainined on the clean data set! </p>
+<p>Recall the poor <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of -0.050 for the model trained on the raw prices.  By taking the log of the prices, our model's OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> matches the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.868 from the model trained on just the apartments less than $10,000.  Without having to clean the data or know anything about the domain, we achieved the same score as the model trainined on the clean data set! </p>
 
 <p>To make actual predictions for some <span class=inlinecode>X_test</span>, though, we have to take the exp of model predictions to get prices in dollars instead of log dollars (<img style="vertical-align: -3.4125pt;" src="images/eqn-DDA3CE43CD62B33E39753A16C3C4F160-depth003.25.svg"> = <span class=eqn>x</span>):</p>
 

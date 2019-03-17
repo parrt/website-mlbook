@@ -35,8 +35,8 @@
 </head>
 <body>
 <div class="watermark">
-<i>Work in progress</i><br>
-Book version 0.3
+<i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
+Book version 0.3.1
 </div>
 
 <h1>6 Categorically Speaking</h1>
@@ -137,16 +137,16 @@ rf.fit(X, y)
 oob_baseline = rf.oob_score_
 print(oob_baseline)</div>
 
-<p class="stdout">0.8673518946724373</p>
+<p class="stdout">0.8681918367221211</p>
 
 
-<p>The 0.867 OOB score is pretty good as it's close to 1.0. (Recall that a score of 0 indicates our model does know better than simply guessing the average rent price for all apartments and 1.0 means a perfect predictor of rent price.) Let's also get an idea of how much work the RF has to do in order to capture the relationship between those features and rent price. The <span class=inlinecode>rfpimp</span> package provides a few simple measures we can use: the total number of nodes in all decision trees of the forest and the height (in nodes) of the typical tree.</p>
+<p>The 0.868 OOB score is pretty good as it's close to 1.0. (Recall that a score of 0 indicates our model does know better than simply guessing the average rent price for all apartments and 1.0 means a perfect predictor of rent price.) Let's also get an idea of how much work the RF has to do in order to capture the relationship between those features and rent price. The <span class=inlinecode>rfpimp</span> package provides a few simple measures we can use: the total number of nodes in all decision trees of the forest and the height (in nodes) of the typical tree.</p>
 
 
 <div class="codeblk">print(f"{rfnnodes(rf):,d} tree nodes and {np.median(rfmaxdepths(rf))} median tree height")
 </div>
 
-<p class="stdout">2,434,250 tree nodes and 35.0 median tree height
+<p class="stdout">2,433,290 tree nodes and 35.0 median tree height
 </p>
 
 <p>The tree height matters because that is the path taken by the RF prediction mechanism and so tree height effects prediction speed.</p>
@@ -221,10 +221,10 @@ X, y = df[['interest_level']+numfeatures], df['price']
 rf, oob = test(X, y)
 </div>
 
-<p class="stdout">OOB R^2 0.87089 using 3,025,250 tree nodes with 35.0 median tree height
+<p class="stdout">OOB R^2 0.87057 using 3,024,590 tree nodes with 35.0 median tree height
 </p>
 
-<p>That 0.871 score is only a little bit better than our baseline of 0.867, but it's still useful. As you approach an <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 1.0, it gets harder and harder to nudge model performance.  The difference in scores actually represents a few percentage points of the remaining accuracy, so we can be happy with this bump.  Also, remember that using a single OOB score is a fairly blunt metric that aggregates the performance of the model on 50,000 records.  It's possible that a certain type of apartment got a really big accuracy boost. The only cost to this accuracy boost is an increase in the number of tree nodes, but the typical decision tree height in the forest remains the same as our baseline.  Prediction using this model should be just as fast as the baseline.</p>
+<p>That 0.871 score is only a little bit better than our baseline of 0.868, but it's still useful. As you approach an <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 1.0, it gets harder and harder to nudge model performance.  The difference in scores actually represents a few percentage points of the remaining accuracy, so we can be happy with this bump.  Also, remember that using a single OOB score is a fairly blunt metric that aggregates the performance of the model on 50,000 records.  It's possible that a certain type of apartment got a really big accuracy boost. The only cost to this accuracy boost is an increase in the number of tree nodes, but the typical decision tree height in the forest remains the same as our baseline.  Prediction using this model should be just as fast as the baseline.</p>
 
 <div class="p_wrapper">
 <div class=callout>The easy way to remember the difference between ordinal and nominal variables is that ordinal variables have order and nominal comes from the word for &ldquo;name&rdquo; in Latin (<i>nomen</i>) or French (<i>nom</i>).</div>
@@ -258,7 +258,7 @@ df['display_address_cat'] = df['display_address_cat'].cat.codes + 1
 rf, oob = test(X, y)
 </div>
 
-<p class="stdout">OOB R^2 0.86551 using 3,122,640 tree nodes with 38.0 median tree height
+<p class="stdout">OOB R^2 0.86572 using 3,121,640 tree nodes with 38.0 median tree height
 </p>
 
 <p>Unfortunately, the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is roughly the same as the baseline's score and it increases the tree height. Not a good trade.</p>
@@ -295,7 +295,7 @@ df['mgr_apt_count'] = df['manager_id'].map(managers_count)
 rf, oob = test(X, y)
 </div>
 
-<p class="stdout">OOB R^2 0.86431 using 4,570,830 tree nodes with 40.0 median tree height
+<p class="stdout">OOB R^2 0.86374 using 4,572,060 tree nodes with 40.0 median tree height
 </p>
 <div class="p_wrapper">
 <span class=sidenote>
@@ -307,7 +307,7 @@ rf, oob = test(X, y)
 
 <p>The model accuracy does not improve and the complexity of the trees goes up, so we should avoid introducing these features.  The feature importance plot confirms that these features are unimportant.</p>
 
-<p>We can conclude that, for this data set, label encoding and frequency encoding of high-cardinality categorical variables is not helpful. These encoding techniques could, however, be useful on other data set so it's worth learning them. We'll learn about another  categorical variable encoding technique called &ldquo;one-hot encoding&rdquo; in <b>Chapter 7</b> <i>Dealing with Missing Data</i>, but we avoid one-hot encoding here because it would add thousands of new columns to our data set.</p>
+<p>We can conclude that, for this data set, label encoding and frequency encoding of high-cardinality categorical variables is not helpful. These encoding techniques could, however, be useful on other data set so it's worth learning them. We'll learn about another  categorical variable encoding technique called &ldquo;one-hot encoding&rdquo; in <b>Chapter 8</b> <i>Dealing with Missing Data</i>, but we avoid one-hot encoding here because it would add thousands of new columns to our data set.</p>
 
 
 
@@ -389,7 +389,7 @@ X, y = df[textfeatures+numfeatures], df['price']
 rf, oob = test(X, y)
 </div>
 
-<p class="stdout">OOB R^2 0.86279 using 4,770,892 tree nodes with 44.0 median tree height
+<p class="stdout">OOB R^2 0.86265 using 4,770,356 tree nodes with 44.0 median tree height
 </p>
 <div class="p_wrapper">
 <span class=sidenote>
@@ -410,7 +410,7 @@ rf, oob = test(X, y)
 <h2 id="sec:6.4">6.4 Synthesizing numeric features</h2>
 
 
-<p>If you grew up with lots of siblings, you're likely familiar with the notion of waiting to use the bathroom in the morning. Perhaps there is some predictive power in the ratio of bedrooms two bathrooms, so let's try synthesizing a new column that is the ratio of two numeric columns:</p>
+<p>If you grew up with lots of siblings, you're likely familiar with the notion of waiting to use the bathroom in the morning. Perhaps there is some predictive power in the ratio of bedrooms to bathrooms, so let's try synthesizing a new column that is the ratio of two numeric columns:</p>
 
 
 <div class="codeblk">df["beds_to_baths"] = df["bedrooms"]/(df["bathrooms"]+1) # avoid div by 0
@@ -418,10 +418,10 @@ X, y = df[['beds_to_baths']+numfeatures], df['price']
 rf, oob = test(X, y)
 </div>
 
-<p class="stdout">OOB R^2 0.86789 using 2,432,888 tree nodes with 35.0 median tree height
+<p class="stdout">OOB R^2 0.86848 using 2,433,550 tree nodes with 35.0 median tree height
 </p>
 
-<p>Combining numerical columns is a useful technique to keep in mind, but unfortunately this combination doesn't affect our model significantly here.  Perhaps we have better luck combining a numeric column with the target, such as the ratio of bedrooms to price:</p>
+<p>Combining numerical columns is a useful technique to keep in mind, but unfortunately this combination doesn't affect our model significantly here.  Perhaps we'd have better luck combining a numeric column with the target, such as the ratio of bedrooms to price:</p>
 
 
 <div class="codeblk">df["beds_per_price"] = df["bedrooms"] / df["price"]
@@ -429,7 +429,7 @@ X, y = df[['beds_per_price']+numfeatures], df['price']
 rf, oob = test(X, y)
 </div>
 
-<p class="stdout">OOB R^2 0.98610 using 1,315,392 tree nodes with 31.0 median tree height
+<p class="stdout">OOB R^2 0.98635 using 1,316,466 tree nodes with 31.0 median tree height
 </p>
 
 <p>Wow! That's almost a perfect score, which should trigger an alarm that it's too good to be true. In fact, we do have an error, but it's not a code bug. We have effectively copied the price  column into the feature set, kind of like studying for a quiz by looking at the answers. This is a form of <i>data leakage</i>, which is a general term for the use of  features that directly or indirectly hint at the target variable.</p>
@@ -440,11 +440,33 @@ rf, oob = test(X, y)
 <div class="codeblk">from sklearn.model_selection import train_test_split
 df_train, df_test = train_test_split(df, test_size=0.20)
 df_train = df_train.copy()
-df_train["beds_per_price"] = df_train["bedrooms"] / df_train["price"]
-df_train[["beds_per_price",'bedrooms']].head(5)
+df_train['beds_per_price'] = df_train['bedrooms'] / df_train["price"]
+df_train[['beds_per_price','bedrooms']].head(5)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>beds_per_price</th><th>bedrooms</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>7824</td><td>0.0003</td><td>1</td>
+	</tr>
+	<tr>
+	<td>5140</td><td>0.0003</td><td>1</td>
+	</tr>
+	<tr>
+	<td>48546</td><td>0.0005</td><td>1</td>
+	</tr>
+	<tr>
+	<td>4762</td><td>0.0006</td><td>2</td>
+	</tr>
+	<tr>
+	<td>9447</td><td>0.0005</td><td>1</td>
+	</tr>
+</tbody>
+</table>
 </div>
-
-
 <div class="p_wrapper">
 <div class=callout>As a general principle, you can't compute features for the validation set using information from the validation set. Only information computed directly from the training set can be used during feature engineering.</div>
 <p class=p_left>While we do have price information for the validation set in <span class=inlinecode>df_test</span>, we can't use it to compute <span class=inlinecode>beds_per_price</span> for the validation set.  In production, the model will not have the validation set prices and so <span class=inlinecode>df['beds_per_price']</span> must be created only from the training set. (If the model had apartment prices in practice, we wouldn't be the model.)  To avoid this common pitfall,  it's helpful to imagine computing features for and sending validation records to the model one by one, rather than all at once.</p>
@@ -458,8 +480,14 @@ df_test = df_test.copy()
 df_test["beds_per_price"] = df_test["bedrooms"].map(bpmap)
 avg = np.mean(df_test['beds_per_price'])
 df_test['beds_per_price'].fillna(avg, inplace=True)
-df_test["beds_per_price"].head(5)
-</div>
+print(df_test['beds_per_price'].head(5))</div>
+
+<p class="stdout">15200    0.000714
+48176    0.000000
+16152    0.001111
+33336    0.000295
+35903    0.000000
+Name: beds_per_price, dtype: float64</p>
 
 
 <p>The <span class=inlinecode>fillna()</span> code deals with the situation where the validation set has a number of bedrooms that is not in the training set; for example, sometimes the validation set has an apartment with 7 bedrooms, but there is no bedroom key equal to 7 in the <span class=inlinecode>bpmap</span>.</p>
@@ -477,11 +505,11 @@ print(f"OOB R^2 {oob_overfit:.5f}")
 print(f"{rfnnodes(rf):,d} nodes, {np.median(rfmaxdepths(rf))} median height")
 </div>
 
-<p class="stdout">OOB R^2 0.09733
-1,163,332 nodes, 30.0 median height
+<p class="stdout">OOB R^2 0.05721
+1,154,512 nodes, 31.0 median height
 </p>
 
-<p>An <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.097 on the validation set is terrible and indicates that the model lacks generality.  In this situation, overfitting means that the model has put too much emphasis on the <span class=inlinecode>beds_per_price</span> feature, which is strongly predictive of price in the training but not the validation set. (The feature was computed using just data from the training set.)  We get a whiff of overfitting even in the complexity of the model, which has half the number of nodes as a model trained just on the numeric features.  It's not always an error to derive features from the target; we just have to be more careful.</p>
+<p>An <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.057 on the validation set is terrible and indicates that the model lacks generality.  In this situation, overfitting means that the model has put too much emphasis on the <span class=inlinecode>beds_per_price</span> feature, which is strongly predictive of price in the training but not the validation set. (The feature was computed using just data from the training set.)  We get a whiff of overfitting even in the complexity of the model, which has half the number of nodes as a model trained just on the numeric features.  It's not always an error to derive features from the target; we just have to be more careful.</p>
 
 
 
@@ -540,10 +568,10 @@ X, y = df_encoded[targetfeatures+numfeatures], df['price']
 rf, oob = test(X, y)
 </div>
 
-<p class="stdout">OOB R^2 0.87267 using 2,745,540 tree nodes with 38.0 median tree height
+<p class="stdout">OOB R^2 0.87191 using 2,746,422 tree nodes with 39.0 median tree height
 </p>
 
-<p>That <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is a bit better than the baseline of 0.867 for numeric-only features. Given the tendency to overfit the model with target encoding, however, it's a good idea to test the model with a validation set. Let's split out 20% as a validation set and get a baseline for numeric features:</p>
+<p>That <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is a bit better than the baseline of 0.868 for numeric-only features. Given the tendency to overfit the model with target encoding, however, it's a good idea to test the model with a validation set. Let's split out 20% as a validation set and get a baseline for numeric features:</p>
 
 
 <div class="codeblk">df_train, df_test = train_test_split(df, test_size=0.20)
@@ -563,7 +591,7 @@ s_validation = rf.score(X_test, y_test)
 print(f"{s_validation:4f} score {rfnnodes(rf):,d} tree nodes and {np.median(rfmaxdepths(rf))} median tree height")
 </div>
 
-<p class="stdout">0.852926 score 2,122,806 tree nodes and 35.5 median tree height
+<p class="stdout">0.868370 score 2,129,230 tree nodes and 35.0 median tree height
 </p>
 
 <p>The validation score and the OOB score are very similar, confirming that OOB scores are an excellent approximation to validation scores. With that baseline, let's see what happens when we properly target encode the validation set, that is, using only data from the training set (warning: this takes several minutes to execute):</p>
@@ -585,7 +613,7 @@ s_tenc_validation = rf.score(X_test, y_test)
 print(f"{s_tenc_validation:.4f} score {rfnnodes(rf):,d} tree nodes and {np.median(rfmaxdepths(rf))} median tree height")
 </div>
 
-<p class="stdout">0.8511 score 2,374,860 tree nodes and 38.0 median tree height
+<p class="stdout">0.8663 score 2,383,668 tree nodes and 38.5 median tree height
 </p>
 <div class="p_wrapper">
 <span class=sidenote>
@@ -595,7 +623,7 @@ print(f"{s_tenc_validation:.4f} score {rfnnodes(rf):,d} tree nodes and {np.media
 </span>
 </div> <!-- end div for p_wrapper -->
 
-<p>The validation score for numeric plus target-encoded feature (0.851) is less than the validation score for numeric-only features (0.853). The model finds the target-encoded feature strongly predictive of the training set prices, causing it to overfit by overemphasizing this feature. This loss of generality explains the drop in validation scores. The feature importance graph provides evidence of this overemphasis because it shows the target-encoded <span class=inlinecode>building_id</span> feature as the most important.</p>
+<p>The validation score for numeric plus target-encoded feature (0.866) is less than the validation score for numeric-only features (0.868). The model finds the target-encoded feature strongly predictive of the training set prices, causing it to overfit by overemphasizing this feature. This loss of generality explains the drop in validation scores. The feature importance graph provides evidence of this overemphasis because it shows the target-encoded <span class=inlinecode>building_id</span> feature as the most important.</p>
 
 <p>While not beneficial for this data set, target encoding is reported to be useful by many practitioners and Kaggle competition winners. It's worth knowing about this technique and learning to apply it properly (computing validation set features using data only from the training set). </p>
 
@@ -629,10 +657,9 @@ print(f"{s_tenc_validation:.4f} score {rfnnodes(rf):,d} tree nodes and {np.media
 <p>To synthesize new features, we compute the so-called <i>Manhattan distance</i> (also called <i>L1 distance</i>) from each apartment to each neighborhood center, which measures the number of blocks one must walk to reach the neighborhood. In contrast, the <i>Euclidean distance</i> would measure distance as the crow flies, cutting through the middle of buildings.</p>
 
 
-<div class="codeblk">for hood in hoods.keys():
+<div class="codeblk">for hood,loc in hoods.items():
     # compute manhattan distance
-    for hood,loc in hoods.items():
-        df[hood] = np.abs(df.latitude - loc[0]) + np.abs(df.longitude - loc[1])
+    df[hood] = np.abs(df.latitude - loc[0]) + np.abs(df.longitude - loc[1])
 </div>
 
 
@@ -644,10 +671,10 @@ X, y = df[numfeatures+hoodfeatures], df['price']
 rf, oob_hood = test(X, y)
 </div>
 
-<p class="stdout">OOB R^2 0.87283 using 2,414,086 tree nodes with 43.0 median tree height
+<p class="stdout">OOB R^2 0.87276 using 2,413,238 tree nodes with 43.0 median tree height
 </p>
 
-<p>An OOB score of 0.873  is noticeably better than the baseline 0.867 for numeric features. The number of trees increased significantly, but the number of nodes is about the same. The model works a little bit harder to associate  similar apartments with similar rent prices, but it's worth the extra complexity for the performance boost.</p>
+<p>An OOB score of 0.873  is noticeably better than the baseline 0.868 for numeric features. The number of trees increased significantly, but the number of nodes is about the same. The model works a little bit harder to associate  similar apartments with similar rent prices, but it's worth the extra complexity for the performance boost.</p>
 
 <p>The new proximity features effectively triangulate an apartment relative to desirable neighborhoods, which means we probably don't need  apartment longitude and latitude anymore. Dropping longitude and latitude and retraining a model shows a similar OOB score and shallower trees:</p>
 
@@ -658,10 +685,10 @@ rf.fit(X, y)
 print(f"{rf.oob_score_:.4f} score {rfnnodes(rf):,d} tree nodes and {np.median(rfmaxdepths(rf))} median tree height")
 </div>
 
-<p class="stdout">0.8701 score 2,422,980 tree nodes and 40.5 median tree height
+<p class="stdout">0.8705 score 2,422,502 tree nodes and 40.0 median tree height
 </p>
 
-<p>Injecting outside data is definitely worth trying as a general rule.  As another example, consider predicting sales at a store or website. We found that injecting columns  indicating paydays or national holidays often helps predict fluctuations in sales volume that are not explained well with existing features.</p>
+<p>Injecting outside data is definitely worth trying as a general rule.  As another example, consider predicting sales at a store or website. We've found that injecting columns  indicating paydays or national holidays often helps predict fluctuations in sales volume that are not explained well with existing features.</p>
 
 
 
@@ -675,10 +702,10 @@ print(f"{rf.oob_score_:.4f} score {rfnnodes(rf):,d} tree nodes and {np.median(rf
 rf, oob_combined = test(X, y)
 </div>
 
-<p class="stdout">OOB R^2 0.87924 using 4,841,800 tree nodes with 44.0 median tree height
+<p class="stdout">OOB R^2 0.87869 using 4,840,370 tree nodes with 44.0 median tree height
 </p>
 
-<p>While OOB score 0.879 is not too much larger than our numeric-only model baseline of 0.867 in absolute terms, it means we've squeezed  an extra 8.959% relative accuracy out of our data (computed using <span class=inlinecode>((oob_combined-oob_baseline) / (1-oob_baseline))*100</span>).</p>
+<p>While OOB score 0.879 is not too much larger than our numeric-only model baseline of 0.868 in absolute terms, it means we've squeezed  an extra 7.966% relative accuracy out of our data (computed using <span class=inlinecode>((oob_combined-oob_baseline) / (1-oob_baseline))*100</span>).</p>
 <div class="p_wrapper">
 <span class=sidenote>
 <a href="images/catvars/catvars_cats_42.svg"><img src="images/catvars/catvars_cats_42.svg"

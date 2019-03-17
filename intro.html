@@ -35,8 +35,8 @@
 </head>
 <body>
 <div class="watermark">
-<i>Work in progress</i><br>
-Book version 0.3
+<i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
+Book version 0.3.1
 </div>
 
 <h1>2 How Machine Learning Works</h1>
@@ -212,11 +212,11 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 
 <p>We could try a &ldquo;mathy&rdquo; approach where we weight each feature by how important it is then use a weighted sum to estimate rent prices:</p>
 
-<p><img style="vertical-align: -2.7844844pt;" src="images/eqn-576FAA65E2A17721D10E7261E68917A0-depth002.65.svg"></p>
+<p><img style="vertical-align: -2.7825pt;" src="images/eqn-576FAA65E2A17721D10E7261E68917A0-depth002.65.svg"></p>
 
 <p>This equation boils all of our rent training data down to just five numbers that comprise our model (four weights, <span class=eqn>w<sub>i</sub></span>, and a scalar for minimum rent). That's an amazing compression!  Better yet, making a prediction is superfast because it's just four multiplies and four additions.</p>
 
-<p>This approach often works well and is called a <a href="https://en.wikipedia.org/wiki/Linear_regression">linear model</a> or <i>linear regression</i> because it tries to draw a line (or plane when given more than two dimensions) through the training data. (Recall the formula for a line from high school algebra, <img style="vertical-align: -2.7844844pt;" src="images/eqn-6D74D8F1C6D1196D2E75893F266AE552-depth002.65.svg">.)   The technique has been around for over 200 years and mathematicians have an elegant formula to conjure up suitable <span class=eqn>w<sub>i</sub></span> weights. <i>Regression</i> is the general term for predicting numerical values based upon training data and the associated model is called a <i>regressor</i>.</p>
+<p>This approach often works well and is called a <a href="https://en.wikipedia.org/wiki/Linear_regression">linear model</a> or <i>linear regression</i> because it tries to draw a line (or plane when given more than two dimensions) through the training data. (Recall the formula for a line from high school algebra, <img style="vertical-align: -2.7825pt;" src="images/eqn-6D74D8F1C6D1196D2E75893F266AE552-depth002.65.svg">.)   The technique has been around for over 200 years and mathematicians have an elegant formula to conjure up suitable <span class=eqn>w<sub>i</sub></span> weights. <i>Regression</i> is the general term for predicting numerical values based upon training data and the associated model is called a <i>regressor</i>.</p>
 
 <div class="p_wrapper">
 <span class=sidenote>
@@ -336,7 +336,7 @@ if bedrooms==2 and bathrooms==1.0 and \
 
 <p>To predict the price of an apartment with a particular set of features, each agent would find comparable (similar or identical) apartments from their training set and report the average of those apartments. The overall prediction would then be the average of all agents' averages.</p>
 
-<p>We'll learn the details of random forests in <b>Chapter 15</b> <i>Forests of Randomized Decision Trees</i> and how to implement them in <b>Chapter 16</b> <i>Implementing Random Forests</i>. RFs are the Swiss Army Knife&trade; of the machine learning world and we recommend them as your model of choice for the majority of machine learning problems encountered in practice. </p>
+<p>We'll learn the details of random forests in <b>Chapter 17</b> <i>Forests of Randomized Decision Trees</i> and how to implement them in <b>Chapter 18</b> <i>Implementing Random Forests</i>. RFs are the Swiss Army Knife&trade; of the machine learning world and we recommend them as your model of choice for the majority of machine learning problems encountered in practice. </p>
 
 <p>With a small tweak, we can use random forests for a related and equally-useful task: predicting discrete categories like cancer/not-cancer instead of continuous values such as prices.</p>
 
