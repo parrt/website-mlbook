@@ -36,7 +36,7 @@
 <body>
 <div class="watermark">
 <i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
-Book version 0.3.1
+Book version 0.4
 </div>
 
 <h1>4 Development Tools</h1>
@@ -154,13 +154,17 @@ cd mlbook</div>
 <span class=sidenote>
 
 <center>
+<center>
 <img src="images/tools/lab1.png" width="100%">
+</center>
 </center>
 
 <br><b>Figure 4.1</b>. Initial Jupyter Lab screen</span><span class=sidenote>
 
 <center>
+<center>
 <img src="images/tools/lab2.png" width="100%">
+</center>
 </center>
 
 <br><b>Figure 4.2</b>. Jupyter Lab after creating Python 3 notebook</span>
@@ -177,7 +181,9 @@ cd mlbook</div>
 <span class=sidenote>
 
 <center>
+<center>
 <img src="images/tools/lab3.png" width="100%">
+</center>
 </center>
 
 <br><b>Figure 4.3</b>. Jupyter Lab with one code cell and output</span>
@@ -216,13 +222,17 @@ bedrooms,bathrooms,latitude,longitude,price
 <span class=sidenote>
 
 <center>
+<center>
 <img src="images/tools/lab3a.png" width="100%">
+</center>
 </center>
 
 <br><b>Figure 4.4</b>. Jupyter Lab cell with pandas CSV load</span><span class=sidenote>
 
 <center>
+<center>
 <img src="images/tools/lab4.png" width="100%">
+</center>
 </center>
 
 <br><b>Figure 4.5</b>. Notebook with graph output</span>
@@ -1059,13 +1069,13 @@ df_aug.head(3)</div>
 </thead>
 <tbody>
 	<tr>
-	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td><td>0.8097</td>
+	<td>0</td><td>3</td><td>1.5000</td><td>40.7145</td><td>-73.9425</td><td>3000</td><td>0.7624</td>
 	</tr>
 	<tr>
-	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td><td>0.5299</td>
+	<td>1</td><td>2</td><td>1.0000</td><td>40.7947</td><td>-73.9667</td><td>5465</td><td>0.9703</td>
 	</tr>
 	<tr>
-	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td><td>0.6160</td>
+	<td>2</td><td>1</td><td>1.0000</td><td>40.7388</td><td>-74.0018</td><td>2850</td><td>0.0397</td>
 	</tr>
 </tbody>
 </table>
@@ -1448,7 +1458,9 @@ df_aug[['created','dayofweek','day','month']].head()</div>
 </center>
 <p>Our goal is to create a new column in <span class=inlinecode>df_sales</span> that has the appropriate <span class=inlinecode>SalePrice</span> for each record. To do that, we need a key that is common to both tables, which is the <span class=inlinecode>SalesID</span> in this case. For example, the record in <span class=inlinecode>df_sales</span> with <span class=inlinecode>SalesID</span> of 1222843 should get a new <span class=inlinecode>SalesPrice</span> entry of 10000. In database terms, we need a <i>left join</i>, which keeps all records from the left dataframe and ignores records for unmatched <span class=inlinecode>SalesID</span>s from the right dataframe:</p>
 
-<p><img src="images/tools/left-join.png" width="60%"></p>
+<p><center>
+<img src="images/tools/left-join.png" width="60%">
+</center></p>
 
 <p>Any record in  the left dataframe without a counterpart in right dataframe gets <span class=inlinecode>np.NaN</span> (not a number) to represent a missing entry.</p>
 
@@ -1650,9 +1662,11 @@ axes[1].set_ylabel("Count of apts")
 axes[1].set_xlabel("Price")
 plt.tight_layout()
 plt.show()</div>
+<center>
 <a href="images/tools/tools_plt_6.svg"><img src="images/tools/tools_plt_6.svg"
   width="60%%"
 ></a>
+</center>
 
 <p>For some reason, matplotlib does not automatically adjust the space between subplots and so we generally have to call <span class=inlinecode>plt.tight_layout()</span>, which tries to adjust the padding. Without that call, the plots overlap.</p>
 
@@ -1785,10 +1799,10 @@ print(np.max(prices))
 print(np.sum(prices))
 </div>
 
-<p class="stdout">[1.09861229 1.09861229 1.38629436 1.38629436 2.07944154]
-4.4
-8
-22
+<p class="stdout">[1.09861229 1.94591015 2.19722458 2.19722458 0.69314718]
+6.0
+9
+30
 </p>
 
 <p>The expression <span class=inlinecode>np.log(prices)</span> is equivalent to the following loop and array constructor, but the loop is much slower:</p>
@@ -1863,8 +1877,8 @@ plt.show()</div>
 print(a)
 </div>
 
-<p class="stdout">[[0.25629003 0.30353098 0.54447865]
- [0.40477094 0.8467397  0.09616695]]
+<p class="stdout">[[0.51437402 0.46566841 0.20536907]
+ [0.82139522 0.11044102 0.66979215]]
 </p>
 
 <p>Indexing 1D NumPy arrays works like Python array indexing with integer indexes and slicing, but NumPy arrays also support queries and list of indices, as we'll seen shortly. Here are some examples of 1D indexing:</p>
@@ -1912,8 +1926,8 @@ print(a)
 print(a>0.3)
 </div>
 
-<p class="stdout">[0.86517816 0.71356603 0.15615269 0.2700004  0.72219358]
-[ True  True False False  True]
+<p class="stdout">[0.63507935 0.51535146 0.34574814 0.38985047 0.92781766]
+[ True  True  True  True  True]
 </p>
 
 <p>We can then use that array of booleans to index into that array, or even another array of the same length:</p>
@@ -1923,7 +1937,7 @@ print(a>0.3)
 print(b[a>0.3])
 </div>
 
-<p class="stdout">[1 2 5]
+<p class="stdout">[1 2 3 4 5]
 </p>
 
 <p>As with one dimensional arrays, vectors, the NumPy defines the arithmetic operators for matrices. For example, here's how to add and print out two matrices:</p>
@@ -2085,7 +2099,7 @@ pred = rf.predict(test_vector)
 print(f"{test_vector} -> {pred}")
 </div>
 
-<p class="stdout">[[  2.       1.      40.7947 -73.9957]] -> [4785.20791667]
+<p class="stdout">[[  2.       1.      40.7947 -73.9957]] -> [4873.48418398]
 </p>
 
 <p>Notice that we also get a vector of predictions (with one element) back because <span class=inlinecode>predict()</span> is designed to map multiple test vectors to multiple predictions.</p>

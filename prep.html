@@ -36,7 +36,7 @@
 <body>
 <div class="watermark">
 <i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
-Book version 0.3.1
+Book version 0.4
 </div>
 
 <h1>5 Exploring and Denoising Your Data Set</h1>
@@ -66,7 +66,7 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 	<ul>
 	</ul>
 	</li>
-	<li><a href="#sec:5.2">Training and evaluating an initial model</a>
+	<li><a href="#sec:initial-model">Training and evaluating an initial model</a>
 	<ul>
 	</ul>
 	</li>
@@ -92,7 +92,7 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 <p>&ldquo;<i>It is a capital mistake to theorize before one has data. Insensibly one begins to twist facts to suit theories, instead of theories to suit facts.</i>&rdquo; &mdash; Arthur Conan Doyle (1891) in <i>A Scandal in Bohemia</i></p>
 <p>	In <b>Chapter 3</b> <i>A First Taste of Applied Machine Learning</i>, we successfully trained a random forest (RF) model to predict New York City rent prices but under ideal conditions: the data was already in a form acceptable to a model and was mostly free of errors, outliers, and other noise.  The unfortunate reality is that real data sets are messy and so, in this chapter, we're going to learn how to process the original data from Kaggle bit-by-bit until it looks like that ideal data set.  The dirty little secret of the machine learning world is that practitioners spend roughly 75% of their time acquiring, cleaning, and otherwise preparing data for training. (We won't learn about the acquisition piece in this book, but you can check out Terence's free <a href="https://github.com/parrt/msan692">Data Acquisition course notes</a>.)</p>
 
-<p>To train a model, the data set must follow two fundamental rules: all data must be numeric and there can't be any missing values. We must derive numeric features from the nonnumeric features such as strings, dates, and categorical variables like <span class=inlinecode>SalesID</span>. Or, we can simply delete the nonnumeric features. That preparation work is a big topic unto itself, which we'll address in <b>Chapter 6</b> <i>Categorically Speaking</i> and <b>Chapter 8</b> <i>Dealing with Missing Data</i>.  In this chapter, we'll stick with the numeric fields (bathrooms, bedrooms, longitude, latitude) we used before.</p>
+<p>To train a model, the data set must follow two fundamental rules: all data must be numeric and there can't be any missing values. We must derive numeric features from the nonnumeric features such as strings, dates, and categorical variables like <span class=inlinecode>SalesID</span>. Or, we can simply delete the nonnumeric features. That preparation work is a big topic unto itself, which we'll address in <b>Chapter 6</b> <i>Categorically Speaking</i> and <b>Chapter 7</b> <i>Exploring and Cleaning the Bulldozer Dataset</i>.  In this chapter, we'll stick with the numeric fields (bathrooms, bedrooms, longitude, latitude) we used before.</p>
 
 <p>Even with purely numeric data, there is potential cleanup work to do. The data could have outliers, errors, or contradictory information.  For example, in our apartment data, one place claims to have 2 bedrooms but 10 bathrooms, while other apartments claim to be on the equator!  Armed with graphs or statistics from the data set, we turn to someone with domain expertise to interpret what we observe. (Terence's sister lives in New York City and confirms that New York is not on the equator, though typically feels that way in August.)</p>
 
@@ -109,7 +109,9 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 
 <p>	</p>
 
-<p>To get started, make sure that you have file <span class=inlinecode>rent.csv</span> in your <span class=inlinecode>data</span> directory underneath where you are running Jupyter. (See <b>Section 3.2.1</b> <i>Loading and sniffing the training data</i> for instructions on downloading JSON rent data from Kaggle and creating the CSV files.) Then, create a new Jupyter notebook by clicking on the &ldquo;+&rdquo; button and selecting &ldquo;Python 3&rdquo; under the &ldquo;Notebook&rdquo; tab. This will create a file in the same directory where you started <span class=inlinecode>jupyter lab</span> (unless you have jumped around using the &ldquo;Files&rdquo; tab on the left side of the lab browser window). It's probably a good idea to give the file a decent name like <span class=inlinecode>clean.ipynb</span> by right clicking on the notebook tab that currently says <span class=inlinecode>Untitled.ipynb</span>. Now, let's enter some code into the notebook to read in the CSV data using pandas to get our first look at the original data:</p>
+<p>To get started, make sure that you have file <span class=inlinecode>rent.csv</span> in your <span class=inlinecode>data</span> directory underneath where you are running Jupyter. (See <b>Section 3.2.1</b> <i>Loading and sniffing the training data</i> for instructions on downloading JSON rent data from Kaggle and creating the CSV files.) Then, create a new Jupyter notebook by clicking on the &ldquo;+&rdquo; button and selecting &ldquo;Python 3&rdquo; under the &ldquo;Notebook&rdquo; tab. This will create a file in the same directory where you started <span class=inlinecode>jupyter lab</span> (unless you have jumped around using the &ldquo;Files&rdquo; tab on the left side of the lab browser window). It's probably a good idea to give the file a decent name like <span class=inlinecode>clean.ipynb</span> by right clicking on the notebook tab that currently says <span class=inlinecode>Untitled.ipynb</span>.  You might also find it convenient to cut/paste from the <a href="https://mlbook.explained.ai/notebooks/">notebooks</a> that were automatically derived from the code snippets from the various chapters.</p>
+
+<p>Now, let's enter some code into the notebook to read in the CSV data using pandas to get our first look at the original data:</p>
 
 
 <div class="codeblk">import pandas as pd
@@ -271,7 +273,7 @@ dtype: bool</p>
 
 
 
-<h2 id="sec:5.2">5.2 Training and evaluating an initial model</h2>
+<h2 id="sec:initial-model">5.2 Training and evaluating an initial model</h2>
 
 
 <div class="p_wrapper">
@@ -315,7 +317,7 @@ rf = RandomForestRegressor(n_estimators=100,
 print( f"{r2:.4f}" )
 </div>
 
-<p class="stdout">0.8507
+<p class="stdout">0.8649
 </p>
 
 <p>A perfect training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score is 1.0, meaning that the model perfectly recalls the training data. An <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score of 0 means the model performs no better than always just returning the average price.  Unfortunately, a high training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score (low error) doesn't tell us much. A high score just means that it's <i>possible</i> there is a relationship between features and target and captured by the model. If, however, we can't get a high <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score, it's an indication that there is no relationship or the model is simply unable to capture it. RFs are very powerful and can capture relationships even between random variables, so expect RF training <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores to be high.</p>
@@ -337,7 +339,7 @@ noisy_oob_r2 = rf.oob_score_
 print(f"OOB score {noisy_oob_r2:.4f}")
 </div>
 
-<p class="stdout">OOB score -0.0501
+<p class="stdout">OOB score -0.0076
 </p>
 
 <p>That score is terrible, approximately as bad as just predicting the average apartment rent price.  Because this is our first exposure to <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg">, let's get more comfortable with it by verifying that the average absolute error (MAE) in dollars is also terrible. To get a validation set, we have to hold out a random 20% subset. In noisy data sets, the range of values in the 20% we select could vary significantly from run to run, so let's get a few MAE numbers for comparison.  Here's a simple test rig with the model-related code emphasized:</p>
@@ -365,8 +367,8 @@ print()
 print(f"Average validation MAE ${noisy_avg_mae:.0f}")
 </div>
 
-<p class="stdout">Validation MAE trials: $374 $875 $522 $560 $1042 $527 $992
-Average validation MAE $699
+<p class="stdout">Validation MAE trials: $411 $872 $851 $498 $901 $395 $425
+Average validation MAE $622
 </p>
 
 <p>Those validation errors are definitely worse than the roughly $300 average error we saw on the clean data set from <b>Chapter 3</b> <i>A First Taste of Applied Machine Learning</i>. Also, the error values bounce around significantly, which means that different subsamples of the data set have different characteristics. This behavior is consistent with the low OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score coming from the RF, indicating a model trained on the raw data set gets poor results.</p>
@@ -504,13 +506,19 @@ Name: bedrooms, dtype: int64</p>
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<a href="images/prep/prep_sniff_17.svg"><img src="images/prep/prep_sniff_17.svg"
+<a href="images/prep/prep_sniff_16.svg"><img src="images/prep/prep_sniff_16.svg"
   width="100%"
 ></a>
 </span>
 
 
-<div class="codeblk">fig,ax = plt.subplots()
+<div class="codeblk">bookcolors = { # our usual book color palette
+         'crimson': '#a50026', 'red': '#d73027',
+         'redorange': '#f46d43', 'orange': '#fdae61',
+         'yellow': '#fee090', 'sky': '#e0f3f8',
+         'babyblue': '#abd9e9', 'lightblue': '#74add1',
+         'blue': '#4575b4', 'purple': '#313695'}
+fig,ax = plt.subplots()
 ax.set_xlabel('Num Bedrooms')
 ax.set_ylabel('Num Apts')
 ax.hist(df_num.bedrooms, color=bookcolors['blue'])
@@ -522,7 +530,9 @@ plt.show()</div>
 <p>	 </p>
 <div class=aside><b>Using a consistent color palette</b><br>
 
-<p>	 A common mistake we see among our students is to use essentially random colors or at least inconsistent colors across graphs.  In one graph, feature price is purple and in the next graph the same feature is green. Humans are very sensitive to color and attach meaning to the various colors subconsciously, so it's important to be consistent across visualizations.  When drawing diagrams manually, it's a good idea to choose from a consistent color palette as well.  For this book, we selected <img src="images/prep/color-palette.png" width="20%"> as our palette and choose from  those colors when drawing diagrams.  Python code used in the remainder of the book will select colors from this pallet using a simple dictionary mechanism:</p>
+<p>	 A common mistake we see among our students is to use essentially random colors or at least inconsistent colors across graphs.  In one graph, feature price is purple and in the next graph the same feature is green. Humans are very sensitive to color and attach meaning to the various colors subconsciously, so it's important to be consistent across visualizations.  When drawing diagrams manually, it's a good idea to choose from a consistent color palette as well.  For this book, we selected <center>
+<img src="images/prep/color-palette.png" width="20%">
+</center> as our palette and choose from  those colors when drawing diagrams.  Python code used in the remainder of the book will select colors from this pallet using a simple dictionary mechanism:</p>
 
 <p>	 </p>
 
@@ -619,7 +629,7 @@ df_clean = df_num[(df_num.price>1_000) & (df_num.price&lt;10_000)]
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<a href="images/prep/prep_sniff_23.svg"><img src="images/prep/prep_sniff_23.svg"
+<a href="images/prep/prep_sniff_22.svg"><img src="images/prep/prep_sniff_22.svg"
   width="100%"
 ></a>
 </span>
@@ -636,7 +646,7 @@ plt.show()</div>
 <div class="p_wrapper">
 <span class=sidenote>
 &#187; <i>Generated by code to left</i><br>
-<a href="images/prep/prep_sniff_24.svg"><img src="images/prep/prep_sniff_24.svg"
+<a href="images/prep/prep_sniff_23.svg"><img src="images/prep/prep_sniff_23.svg"
   width="100%"
 ></a>
 </span>
@@ -699,12 +709,12 @@ clean_oob_r2 = rf.oob_score_
 print(f"Validation OOB score {clean_oob_r2:.4f}")
 </div>
 
-<p class="stdout">Validation OOB score 0.8679
+<p class="stdout">Validation OOB score 0.8677
 </p>
 
 <p>Let's also verify that the MAE is the same as we saw for the ideal data set (only the output is shown for brevity):</p>
-<p class="stdout">Validation MAE trials: $295 $287 $290 $304 $287 $294 $292
-Average clean validation MAE $292
+<p class="stdout">Validation MAE trials: $293 $293 $296 $290 $293 $300 $296
+Average clean validation MAE $294
 </p>
 
 <p>Great! We've now got a prediction model that gets a decent <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> estimated prediction error.  Are we done yet? That depends on the definition of &ldquo;good enough&rdquo; and whether we think we can do better. Imagine a website that used our model to predictor rent prices using apartment features entered by a user. There is likely a threshold below which users don't find the predictions useful. If we have a suitable way to test &ldquo;good enough,&rdquo; this should guide whether we keep looking for improvements. </p>
@@ -724,8 +734,8 @@ print(f"LM Training score {lm.score(X_train, y_train):.4f}")
 print(f"LM Validation score {lm.score(X_test, y_test):.4f}")
 </div>
 
-<p class="stdout">LM Training score 0.5721
-LM Validation score 0.5903
+<p class="stdout">LM Training score 0.5764
+LM Validation score 0.5740
 </p>
 
 <p>Even the linear model's <i>training</i> <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> is significantly worse than the RF's validation score.  The linear model is unable to capture the relationship between features and apartment price even for training data.</p>
@@ -744,8 +754,8 @@ print(f"GB Training score {gbr.score(X_train, y_train):.4f}")
 print(f"GB Validation score {gbr.score(X_test, y_test):.4f}")
 </div>
 
-<p class="stdout">GB Training score 0.8387
-GB Validation score 0.8236
+<p class="stdout">GB Training score 0.8425
+GB Validation score 0.8046
 </p>
 
 <p>Given the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> and MAE scores from our RF model and that model's favorable comparison to other models, it's reasonable to declare victory over this problem.  Our solution comes from cleaning the data to make life easier on the model, rather than choosing the right model on the raw data set.</p>
@@ -768,18 +778,22 @@ GB Validation score 0.8236
 
 <div class="p_wrapper">
 <span class=sidenote>
+<center>
 <a href="images/prep/prep_logs_2.svg"><img src="images/prep/prep_logs_2.svg"
   width="100%"
 ></a>
+</center>
 <br><b>Figure 5.1</b>. Histogram of prices clipped to less than $20,000 and zoomed in to make the long right tail more apparent; the triangle marks the average price.</span><p class=sidenote><span class=sup>7</span>Averages are highly sensitive to outliers; consider the average salary of 10 of your friends and then add Bill Gates' salary, which would drive the average up tremendously.</p>
 <p class=p_left>To arrive at the log trick, let's look at the distribution of prices again. <b>Figure 5.1</b> shows the distribution of prices clipped to less than $20,000 and zoomed in to show part of the long right tail. Long tails are not necessarily a problem themselves; it's the inconsistencies caused by the outliers that lead to inaccurate models. During training, RFs combine the prices of identical or nearly-identical apartments by averaging them together, thus, forming the prediction for those apartments. But, outlier prices wildly skew average prices, so the model's predictions could be very far off.<span class=sup>7</span></p>
 </div>
 
 <div class="p_wrapper">
 <span class=sidenote>
+<center>
 <a href="images/prep/prep_logs_3.svg"><img src="images/prep/prep_logs_3.svg"
   width="90%%"
 ></a>
+</center>
  <br><b>Figure 5.2</b>. Histogram of natural log(prices) without clipping outliers; the triangle marks the average log price.</span>
 <p class=p_left>Optimally, the distribution of prices would be a narrow &ldquo;bell curve&rdquo; distribution without a tail. This would make predictions based upon average prices more accurate. We need a mathematical operation that transforms the widely-distributed target prices into a new space. The &ldquo;price in dollars space&rdquo; has a long right tail because of outliers and we want to squeeze that space into a new space that is normally distributed (&ldquo;bell curved&rdquo;).  More specifically, we need to shrink large values a lot and smaller values a little. That magic operation is called the <i>logarithm</i> or log for short. <b>Figure 5.2</b> shows the histogram resulting from taking the log of <i>all</i> prices in the data set. We get a nice normally-shaped distribution of prices without having to clip outliers. (See <b>Section 19.3</b> <i>Log, orders of magnitude, and Euler's number</i> for more on log.) The max price has dropped from millions to about 10.</p>
 </div>
@@ -827,10 +841,10 @@ log_oob_r2 = rf.oob_score_
 print(f"OOB R^2 score for log(price) {log_oob_r2:.4f}")
 </div>
 
-<p class="stdout">OOB R^2 score for log(price) 0.8762
+<p class="stdout">OOB R^2 score for log(price) 0.8767
 </p>
 
-<p>Recall the poor <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of -0.050 for the model trained on the raw prices.  By taking the log of the prices, our model's OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> matches the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.868 from the model trained on just the apartments less than $10,000.  Without having to clean the data or know anything about the domain, we achieved the same score as the model trainined on the clean data set! </p>
+<p>Recall the poor <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of -0.008 for the model trained on the raw prices.  By taking the log of the prices, our model's OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> matches the <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> of 0.868 from the model trained on just the apartments less than $10,000.  Without having to clean the data or know anything about the domain, we achieved the same score as the model trainined on the clean data set! </p>
 
 <p>To make actual predictions for some <span class=inlinecode>X_test</span>, though, we have to take the exp of model predictions to get prices in dollars instead of log dollars (<img style="vertical-align: -3.4125pt;" src="images/eqn-DDA3CE43CD62B33E39753A16C3C4F160-depth003.25.svg"> = <span class=eqn>x</span>):</p>
 

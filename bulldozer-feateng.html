@@ -1,0 +1,714 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118361649-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-118361649-2');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+<link rel="stylesheet" type="text/css" href="css/book.css"/>
+<title>Bulldozer Feature Engineering</title>
+<!-- META -->
+<!-- LinkedIn meta -->
+<meta property='og:title' content="The Mechanics of Machine Learning"/>
+<meta property='og:image' content="https://mlbook.explained.ai/images/intro/training.svg">
+<meta property='og:description' content="This book is a primer on machine learning for programmers trying to get up to speed quickly."/>
+<meta property='og:url' content="https://mlbook.explained.ai"/>
+
+<!-- Facebook meta -->
+<meta property="og:type" content="article" />
+
+<!-- Twitter meta -->
+<meta name="twitter:title" content="The Mechanics of Machine Learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@the_antlr_guy">
+<meta name="twitter:creator" content="@the_antlr_guy">
+<meta name="twitter:description" content="This book is a primer on machine learning for programmers trying to get up to speed quickly.">
+<meta name="twitter:image" content="https://mlbook.explained.ai/images/intro/training.svg">
+<!-- END META -->
+</head>
+<body>
+<div class="watermark">
+<i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
+Book version 0.4
+</div>
+
+<h1>8 Bulldozer Feature Engineering</h1>
+
+<p><a href="http://parrt.cs.usfca.edu">Terence Parr</a> and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
+
+<p></p>
+
+<p style="font-size: 80%">Copyright &copy; 2018-2019 Terence Parr.  All rights reserved.<br><i>Please don't replicate on web or redistribute in any way.</i><br>This book generated from markup+markdown+python+latex source with <a href="https://github.com/parrt/bookish">Bookish</a>.
+<p>
+<p>
+You can make <b>comments or annotate</b> this page by going to the <a id="annotatelink" href="">annotated version of this page</a>. You'll see existing annotated bits highlighted in yellow. They are <i>PUBLICLY VISIBLE</i>. Or, you can send comments, suggestions, or fixes directly to <a href="mailto:parrt@cs.usfca.edu">Terence</a>.
+</p>
+<script>
+var me = window.location.href;
+document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
+</script>
+</p>
+</p>
+
+
+
+<div id="toc">
+<p class="toc_title">Contents</p>
+<ul>
+	<li><a href="#sec:8.1">Synthesizing date-related features</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:8.2">ProductSize is an ordinal variable</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#onehot-hf">One-hot encoding Hydraulics_Flow</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:8.4">One-hot encoding Enclosure</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:8.5">Splitting apart fiProductClassDesc</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:8.6">Training with log(price)</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:8.7">The effect of feature engineering on model performance</a>
+	<ul>
+	</ul>
+	</li>
+	<li><a href="#sec:8.8">Summary</a>
+	<ul>
+	</ul>
+	</li>
+
+</ul>
+</div>
+
+
+<p>In the last chapter, we cleaned up the bulldozer dataset and fixed missing values.  The resulting model's OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score was good, but we can improve on that score by transforming some existing columns and synthesizing others. The techniques in this chapter extend and improve upon the feature engineering we did in <b>Chapter 6</b> <i>Categorically Speaking</i>.  The features to focus on are derived from the feature importance graph from the last chapter, and our engineering process will look like this:</p>
+<ol>
+<li>Shatter the <span class=inlinecode>saledate</span> feature into its constituent components</li>
+<li>Convert <span class=inlinecode>ProductSize</span> to an ordered categorical variable</li>
+<li><i>One hot encode</i> <span class=inlinecode>Hydraulics_Flow</span> and <span class=inlinecode>Enclosure</span></li>
+<li>Split <span class=inlinecode>fiProductClassDesc</span> into its constituent components</li>
+<li>Take the logarithm of <span class=inlinecode>SalePrice</span> target variable</li>
+</ol>
+<p>As we go along, we'll examine the change in the model's OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score and see what pops up in the feature importance graph. At the end, we'll plot the feature transformations versus model scores to visualize the improvements gained from our handiwork.</p>
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>1</span>If you get an error &ldquo;<span class=inlinecode>read_feather() got an unexpected keyword argument 'nthreads'</span>,&rdquo; then try:<br><span class=inlinecode>import feather</span><br><span class=inlinecode>feather.read_dataframe("data/bulldozer-train.feather")</span></p>
+<p class=p_left>Let's get started by loading the cleaned up dataframe we computed in the last chapter. We'll also load the original dataset so that we apply different transformations to <span class=inlinecode>ProductSize</span>, <span class=inlinecode>Hydraulics_Flow</span>, <span class=inlinecode>fiProductClassDesc</span>, and <span class=inlinecode>Enclosure</span>.<span class=sup>1</span></p>
+</div>
+
+
+<div class="codeblk">df_raw = pd.read_feather("data/bulldozer-train.feather")
+df_raw = df_raw.iloc[-100_000:] # same 100,000 records as before
+df = pd.read_feather("data/bulldozer-train-clean.feather")
+</div>
+
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>2</span>Don't forget the <a href="https://mlbook.explained.ai/notebooks/">notebooks</a> aggregating the code snippets from the various chapters.</p>
+<p class=p_left>We should get a new baseline OOB score, this time using a model with 150 trees in the forest, rather than the 50 we used previously. As we increase the number of trees, the accuracy of an RF tends to improve but only up to a certain point.  More importantly for assessing model improvements, another interesting thing happens as we increase the number of trees. Scores from the larger and larger models start to converge to the same score for the same OOB test set, run after run. As the Random Forest averages more and more predictions from the individual trees, the variance of its combined predictions goes down and, hence, so does the variance of the overall OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> scores.  Here's how to get a stable baseline using the <span class=inlinecode>test()</span> function used in previous chapters:<span class=sup>2</span></p>
+</div>
+
+
+<div class="codeblk">X, y = df.drop(['SalePrice','saledate'], axis=1), df['SalePrice']
+rf, oob_clean = test(X, y, n_estimators=150)
+</div>
+
+<p class="stdout">OOB R^2 0.90318 using 15,454,126 tree nodes with 43.0 median tree height
+</p>
+
+<p>You'll notice that the OOB score of 0.903 slightly higher than the score we got at the end of the last chapter, due to the increased number of trees in the forest.  Now let's dive into feature engineering.</p>
+<div class=aside><b>Bias and variance</b><br>
+Statisticians use the words <i>bias</i> and <i>variance</i> when evaluating the effect of model complexity on model accuracy. A model that systematically predicts values that differ from known true values is said to be <i>biased</i>. The larger that difference, the higher the bias.  High bias models are not complex enough to capture the relationship between features and the target variable--they are <i>underfit</i>. If the model gives widely fluctuating results, depending on the test set, the model has high variance and is <i>overfit</i>. The simple way to think of these terms is that bias is accuracy and variance is generality.
+<p>The use of &ldquo;variance&rdquo; in this way is suboptimal, particularly when &ldquo;overfit&rdquo; is available and more explicit, because variance is used in so many contexts. For example, the term variance is also applicable when discussing the effect of increasing the number of trees in a Random Forest.  Constructing an RF is an inherently random process and so multiple RF models trained on the exact same training set will be different. That means the prediction of these models on the exact same test set or OOB set will also be different. It's appropriate to describe the variation in the models' predictions as, well, variance. </p>
+
+<p>Imagine that we build a model with, say, 10 trees and get an OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score. Repeat that train-and-score process many times, and you will find lots of variation in the scores. Now, increase the number of trees to 100 and repeat the trials. You will notice that the variation between model OOB scores is significantly lower than models trained with only 10 trees. (The <a href="https://en.wikipedia.org/wiki/Central_limit_theorem">central limit theorem</a> comes into play when we average the predictions of multiple trees.)</p>
+
+<p>So some people use variance to mean generality when comparing multiple test sets but also use variance to mean reduced prediction fluctuations on the same test set but larger forests.  We recommend that you shy away from bias and variance, in favor of the more explicit accuracy and generality or underfit and overfit.</p>
+
+</div>
+
+
+<h2 id="sec:8.1">8.1 Synthesizing date-related features</h2>
+
+
+<p>Date columns in datasets are often predictive of target variables, such as the <span class=inlinecode>saledate</span> in the bulldozer dataset. The date of sale and the year of manufacture together are strongly predictive of the sale price. As a general rule, we recommend shattering date columns into their constituent components to include: year, month, day, day of week (1..7), day of year (1..365), and even things like &ldquo;end of quarter&rdquo; and &ldquo;end of month.&rdquo; Pandas provides convenient functions to extract all of this information from a single <span class=inlinecode>datetime64</span> entity.  After extracting the components, convert the <span class=inlinecode>datetime64</span> to an integer with the number of seconds since 1970 (the usual UNIX time measurement).  Here's a basic function that illustrates how to synthesize date-related features:</p>
+
+
+<div class="codeblk">def df_split_dates(df,colname):
+    df["saleyear"] = df[colname].dt.year
+    df["salemonth"] = df[colname].dt.month
+    df["saleday"] = df[colname].dt.day
+    df["saledayofweek"] = df[colname].dt.dayofweek
+    df["saledayofyear"] = df[colname].dt.dayofyear
+    df[colname] = df[colname].astype(np.int64) # convert to seconds since 1970
+</div>
+
+
+<p>After using the function, we can use Pandas' <span class=inlinecode>filter()</span> to examine the newly-created columns:</p>
+
+
+<div class="codeblk">df_split_dates(df, 'saledate')
+df.filter(regex=('sale*')).head(2).T</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>0</th><th>1</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>saledate</td><td>1232668800000000000</td><td>1232668800000000000</td>
+	</tr>
+	<tr>
+	<td>saleyear</td><td>2009</td><td>2009</td>
+	</tr>
+	<tr>
+	<td>salemonth</td><td>1</td><td>1</td>
+	</tr>
+	<tr>
+	<td>saleday</td><td>23</td><td>23</td>
+	</tr>
+	<tr>
+	<td>saledayofweek</td><td>4</td><td>4</td>
+	</tr>
+	<tr>
+	<td>saledayofyear</td><td>23</td><td>23</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Since we don't know which components, if any, will be predictive it's a good idea to just add whatever you can derive from the date. For example, you might want to add a column indicating that a day was a business holiday or even whether there was a big storm. Beyond the usual year/month/day and other numeric components, the new columns you synthesize will be application-specific. RF models won't get confused by the extra columns and we can excise useless features later, after finishing feature engineering. Let's check the effect of date-splitting on model accuracy:</p>
+
+
+<div class="codeblk">X, y = df.drop('SalePrice', axis=1), df['SalePrice']
+rf, oob_dates = test(X, y, n_estimators=150)
+</div>
+
+<p class="stdout">OOB R^2 0.91315 using 14,917,750 tree nodes with 43.0 median tree height
+</p>
+
+<p>We get a nice bump from our clean baseline score of 0.903 to 0.913 and the number of nodes is smaller.</p>
+
+<p>Now that we have a <span class=inlinecode>saleyear</span> column in addition to the <span class=inlinecode>YearMade</span>, let's create an <span class=inlinecode>age</span> feature that explicitly states the age of a bulldozer for sale. The age of a vehicle is obviously important and, while the model has access to both fields already, it's a good idea to make life as easy as possible on the model:</p>
+
+
+<div class="codeblk">df['age'] = df['saleyear'] - df['YearMade']
+
+X, y = df.drop('SalePrice', axis=1), df['SalePrice']
+rf, oob_age = test(X, y, n_estimators=150)
+</div>
+
+<p class="stdout">OOB R^2 0.91281 using 14,896,494 tree nodes with 43.0 median tree height
+</p>
+
+<p>The OOB score is roughly the same after we add <span class=inlinecode>age</span>, but the number of nodes is a little smaller.</p>
+
+<p>Looking at the feature importance graph, none of the date-related features we added appear to be important, other than the converted <span class=inlinecode>saledate</span>. <span class=inlinecode>YearMade</span> is still very important, but <span class=inlinecode>age</span> appears to be not that important.</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_11.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_11.svg"
+  width="100%"
+></a>
+</span>
+
+
+<div class="codeblk">I = importances(rf, X, y)
+plot_importances(I.head(15))</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>The reason for this is subtle but has to do with the fact that all of the date-related features are highly correlated, meaning that if we dropped one of them, the other features would &ldquo;cover&rdquo; for it. It's better to treat all of those date-related features as a meta-feature for feature importance graphs:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_12.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_12.svg"
+  width="100%"
+></a>
+</span>
+
+
+<div class="codeblk">features = list(df.drop('SalePrice',axis=1).columns)
+datefeatures = list(df.filter(regex=("sale*")).columns)
+for f in datefeatures:
+    features.remove(f)
+features.remove('YearMade')
+features.remove('age')
+features += [['YearMade','age']+datefeatures]
+I = importances(rf, X, y, features=features)
+plot_importances(I.head(15))</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>While <span class=inlinecode>age</span> might not individually pop up in the importance graph, a graph of age in years versus sale price confirms our belief that older vehicles sell for less on average. That correlation (relationship between the age feature and target price) implies at least some predictability for <span class=inlinecode>age</span>. </p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_13.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_13.svg"
+  width="100%"
+></a>
+</span>
+
+
+<div class="codeblk">fig,ax = plt.subplots()
+df_small = df.sample(n=5_000) # don't draw too many dots
+ax.scatter(df_small['age'], df_small['SalePrice'],
+           alpha=0.03, c=bookcolors['blue'])
+ax.set_ylabel("SalePrice")
+ax.set_xlabel("Age in years")</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>Let's keep all of these features for now and move on to the next task.</p>
+
+
+
+<h2 id="sec:8.2">8.2 ProductSize is an ordinal variable</h2>
+
+
+<p>The <span class=inlinecode>ProductSize</span> feature is important according to the feature importance graph so it's worth revisiting the feature to see if we can improve upon the default label encoding. To get corroborating evidence of its importance, we can also look at the relationship between product size and sale price using Pandas' <span class=inlinecode>groupby</span>. By grouping the data by <span class=inlinecode>ProductSize</span> then calling <span class=inlinecode>mean()</span>, we get the average <span class=inlinecode>SalePrice</span> (and other columns) across product sizes:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_14.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_14.svg"
+  width="100%"
+></a>
+</span>
+
+
+<div class="codeblk">temp = df_raw.fillna('nan') # original dataset
+temp = temp.groupby('ProductSize').mean()
+temp[['SalePrice']].sort_values('SalePrice').plot.barh()</div>
+</div> <!-- end div for p_wrapper -->
+
+<div class="p_wrapper">
+<p class=sidenote><span class=sup>3</span>When copying a column from one dataframe to another, <span class=inlinecode>df_raw</span> to <span class=inlinecode>df</span>, using the assignment operator, Pandas can silently do weird things depending on how the two dataframes are indexed. The safest approach is to copy over the NumPy version of the column by using <span class=inlinecode>.values</span>, as we have done here.</p>
+<p class=p_left>(Here we're using the built-in Pandas shortcut to matplotlib's bar chart: <span class=inlinecode>.plot.barh()</span>.) There's a clear relationship between the size of the product and the sale price, as we would expect. Since <span class=inlinecode>Large</span> is bigger than <span class=inlinecode>Small</span>, the <span class=inlinecode>ProductSize</span> feature is ordered, which  means we can use an <i>ordinal encoding</i>. That just means that we assign numbers to the category values according to their size. A quick web search also shows that <span class=inlinecode>Mini</span> and <span class=inlinecode>Compact</span> bulldozers are the same size, leading to the following encoding:<span class=sup>3</span></p>
+</div>
+
+
+<div class="codeblk">sizes = {None:0, 'Mini':1, 'Compact':1, 'Small':2, 'Medium':3,
+         'Large / Medium':4, 'Large':5}
+df['ProductSize'] = df_raw['ProductSize'].map(sizes).values
+print(df['ProductSize'].unique())</div>
+
+<p class="stdout">[0 2 4 3 1 5]</p>
+
+
+<p>By using an ordinal encoding rather than a label encoding, we get a small bump in OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg"> score:</p>
+
+
+<div class="codeblk">X, y = df.drop('SalePrice', axis=1), df['SalePrice']
+rf, oob_ProductSize = test(X, y, n_estimators=150)
+</div>
+
+<p class="stdout">OOB R^2 0.91526 using 14,873,450 tree nodes with 45.0 median tree height
+</p>
+
+<p>There are two other important features, <span class=inlinecode>Hydraulics_Flow</span> and <span class=inlinecode>Enclosure</span>, that we can easily encode in a more structured way than label encoding.</p>
+
+
+
+<h2 id="onehot-hf">8.3 One-hot encoding Hydraulics_Flow</h2>
+
+
+<p>When in doubt, we encode categorical variables using label encoding. As we saw in the last section, however, if we notice that the variable is ordinal, we use that type of encoding.  When the number of category levels is small, say, 10 or less we <i>one hot encode</i> the variable, assuming the category is important. One-hot encoding yields what people call <i>dummy variables</i>, boolean variables derived from a categorical variable where exactly one of the dummy variables is true for a given record. There is a new column for every categorical level. Missing category values yield 0 in each dummy variable.</p>
+<div class=aside><b>One-hot encoding</b><br>
+
+<p>The easiest way to pickup the idea behind one-hot encoding is through a trivial example. Imagine we have a categorical variable with three levels (three departments). We start out with a dataframe like this:</p>
+
+
+<div class="codeblk">df_toy = pd.DataFrame()
+df_toy['Dept'] = ['Math','CS','Physics',np.nan]
+df_toy</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>Dept</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>Math</td>
+	</tr>
+	<tr>
+	<td>1</td><td>CS</td>
+	</tr>
+	<tr>
+	<td>2</td><td>Physics</td>
+	</tr>
+	<tr>
+	<td>3</td><td></td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Pandas can give us the dummy variables for that column and concatenate them onto the existing dataframe:</p>
+
+
+<div class="codeblk">onehot = pd.get_dummies(df_toy['Dept'])
+df_toy = pd.concat([df_toy, onehot], axis=1)
+df_toy</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>Dept</th><th>CS</th><th>Math</th><th>Physics</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>Math</td><td>0</td><td>1</td><td>0</td>
+	</tr>
+	<tr>
+	<td>1</td><td>CS</td><td>1</td><td>0</td><td>0</td>
+	</tr>
+	<tr>
+	<td>2</td><td>Physics</td><td>0</td><td>0</td><td>1</td>
+	</tr>
+	<tr>
+	<td>3</td><td></td><td>0</td><td>0</td><td>0</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Now, instead of a number, the &ldquo;hot&rdquo; position indicates the category.  Notice how the missing value ends up with none hot.  If you're wondering what &ldquo;hot&rdquo; refers to, &ldquo;one hot&rdquo; is an electrical engineering term referring to multiple chip outputs where at most one output has a nonzero voltage at any given time.</p>
+
+</div>
+<p>Feature <span class=inlinecode>Hydraulics_Flow</span> has &ldquo;High Flow&rdquo; and &ldquo;Standard&rdquo; levels, but the vast majority of records are missing a value for this feature:</p>
+
+
+<div class="codeblk">print(df_raw.Hydraulics_Flow.value_counts(dropna=False))</div>
+
+<p class="stdout">NaN                    86819
+Standard               12761
+High Flow                402
+None or Unspecified       18
+Name: Hydraulics_Flow, dtype: int64</p>
+
+
+<p>Before one-hot encoding let's normalize the columns so string &ldquo;None or Unspecified&rdquo; is the same as missing (<span class=inlinecode>np.nan</span>) then get dummy variables:</p>
+
+
+<div class="codeblk">df['Hydraulics_Flow'] = df_raw['Hydraulics_Flow'].values
+df['Hydraulics_Flow'] = df['Hydraulics_Flow'].replace('None or Unspecified', np.nan)
+onehot = pd.get_dummies(df['Hydraulics_Flow'],
+                        prefix='Hydraulics_Flow',
+                        dtype=bool)
+</div>
+
+
+<p>Next, we replace column <span class=inlinecode>Hydraulics_Flow</span> with the dummy variables by concatenating them onto the <span class=inlinecode>df</span> DataFrame and deleting the unused column:</p>
+
+
+<div class="codeblk">del df['Hydraulics_Flow']
+df = pd.concat([df, onehot], axis=1)
+</div>
+
+
+<p>Checking the OOB <img style="vertical-align: -0.5pt;" src="images/eqn-E31B458B48DD58470B662E66B9742071-depth000.00.svg">, we see that it's about the same as before and the feature importance graph shows that the most predictive category is <span class=inlinecode>Standard</span>. (See feature <span class=inlinecode>Hydraulics_Flow_Standard</span> in the graph.)</p>
+
+
+<div class="codeblk">X, y = df.drop('SalePrice', axis=1), df['SalePrice']
+rf, oob_Hydraulics_Flow = test(X, y, n_estimators=150)
+</div>
+
+<p class="stdout">OOB R^2 0.91558 using 14,872,994 tree nodes with 45.0 median tree height
+</p>
+<div class="p_wrapper">
+<span class=sidenote>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_21.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_21.svg"
+  width="100%"
+></a>
+</span>
+</div> <!-- end div for p_wrapper -->
+
+
+
+<h2 id="sec:8.4">8.4 One-hot encoding Enclosure</h2>
+
+	
+<p>Let's follow this same one-hot procedure for <span class=inlinecode>Enclosure</span> because it's also a categorical variable with only a few levels:</p>
+
+
+<div class="codeblk">print(df_raw.Enclosure.value_counts(dropna=False))</div>
+
+<p class="stdout">OROPS         40904
+EROPS w AC    34035
+EROPS         24999
+NaN              54
+EROPS AC          6
+NO ROPS           2
+Name: Enclosure, dtype: int64</p>
+
+
+<p>First, let's normalize the categories:</p>
+
+
+<div class="codeblk">df['Enclosure'] = df_raw['Enclosure'].values
+df['Enclosure'] = df['Enclosure'].replace('EROPS w AC', 'EROPS AC')
+df['Enclosure'] = df['Enclosure'].replace('None or Unspecified', np.nan)
+df['Enclosure'] = df['Enclosure'].replace('NO ROPS', np.nan)
+</div>
+
+
+<p>Let's also look at the relationship between this variable and the sale price:</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_24.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_24.svg"
+  width="100%"
+></a>
+</span>
+
+
+<div class="codeblk">temp = df.groupby('Enclosure').mean()
+temp[['SalePrice']].sort_values('SalePrice').plot.barh()</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>That's interesting, &ldquo;EROPS AC&rdquo; gets, on average, twice the price of the other bulldozers.  A web search reveals that ROP means &ldquo;Roll Over Protection Structure,&rdquo; so EROPS is an enclosed ROPS (a cabin) and OROP is an open protective cage. AC means &ldquo;Air Conditioning.&rdquo;  The model suggests that a bulldozer with an enclosed cab gets a higher price and one with air conditioning gets the highest price, on average. Unfortunately, the OOB score drops a little bit but dummy variable <span class=inlinecode>Enclosure_EROPS AC</span> is important per the importance graph.</p>
+
+
+<div class="codeblk">onehot = pd.get_dummies(df['Enclosure'],
+                        prefix='Enclosure',
+                        dtype=bool)
+del df['Enclosure']
+df = pd.concat([df, onehot], axis=1)
+X, y = df.drop('SalePrice', axis=1), df['SalePrice']
+rf, oob_Enclosure = test(X, y, n_estimators=150)
+</div>
+
+<p class="stdout">OOB R^2 0.91356 using 14,896,328 tree nodes with 44.0 median tree height
+</p>
+<div class="p_wrapper">
+<span class=sidenote>
+&#187; <i>Generated by code to left</i><br>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_26.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_26.svg"
+  width="100%"
+></a>
+</span>
+
+
+<div class="codeblk">I = importances(rf, X, y)
+plot_importances(I.head(20))</div>
+</div> <!-- end div for p_wrapper -->
+
+<p>There are other important categorical variables, such as <span class=inlinecode>fiSecondaryDesc</span>, but it has 148 levels, which would create 148 new columns, which would more than triple the number of overall columns in the dataframe. We recommend label encoding such categorical variables.</p>
+
+
+
+<h2 id="sec:8.5">8.5 Splitting apart fiProductClassDesc</h2>
+
+
+<p>Feature <span class=inlinecode>fiProductClassSpec</span> is string variable rather than a categorical variable. The values are descriptions of the product class and some components of the string appear to correlate with higher prices:</p>
+
+
+<div class="codeblk">temp = df_raw.groupby('fiProductClassDesc').mean()
+temp[['SalePrice']].sort_values('SalePrice').head(15).plot.barh()</div>
+<center>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_27.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_27.svg"
+  width="90%%"
+></a>
+</center>
+
+<p>The bulldozers with higher operating capacity values seem to fetch higher prices. The model is clearly getting some kind of predictive power out of this feature when label encoded (per the feature important graph). But, we can make the information more explicit by splitting the description into four pieces:</p>
+
+<p><center>
+<img src="images/bulldozer-feateng/model-descr.svg" width="60%">
+</center></p>
+
+<p>The description is a categorical variable, chosen from a finite set of categories such as &ldquo;Skip Steer Loader.&rdquo; The lower and upper components are numerical features and the units is a category, such as &ldquo;Horsepower&rdquo; or &ldquo;Lb Operating Capacity.&rdquo;  We can call the latter three components the &ldquo;spec&rdquo;.  Because the spec is sometimes <span class=inlinecode>Unidentified</span>, the spec components could be missing.</p>
+
+<p>To pull apart the description string, let's do it in two steps. First, copy the original non-label-encoded string from <span class=inlinecode>df_raw</span> and split it at the hyphen:</p>
+
+
+<div class="codeblk"># careful when copying between dataframes; use .values
+df_split = df_raw.fiProductClassDesc.str.split(' - ',expand=True).values
+df['fiProductClassDesc'] = df_split[:,0] 
+df['fiProductClassSpec'] = df_split[:,1] # temporary column
+print(df['fiProductClassDesc'].unique())</div>
+
+<p class="stdout">['Track Type Tractor, Dozer' 'Hydraulic Excavator, Track' 'Wheel Loader'
+ 'Skid Steer Loader' 'Backhoe Loader' 'Motorgrader']</p>
+
+
+<p>This leaves the right-hand side of the string as the spec string:</p>
+
+
+<div class="codeblk">print(df['fiProductClassSpec'].unique()[:5])</div>
+
+<p class="stdout">['20.0 to 75.0 Horsepower' '12.0 to 14.0 Metric Tons'
+ '14.0 to 16.0 Metric Tons' '33.0 to 40.0 Metric Tons'
+ '225.0 to 250.0 Horsepower']</p>
+
+
+<p>Next, split that string using a regular expression that captures the two numbers and units to the right:</p>
+
+
+<div class="codeblk">pattern = r'([0-9.\+]*)(?: to ([0-9.\+]*)|\+) ([a-zA-Z ]*)'
+df_split = df['fiProductClassSpec'].str.extract(pattern, expand=True).values
+df['fiProductClassSpec_lower'] = pd.to_numeric(df_split[:,0])
+df['fiProductClassSpec_upper'] = pd.to_numeric(df_split[:,1])
+df['fiProductClassSpec_units'] = df_split[:,2]
+del df['fiProductClassSpec'] # remove temporary column
+df.filter(regex=('fiProductClassSpec*')).head(3)</div>
+<div class="scrollbar_wrapper">
+<table class="dataframe dataframe-indexed">
+<thead>
+	<tr><th>&nbsp;</th><th>fiProductClassSpec_lower</th><th>fiProductClassSpec_upper</th><th>fiProductClassSpec_units</th></tr>
+    <tr><td></td></tr>
+</thead>
+<tbody>
+	<tr>
+	<td>0</td><td>20.0000</td><td>75.0000</td><td>Horsepower</td>
+	</tr>
+	<tr>
+	<td>1</td><td>12.0000</td><td>14.0000</td><td>Metric Tons</td>
+	</tr>
+	<tr>
+	<td>2</td><td>14.0000</td><td>16.0000</td><td>Metric Tons</td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p>Because we have introduced columns with potentially missing values and new categorical variables, we have to prepare the dataset following our usual procedure:</p>
+
+
+<div class="codeblk">fix_missing_num(df, 'fiProductClassSpec_lower')
+fix_missing_num(df, 'fiProductClassSpec_upper')
+# label encode fiProductClassDesc fiProductClassSpec_units
+df_string_to_cat(df)
+df_cat_to_catcode(df)
+</div>
+
+
+<p>We see a small bump in model performance from the transformation of this feature and a feature importance graph shows that the individual components we synthesized are important.</p>
+
+
+<div class="codeblk">X, y = df.drop('SalePrice', axis=1), df['SalePrice']
+rf, oob_fiProductClassDesc = test(X, y, n_estimators=150)
+</div>
+
+<p class="stdout">OOB R^2 0.91429 using 14,873,080 tree nodes with 43.0 median tree height
+</p>
+
+
+
+<h2 id="sec:8.6">8.6 Training with log(price)</h2>
+
+
+<p>The original Kaggle competition measured model performance based upon the logarithm of the price, so we should also do that because we're going to compare our model's performance to the competition leaders in the next chapter. Also, as we discussed in <b>Section 5.5</b> <i>Log in, exp out</i>, it often helps to take the logarithm of the target variable when dealing with prices. (We usually care more that two prices are different by 20% than by a fixed $20.)  Transforming the target variable is a simple matter of calling the <span class=inlinecode>log()</span> function:</p>
+
+
+<div class="codeblk">X, y = df.drop('SalePrice', axis=1), df['SalePrice']
+y = np.log(y)
+rf, oob_log = test(X, y, n_estimators=150)
+</div>
+
+<p class="stdout">OOB R^2 0.91881 using 14,865,740 tree nodes with 44.0 median tree height
+</p>
+
+<p>That 0.919 score is a nice bump in accuracy, all from a simple mathematical transformation.</p>
+
+
+
+<h2 id="sec:8.7">8.7 The effect of feature engineering on model performance</h2>
+
+<div class="p_wrapper">
+<span class=sidenote>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_35.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_35.svg"
+  width="100%"
+></a>
+</span>
+</div> <!-- end div for p_wrapper -->
+
+<p>We've done a lot of work in this chapter to improve the features presented to the RF model, so let's compare the effect of these changes on model performance. The following figure zooms in on the range of OOB scores from our baseline to the final log feature improvement. (Code for this figure is in the <a href="https://mlbook.explained.ai/notebooks/bulldozer-feateng/eng.ipynb">notebook</a> for this chapter.)</p>
+<center>
+<a href="images/bulldozer-feateng/bulldozer-feateng_eng_36.svg"><img src="images/bulldozer-feateng/bulldozer-feateng_eng_36.svg"
+  width="50%%"
+></a>
+</center>
+
+<p>Overall the model OOB score has improved from 0.903 to 0.919, a 16.141% improvement; <span class=inlinecode>(oob_log-oob_clean)*100/(1-oob_clean)</span>). </p>
+
+<p>For the most part, our feature engineering efforts have paid off. The one-hot encoding of <span class=inlinecode>Hydraulics_Flow</span> and <span class=inlinecode>Enclosure</span>, however, doesn't seem to have improved model performance. In fact, <span class=inlinecode>Enclosure</span>'s one-hot encoding seems to have hurt performance. But, remember,  we are measuring accuracy and looking at a feature importance graph using the training set, not a validation set.   As it turns out, one-hot encoding <span class=inlinecode>Enclosure</span> does seem to improve metrics where it counts, on validation and other test sets. (While working on the next chapter, we compared scores from models with and without one-hot encoded <span class=inlinecode>Enclosure</span> columns.) For the moment, it's best to keep all features available to the model.</p>
+
+
+
+<h2 id="sec:8.8">8.8 Summary</h2>
+
+
+<p>Let's summarize the techniques that we learned in this chapter.</p>
+
+<p><b>Dates</b></p>
+
+<p>As a general rule, break apart date columns into components such as day, month, year, day of week, day of year, and any other elements relevant to your application, such as &ldquo;end of quarter&rdquo; or &ldquo;is holiday.&rdquo;  Synthesizing new columns based upon the date looks like this:</p>
+
+
+<div class="codeblk">df["salemonth"] = df[colname].dt.month</div>
+
+
+<p>Then convert the original date column to an integer representing the number of seconds since 1970 using:</p>
+
+
+<div class="codeblk">df[colname] = df[colname].astype(np.int64) # convert date to seconds</div>
+
+
+<p><b>Ordinal encoding</b></p>
+
+<p>Categorical variables whose elements have order should be ordinal encoded using integers that mirror the relationship between category levels.  For example, if a column has low, medium, and high levels, an encoding such as the following would work where missing values become 0:</p>
+
+
+<div class="codeblk">m = {np.nan:0, 'low':1, 'medium':2, 'high':3}
+df[colname] = df_raw[colname].map(m)</div>
+
+
+<p><b>One-hot encoding</b></p>
+
+<p>Non-ordered (nominal) categorical variables with about 10 or fewer levels can be one-hot encoded. Here is the basic procedure to replace a column with multiple dummy columns that one-hot encode the column:</p>
+
+
+<div class="codeblk">onehot = pd.get_dummies(df[colname])
+df = pd.concat([df, onehot], axis=1)
+del df[colname]</div>
+
+
+<p><b>Split strings encoding</b></p>
+
+<p>In this chapter, we split a string based upon the hyphen character using <span class=inlinecode>split()</span>:</p>
+
+
+<div class="codeblk"># get two columns
+df_descr_spec_split = df[colname].str.split(' - ',expand=True)</div>
+
+
+<p>and then used regular expressions to extract three components from the right-hand string using <span class=inlinecode>extract()</span>:</p>
+
+
+<div class="codeblk"># get three columns
+pattern = r'([0-9.\+]*)(?: to ([0-9.\+]*)|\+) ([a-zA-Z ]*)'
+df_split = df['fiProductClassSpec'].str.extract(pattern, expand=True)</div>
+
+
+<p>We created new columns in <span class=inlinecode>df</span> from the columns extracted in this way.</p>
+
+<p>There are lots of other kinds of strings (in other datasets) you might want to split apart, such as URLs. You can create new columns that indicate <span class=inlinecode>https</span> vs <span class=inlinecode>http</span>, the top level domain, domain, filename, file extension etc.</p>
+
+
+
+</body>
+</html>

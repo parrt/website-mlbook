@@ -36,7 +36,7 @@
 <body>
 <div class="watermark">
 <i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
-Book version 0.3.1
+Book version 0.4
 </div>
 
 <h1>2 How Machine Learning Works</h1>
@@ -104,7 +104,9 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 
 <p>As with any problem-solving exercise, it's a good idea to start by clearly defining the problem. Given four attributes of an apartment, the number of bedrooms, the number of bathrooms, and location (longitude, latitude) we want to <i>predict</i> (determine) the price. Those apartment attributes are called <i>features</i> and the price is called the <i>target</i>.  We're usually given data in the form of a table like the following.</p>
 
-<p><img src="images/intro/rent-idea-head-annotated.png" width="55%"></p>
+<p><center>
+<img src="images/intro/rent-idea-head-annotated.png" width="55%">
+</center></p>
 
 <p>This data is called <i>training data</i> or the <i>training set</i> because we, or a program, must learn from this &ldquo;experience&rdquo; in order to make predictions. (It's often convenient to treat all of the features for a single record as a single <i>feature vector</i>; a <i>vector</i> is a list of numbers.)</p>
 
@@ -220,9 +222,11 @@ def train(bedrooms, bathrooms, latitude, longitude, price):
 
 <div class="p_wrapper">
 <span class=sidenote>
+<center>
 <a href="images/intro/intro_stats_4.svg"><img src="images/intro/intro_stats_4.svg"
   width="100%"
 ></a>
+</center>
 <br><b>Figure 2.1</b>. Price per number of bathrooms and linear regression fit line</span>
 <p class=p_left>For this data set, unfortunately, a linear model is not a good choice because such models treat every feature as a single trend with lower rent on one side and higher rent on the other, or vice versa.  For example, it's reasonable to assume that rent prices would go up as the number of bathrooms goes up, but the data doesn't support that conclusion. <b>Figure 2.1</b> shows the average rent for all apartments with the same number of bathrooms with dots where we actually have data.</p>
 </div>
@@ -313,7 +317,9 @@ if bedrooms==2 and bathrooms==1.0 and \
 <span class=sidenote>
 
 <center>
+<center>
 <img src="images/intro/dec-tree.svg" width="100%">
+</center>
 </center>
 
 <br><b>Figure 2.2</b>. Sample partial regressor decision tree</span>
@@ -357,7 +363,9 @@ if bedrooms==2 and bathrooms==1.0 and \
 <span class=sidenote>
 
 <center>
+<center>
 <img src="images/intro/class-dec-tree.svg" width="100%">
+</center>
 </center>
 
 <br><b>Figure 2.3</b>. Sample partial classifier decision tree</span>
@@ -375,7 +383,9 @@ if bedrooms==2 and bathrooms==1.0 and \
 <span class=sidenote>
 
 <center>
+<center>
 <img src="images/intro/Xy.svg" width="85%">
+</center>
 </center>
 
 <br><b>Figure 2.4</b>. Feature vectors X and targets y</span>
@@ -386,25 +396,33 @@ if bedrooms==2 and bathrooms==1.0 and \
 <span class=sidenote>
 
 <center>
+<center>
 <img src="images/intro/regressor.svg" width="90%">
+</center>
 </center>
 
  <br><b>Figure 2.5</b>. Predictor block diagram</span><span class=sidenote>
 
 <center>
+<center>
 <img src="images/intro/classifier.png" width="100%">
+</center>
 </center>
 
 <br><b>Figure 2.6</b>. Classifier block diagram</span><span class=sidenote>
 
 <center>
+<center>
 <img src="images/intro/fitpiecewise.svg" width="85%">
+</center>
 </center>
 
 <br><b>Figure 2.7</b>. Predictors draw curves through data</span><span class=sidenote>
 
 <center>
+<center>
 <img src="images/intro/mindist-decision-lines.svg" width="85%">
+</center>
 </center>
 
 <br><b>Figure 2.8</b>. Classifiers draw curves through the  space separating classes</span>
@@ -417,7 +435,9 @@ if bedrooms==2 and bathrooms==1.0 and \
 <span class=sidenote>
 
 <center>
+<center>
 <img src="images/intro/training.svg" width="100%">
+</center>
 </center>
 
 <br><b>Figure 2.9</b>. Distilling model parameters from training data and</span>

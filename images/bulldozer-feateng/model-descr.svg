@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="47.16 55.546665 339.12305 47.553333" width="339.12305" height="47.553333">
+  <defs>
+    <font-face font-family="Arial" font-size="14" panose-1="2 11 6 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="73.24219" slope="0" x-height="518.5547" cap-height="716.3086" ascent="905.2734" descent="-211.91406" font-weight="400">
+      <font-face-src>
+        <font-face-name name="ArialMT"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica Neue" font-size="12" panose-1="2 0 5 3 0 0 0 9 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="-1e3" x-height="517" cap-height="714" ascent="957.0007" descent="-212.99744" font-style="italic" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue-Italic"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.10.2 
+    <dc:date>2019-03-26 17:49:07 +0000</dc:date>
+  </metadata>
+  <g id="bulldozer" stroke="none" stroke-dasharray="none" stroke-opacity="1" fill-opacity="1" fill="none">
+    <title>bulldozer</title>
+    <rect fill="white" x="47.16" y="55.546665" width="339.12305" height="47.553333"/>
+    <g id="bulldozer: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <text transform="translate(52.16 60.546665)" fill="black">
+          <tspan font-family="Arial" font-size="14" font-weight="400" fill="black" x="0" y="13">Track Type Tractor, Dozer - 20.0 to 75.0 Horsepower</tspan>
+        </text>
+      </g>
+      <g id="Graphic_3">
+        <rect x="50.4" y="55.8" width="168.12" height="24.48" fill="#b43da7" fill-opacity=".27"/>
+      </g>
+      <g id="Graphic_6">
+        <rect x="302.7" y="55.8" width="80.28" height="24.48" fill="#f46c43" fill-opacity=".271083"/>
+      </g>
+      <g id="Graphic_5">
+        <rect x="272.02" y="55.8" width="29.52" height="24.48" fill="#abd9e9" fill-opacity=".269157"/>
+      </g>
+      <g id="Graphic_4">
+        <rect x="226.3" y="55.8" width="29.52" height="24.48" fill="#fee18f" fill-opacity=".27"/>
+      </g>
+      <g id="Graphic_7">
+        <text transform="translate(96.078 83.1)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-style="italic" font-weight="400" fill="black" x="24868996e-20" y="11">description</tspan>
+        </text>
+      </g>
+      <g id="Graphic_8">
+        <text transform="translate(227.01 83.1)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-style="italic" font-weight="400" fill="black" x="0" y="11">lower</tspan>
+        </text>
+      </g>
+      <g id="Graphic_10">
+        <text transform="translate(271.608 83.1)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-style="italic" font-weight="400" fill="black" x="4813927e-19" y="11">upper</tspan>
+        </text>
+      </g>
+      <g id="Graphic_11">
+        <text transform="translate(330.56 83.1)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-style="italic" font-weight="400" fill="black" x="6536993e-19" y="11">units</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

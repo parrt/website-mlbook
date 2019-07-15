@@ -40,7 +40,7 @@
 
 <div class="watermark">
 <i><a href='http://mlbook.explained.ai'>Book contents</a><br>Work in progress</i><br>
-Book version 0.3.1
+Book version 0.4
 </div>
 
 <p><a href="http://parrt.cs.usfca.edu">Terence Parr</a> and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
@@ -56,8 +56,10 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 </p>
 </font></p>
 
-<p>This book is a primer on machine learning for programmers trying to get up to speed quickly. You'll learn how machine learning works and how to apply it in practice.  We focus on just a few powerful models (algorithms) that are extremely effective on real problems, rather than presenting a broad survey of machine learning algorithms as many books do. Co-author Jeremy used these few models to become the #1 competitor for two consecutive years at <span class=inlinecode>Kaggle.com</span>. This narrow approach leaves lots of room to cover the models, training, and testing in detail, with intuitive descriptions and full code implementations.
-<p><i>Obviously, this is a book in progress and we will add chapters and make edits as we can.</i></p>
+<p><i>Warning: The content of this book is so unexciting that you'll be able to use it in your actual job!</i> 
+<p>This book is a primer on machine learning for programmers trying to get up to speed quickly. You'll learn how machine learning works and how to apply it in practice.  We focus on just a few powerful models (algorithms) that are extremely effective on real problems, rather than presenting a broad survey of machine learning algorithms as many books do. Co-author Jeremy used these few models to become the #1 competitor for two consecutive years at <span class=inlinecode>Kaggle.com</span>. This narrow approach leaves lots of room to cover the models, training, and testing in detail, with intuitive descriptions and full code implementations.</p>
+
+<p><i>This is a book in progress and we will add chapters and make edits as we can.</i></p>
 </p>
 
 <div id="toc">
@@ -100,7 +102,7 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 	<li><a href="prep.html">Exploring and Denoising Your Data Set</a></li>
 	<ul>
 			<li><a href="prep.html#sec:5.1">Getting a quick sniff of the data</a></li>
-			<li><a href="prep.html#sec:5.2">Training and evaluating an initial model</a></li>
+			<li><a href="prep.html#sec:initial-model">Training and evaluating an initial model</a></li>
 			<li><a href="prep.html#sec:5.3">Exploring and denoising the apartment rent data</a></li>
 			<li><a href="prep.html#sec:5.4">Comparing models trained on denoised data</a></li>
 			<li><a href="prep.html#logtarget">Log in, exp out</a></li>
@@ -109,7 +111,7 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 	<li><a href="catvars.html">Categorically Speaking</a></li>
 	<ul>
 			<li><a href="catvars.html#sec:6.1">Getting a baseline</a></li>
-			<li><a href="catvars.html#sec:6.2">Encoding categorical variables</a></li>
+			<li><a href="catvars.html#sec:catvars">Encoding categorical variables</a></li>
 			<li><a href="catvars.html#sec:6.3">Extracting features from strings</a></li>
 			<li><a href="catvars.html#sec:6.4">Synthesizing numeric features</a></li>
 			<li><a href="catvars.html#target-encoding">Target encoding categorical variables</a></li>
@@ -118,6 +120,39 @@ document.getElementById("annotatelink").href = "https://via.hypothes.is/"+me;
 			<li><a href="catvars.html#sec:6.8">Summary of categorical feature engineering</a></li>
 
 	</ul>
+	<li><a href="bulldozer-intro.html">Exploring and Cleaning the Bulldozer Dataset</a></li>
+	<ul>
+			<li><a href="bulldozer-intro.html#sec:7.1">Loading the bulldozer data</a></li>
+			<li><a href="bulldozer-intro.html#sec:7.2">Taking an initial look at the data</a></li>
+			<li><a href="bulldozer-intro.html#sec:7.3">Baseline model</a></li>
+			<li><a href="bulldozer-intro.html#sec:7.4">Cleaning up</a></li>
+			<li><a href="bulldozer-intro.html#sec:missing">Dealing with missing data</a></li>
+			<li><a href="bulldozer-intro.html#sec:7.6">Training a model with all features</a></li>
+			<li><a href="bulldozer-intro.html#sec:7.7">Summary</a></li>
+
+	</ul>
+	<li><a href="bulldozer-feateng.html">Bulldozer Feature Engineering</a></li>
+	<ul>
+			<li><a href="bulldozer-feateng.html#sec:8.1">Synthesizing date-related features</a></li>
+			<li><a href="bulldozer-feateng.html#sec:8.2">ProductSize is an ordinal variable</a></li>
+			<li><a href="bulldozer-feateng.html#onehot-hf">One-hot encoding Hydraulics_Flow</a></li>
+			<li><a href="bulldozer-feateng.html#sec:8.4">One-hot encoding Enclosure</a></li>
+			<li><a href="bulldozer-feateng.html#sec:8.5">Splitting apart fiProductClassDesc</a></li>
+			<li><a href="bulldozer-feateng.html#sec:8.6">Training with log(price)</a></li>
+			<li><a href="bulldozer-feateng.html#sec:8.7">The effect of feature engineering on model performance</a></li>
+			<li><a href="bulldozer-feateng.html#sec:8.8">Summary</a></li>
+
+	</ul>
+	<li><a href="bulldozer-testing.html">Train, Validate, Test</a></li>
+	<ul>
+			<li><a href="bulldozer-testing.html#sec:trilogy">The testing trilogy</a></li>
+			<li><a href="bulldozer-testing.html#sec:rectifying">Rectifying training and validation sets</a></li>
+			<li><a href="bulldozer-testing.html#sec:tuning">Tuning a Random Forest model</a></li>
+			<li><a href="bulldozer-testing.html#sec:test-set">Getting a true measure of generality</a></li>
+			<li><a href="bulldozer-testing.html#sec:9.5">Summary</a></li>
+
+	</ul>
+
 </ul>
 </div>
 
